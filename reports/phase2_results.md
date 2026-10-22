@@ -81,6 +81,6 @@ Both are open questions: how to stabilise the combined weights, and how to build
 
 - The data-generating mechanism is ours and is not calibrated to any disease.
 - The helper models are parametric Weibull and logistic regressions; the Super Learner was not used in Phase 2.
-- One truncation level (0.05) was tried.
+- One truncation level (0.05) was tried. Truncation shifts the estimand (Dahabreh et al., Stat Med 2020, p. 16), so the truncated methods' small bias is partly a change of target.
 - Time to benefit is read on a half-year grid.
 - 200 hospitals per setting: Monte Carlo error on integrated bias is about 0.005 to 0.01.
