@@ -37,10 +37,12 @@ Step 1 shows this with exact numbers. At v = 2:
 
 | Who | Risk reduction |
 |---|---|
-| Trial patients | 15.6 percentage points |
-| All 2,500 eligible patients (the truth we want) | 12.0 percentage points |
+| Trial patients | 14.8 percentage points |
+| All 2,500 eligible patients (the truth we want) | 8.5 percentage points |
 
-The figure `reports/figures/01_true_curves.png` shows both curves across all values of v. The dashed curve (trial) lies below the solid one (everyone) at every v. Below zero means the drug lowers the risk.
+The figure `reports/figures/01_true_curves.png` shows both curves across all values of v. Below zero means the drug lowers the risk. The drug helps in the middle of v and harms at both ends: for all eligible patients, the risk goes up by 16 points at v = 0.2. The dashed curve (trial) lies below the solid one (everyone) at every v, so the trial makes the drug look better everywhere.
+
+(These numbers changed on 22 October, after the first pilot run showed the original curve was too flat. See `docs/LOG.md`.)
 
 ## Why we simulate
 

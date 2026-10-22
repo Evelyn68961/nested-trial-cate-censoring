@@ -49,20 +49,20 @@ This is called **double robustness**: two chances to be right.
 
 ## What the simulation shows
 
-Step 3 fitted the helpers in 200 hospitals with the right terms, or with one term left out on purpose. The "wrong" outcome model leaves out frailty. The "wrong" participation model gives everyone the same chance of joining. The table shows the error in the average effect over all eligible patients (estimate minus truth; the truth is −0.082).
+Step 3 fitted the helpers in 200 hospitals with the right terms, or with one term left out on purpose. The "wrong" outcome model leaves out frailty. The "wrong" participation model gives everyone the same chance of joining. The table shows the error in the average effect over all eligible patients (estimate minus truth; the truth is +0.003, because harm at the ends of v and benefit in the middle nearly cancel).
 
 | Helper models | Outcome model alone | With the correction |
 |---|---|---|
-| Both right | 0.000 | 0.000 |
-| Outcome model wrong | −0.037 | 0.003 |
-| Participation model wrong | 0.000 | 0.001 |
-| Both wrong | −0.037 | −0.039 |
+| Both right | 0.001 | 0.000 |
+| Outcome model wrong | −0.069 | 0.005 |
+| Participation model wrong | 0.001 | 0.001 |
+| Both wrong | −0.069 | −0.072 |
 
-Read the second row: the outcome model alone is off by 0.037 (it leans toward the trial's healthier patients), and the correction removes that error. In the last row, both helpers are wrong and the error stays.
+Read the second row: the outcome model alone is off by 0.069 (it leans toward the trial's healthier patients), and the correction removes that error. In the last row, both helpers are wrong and the error stays.
 
 ## The price
 
-The correction adds noise. With both helpers right, the estimate varied across hospitals with a standard deviation of 0.060 with the correction, against 0.052 for the outcome model alone. The method trades some precision for protection against a wrong model. Trial patients with tiny chances of joining make it worse, because their weights are huge.
+The correction adds noise. With both helpers right, the estimate varied across hospitals with a standard deviation of 0.058 with the correction, against 0.049 for the outcome model alone. The method trades some precision for protection against a wrong model. Trial patients with tiny chances of joining make it worse, because their weights are huge.
 
 ## What this lesson does not cover yet
 

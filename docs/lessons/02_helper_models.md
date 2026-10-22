@@ -27,14 +27,14 @@ The outcome model alone already gives an estimate: average `g1 − g0` over the 
 
 | Averaged over | Mean of 200 hospitals | Truth |
 |---|---|---|
-| All eligible patients | −0.123 | −0.120 (target) |
-| Trial patients only | −0.159 | −0.156 (trial) |
+| All eligible patients | −0.088 | −0.085 (target) |
+| Trial patients only | −0.151 | −0.148 (trial) |
 
 So when the outcome model is applied to the 2,000 non-trial patients, it lands on the target, not on the trial's value. This is how the non-trial patients help: they bring the right mix of frail and not frail people, even without outcomes.
 
 Two warnings come with it:
 
-- **One hospital is very noisy.** Single hospitals ranged from −0.29 to +0.04. The average over 200 is right; any one hospital can be far off.
+- **One hospital is very noisy.** Single hospitals ranged from −0.24 to +0.05. The average over 200 is right; any one hospital can be far off.
 - **Predictions are worst for the patients least like the trial.** In `reports/figures/02_outcome_model_vs_truth.png`, the blue points (trial patients) sit close to the grey line, which marks a perfect prediction. The red points (non-trial patients) scatter much more. The model learned from healthier patients and is guessing about frail ones.
 
 The right panel shows the same with Super Learner, which was not told the right formula. In real data nobody knows the right formula, so this is the realistic case.

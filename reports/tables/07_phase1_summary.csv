@@ -1,5 +1,5 @@
 "setting","hospitals","estimator","integrated_abs_bias","integrated_rmse","integrated_coverage","coverage_smoothed","coverage_trial_curve","missing_estimates"
-"glm_trial20",50,"P",0.023,0.098,94.3,94.6,NA,0
-"glm_trial20",50,"L",0.029,0.082,94.3,NA,NA,0
-"glm_trial20",50,"T",0.029,0.071,92.6,NA,94.1,0
-"glm_trial20",50,"G",0.015,0.07,NA,NA,NA,0
+"glm_trial20",100,"P",0.021,0.104,91.4,93,NA,0
+"glm_trial20",100,"L",0.06,0.098,80.4,NA,NA,0
+"glm_trial20",100,"T",0.06,0.097,83.6,NA,90.6,0
+"glm_trial20",100,"G",0.007,0.075,NA,NA,NA,0
