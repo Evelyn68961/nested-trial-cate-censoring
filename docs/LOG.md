@@ -311,3 +311,49 @@ All four settings, 200 hospitals each, with IPCW_t and AIPCW_t added. The untrun
   - a wrong-outcome-model setting C4;
   - weight diagnostics;
   - counterfactual Brier scores with dropout.
+
+## 23 October 2026: three additions from Steingrimsson's work (steps 12 to 14)
+
+Planned and timed against the 17:30 shutdown: code by 08:30, runs by 12:30, write-up by 15:30. Started 05:58.
+
+### Step 12: a Buckley-James estimator (BJ)
+
+**What it is.** No dropout weight at all. A trial patient whose status at t is known keeps it. A patient who dropped out before t gets the outcome model's chance of an event between leaving and t. In code it is `augmented_status()` with the chance of staying set to 1 for everyone (`use_dropout_model = FALSE`). With G ≡ 1 the compensator is zero, so only the observed status and the filled-in chance are left. Steingrimsson & Morrison (Stat Med 2020, p. 7) show this is the doubly robust loss with G ≡ 1.
+
+**Why.** In C2, 92 (IPCW) and 50 (AIPCW) of 200 hospitals broke. BJ keeps the trial-joining weight but drops the dropout weight. If it rarely breaks, the dropout weight caused the breaks.
+
+**Price.** BJ is right only if the outcome model is right.
+
+**Tests added:**
+- BJ status equals the AIPCW status computed with a dropout model that says nobody leaves.
+- With the true outcome model, the BJ status averages to the true risk; with an outcome model that ignores every characteristic, it does not.
+- With no dropout, the BJ curve equals the AIPCW curve exactly.
+
+### Step 13: setting C4, a wrong outcome model
+
+**What it is.** The C2 hospitals (same seeds), the right dropout model, and outcome models that leave out frailty: the Weibull models in each arm and the IPCW logistic models (`~ v + I(v^2) + male`). The Phase 1 helper models used by CC and NE are unchanged.
+
+**Why.** C3 tested a wrong dropout model with a right outcome model. C4 is the other half of the double-robustness test. Expected: BJ biased, IPCW and AIPCW not.
+
+**Pilot (25 hospitals, 06:03 to 06:07).** The risk was that leaving out frailty biases BJ too little to see; the threshold set in advance was 0.02. At 5 years, BJ's bias was 0.066 with 72% coverage, and only 1 of 25 hospitals broke. So C4 was kept as designed, with no stronger misspecification. The pilot's 25 hospitals are the first chunk of the full C4 run (same code and seeds).
+
+### Step 14: weight checks
+
+Recorded per hospital at 5 years, over all eligible patients (`weight_checks()` in `R/phase2_estimators.R`):
+- the mean of the trial-joining weight S / P(trial), which should be close to 1 (Dahabreh et al., Stat Med 2020, p. 16);
+- in each arm, the mean of the trial and arm weight, and of the combined weight (also divided by the chance of still being followed, untruncated), each close to 1;
+- in each arm, the largest combined weight, the share of the arm's total weight that it carries, and the effective sample size (sum of weights squared over sum of squared weights).
+
+The summary script tests four rules, fixed before seeing the full results:
+- a combined-weight mean off 1 by more than 0.2;
+- one patient carrying more than 10% of an arm's weight;
+- an effective sample size below 50 in an arm;
+- a trial-joining weight mean off 1 by more than 0.2.
+
+For each rule, it counts how many broken hospitals (curve off by more than 0.5 somewhere at 5 years) it flags, and how many unbroken ones.
+
+### Runs
+
+The 200-hospital results of 22 October moved to `results/archive/phase2_200_before_bj/`. All five settings were rerun at commit 2b38cab, 3 workers, starting 06:08. The six existing estimators use the same seeds and code paths, so they must reproduce the archived numbers exactly; this is checked below.
+
+Commits after 2b38cab during the runs change only docs/ (checked with `git diff --stat 2b38cab -- R config scripts`, which is empty), so settings that started later may record a later commit hash with the same code.

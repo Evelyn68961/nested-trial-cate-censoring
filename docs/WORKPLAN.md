@@ -29,6 +29,20 @@ Full rationale: `nested_trial_CATE_censoring_plan.md` (kept outside this reposit
 
 **Gate 2:** C0 reproduces Phase 1 at every year; the weighted estimator has small bias in C1 and C2.
 
+## Phase 2 additions from Steingrimsson's work
+
+Ranked in a notes file kept outside this repository.
+
+| Step | Code | Lesson | State |
+|---|---|---|---|
+| 12 | Buckley-James estimator: no dropout weight, dropouts filled in by the outcome model | 11 Which model to trust | Code and tests done 2026-10-23 |
+| 13 | Setting C4: right dropout model, outcome models without frailty | 11 | Code done; pilot of 25 hospitals passed 2026-10-23 |
+| 14 | Weight checks per hospital, and four flagging rules | 11 | Code done 2026-10-23 |
+| 15 | Rerun C0 to C4 at 200 hospitals; report and lesson | 11 | Running |
+| 16 | Optional: Brier score and calibration of each arm's risk model among all eligible patients, with dropout | 12 | Not started |
+
+**Gate 3:** the six existing estimators reproduce the 22 October numbers exactly; BJ is stable in C2 if the dropout weight caused the breaks; BJ is biased in C4 while IPCW and AIPCW are not; the report says which weight check, if any, flags the broken hospitals.
+
 ## Output
 
 Reports in `reports/`, a slide deck, and this repository made public once the results have been checked.

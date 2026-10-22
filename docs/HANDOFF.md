@@ -2,6 +2,10 @@
 
 Updated 22 October 2026, 20:40.
 
+## 23 October 2026: in progress
+
+Steps 12 to 15 (Buckley-James, setting C4, weight checks, rerun) are in `docs/WORKPLAN.md` and `docs/LOG.md`. Code is committed (2b38cab). If the runs were cut off, restart each unfinished setting with `Rscript scripts/10_run_phase2.R <C0..C4> 200 3`; finished chunks are skipped. Then run `Rscript scripts/11_summarise_phase2.R`.
+
 ## State
 
 | Part | State |
