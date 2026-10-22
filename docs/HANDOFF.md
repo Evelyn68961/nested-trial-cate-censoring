@@ -10,7 +10,7 @@ Written 22 October 2026, 16:45, before the computer's scheduled shutdown at 17:3
 | Phase 1 main run: Super Learner, trial about 500 | **Done, 500 hospitals. Gate 1 passed.** `reports/phase1_results.md` |
 | Phase 1 run: Super Learner, trial about 125 | 50 of 500 hospitals |
 | Phase 2 code (dropout, effect over time) | Done, tested (7 tests) |
-| Phase 2 runs | **50 hospitals per setting done (C0 to C3), preliminary.** `reports/phase2_preliminary.md`. The dependent-dropout setting is too mild; strengthen it before the 200-hospital runs |
+| Phase 2 runs | Dependent dropout strengthened to D3 at 17:37 (LOG). 200-hospital runs started 17:37 in order C2, C3, C1, C0; check `results/phase2/*` for how far they got |
 | Lessons | 1 to 9 written; 10 (Phase 2 results) not yet |
 | Report for Phase 2 | Preliminary only: `reports/phase2_preliminary.md` |
 
@@ -21,7 +21,7 @@ All code, documents and finished result chunks are on GitHub. An autosave loop p
 1. Turn the computer on. Open the repository folder `nested-trial-cate-censoring`.
 2. Make sure the local copy is complete: `git pull`
 3. Check what finished: `ls results/phase2/*` (each chunk file = 25 hospitals).
-4. Phase 2 at 50 hospitals is finished. Next, per `reports/phase2_preliminary.md`: strengthen the dependent-dropout setting in `config/phase2.yaml` (compare candidates first; log it), move the old `results/phase2` to `results/archive/`, then run each setting with 200 hospitals. Each command continues from saved chunks and only adds missing ones:
+4. Resume the 200-hospital runs (D3 dropout is already in the config; the old mild-dropout C2/C3 results are in `results/archive/`). Each command continues from saved chunks and only adds missing ones:
 
 ```
 Rscript scripts/10_run_phase2.R C2 200 3
