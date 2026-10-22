@@ -1,0 +1,108 @@
+
+C2 dependent dropout: 200 hospitals; 30% of trial patients dropped out on average; median 21 s per hospital; commits 70d1a8f
+ estimator abs_bias_avg_over_t rmse_avg_over_t coverage_avg_over_t
+        CC               0.069           0.123                77.8
+        NE               0.029           0.092                90.8
+      IPCW               0.073           1.097                95.4
+     AIPCW               0.038           0.758                92.3
+    IPCW_t               0.022           0.243                95.3
+   AIPCW_t               0.024           0.158                91.6
+ abs_bias_at_5y coverage_at_5y median_bias_at_5y hospitals_off_by_0.5
+          0.093           68.1             0.091                    8
+          0.027           92.3             0.029                    6
+          0.116           97.3             0.035                   92
+          0.048           92.6             0.019                   50
+          0.022           97.3             0.033                   83
+          0.029           91.4             0.024                   27
+
+C3 dependent dropout, dropout model wrong: 200 hospitals; 30% of trial patients dropped out on average; median 21 s per hospital; commits 7975a50
+ estimator abs_bias_avg_over_t rmse_avg_over_t coverage_avg_over_t
+        CC               0.069           0.123                77.8
+        NE               0.029           0.092                90.8
+      IPCW               0.031           0.127                93.6
+     AIPCW               0.022           0.087                84.2
+    IPCW_t               0.031           0.127                93.6
+   AIPCW_t               0.022           0.087                84.2
+ abs_bias_at_5y coverage_at_5y median_bias_at_5y hospitals_off_by_0.5
+          0.093           68.1             0.091                    8
+          0.027           92.3             0.029                    6
+          0.037           94.6             0.030                   30
+          0.027           79.9             0.029                    4
+          0.037           94.6             0.030                   30
+          0.027           79.9             0.029                    4
+
+Time to benefit (years), delta = 0.05:
+ setting profile_v estimator true_ttb median_estimated share_within_half_year
+      C2         1        CC      3.5             4.50                   0.14
+      C2         1        NE      3.5             2.50                   0.23
+      C2         1      IPCW      3.5             2.50                   0.14
+      C2         1     AIPCW      3.5             3.00                   0.24
+      C2         1    IPCW_t      3.5             2.50                   0.14
+      C2         1   AIPCW_t      3.5             3.00                   0.22
+      C2         2        CC      2.0             3.00                   0.30
+      C2         2        NE      2.0             2.00                   0.60
+      C2         2      IPCW      2.0             2.00                   0.44
+      C2         2     AIPCW      2.0             2.00                   0.43
+      C2         2    IPCW_t      2.0             2.00                   0.44
+      C2         2   AIPCW_t      2.0             2.00                   0.44
+      C2         3        CC      2.5             4.00                   0.28
+      C2         3        NE      2.5             2.25                   0.51
+      C2         3      IPCW      2.5             3.00                   0.30
+      C2         3     AIPCW      2.5             2.50                   0.40
+      C2         3    IPCW_t      2.5             2.75                   0.30
+      C2         3   AIPCW_t      2.5             2.50                   0.41
+      C3         1        CC      3.5             4.50                   0.14
+      C3         1        NE      3.5             2.50                   0.23
+      C3         1      IPCW      3.5             2.50                   0.20
+      C3         1     AIPCW      3.5             3.50                   0.28
+      C3         1    IPCW_t      3.5             2.50                   0.20
+      C3         1   AIPCW_t      3.5             3.50                   0.28
+      C3         2        CC      2.0             3.00                   0.30
+      C3         2        NE      2.0             2.00                   0.60
+      C3         2      IPCW      2.0             2.00                   0.52
+      C3         2     AIPCW      2.0             2.50                   0.46
+      C3         2    IPCW_t      2.0             2.00                   0.52
+      C3         2   AIPCW_t      2.0             2.50                   0.46
+      C3         3        CC      2.5             4.00                   0.28
+      C3         3        NE      2.5             2.25                   0.51
+      C3         3      IPCW      2.5             2.00                   0.42
+      C3         3     AIPCW      2.5             3.00                   0.50
+      C3         3    IPCW_t      2.5             2.00                   0.42
+      C3         3   AIPCW_t      2.5             3.00                   0.50
+ share_never_reached
+                0.41
+                0.09
+                0.22
+                0.15
+                0.23
+                0.18
+                0.12
+                0.01
+                0.10
+                0.06
+                0.09
+                0.06
+                0.16
+                0.01
+                0.19
+                0.07
+                0.19
+                0.07
+                0.41
+                0.09
+                0.14
+                0.23
+                0.14
+                0.23
+                0.12
+                0.01
+                0.04
+                0.04
+                0.04
+                0.04
+                0.16
+                0.01
+                0.02
+                0.04
+                0.02
+                0.04
