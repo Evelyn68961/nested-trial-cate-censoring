@@ -40,7 +40,8 @@ participation_intercept <- function(cfg, n_mc = 1e6, seed = 1) {
 # One simulated hospital.
 # Returns a list:
 #   observed  what an analyst would have (a and y are NA outside the trial)
-#   hidden    each patient's true risks under both treatments; for checking only, never for estimating
+#   hidden    each patient's true chance of joining and true risks under both treatments;
+#             for checking only, never for estimating
 simulate_cohort <- function(cfg, seed, b0 = participation_intercept(cfg)) {
   set.seed(seed)
   n <- cfg$cohort_size
@@ -48,7 +49,8 @@ simulate_cohort <- function(cfg, seed, b0 = participation_intercept(cfg)) {
   v <- runif(n, 0, 4)
   male <- rbinom(n, 1, 0.5)
 
-  s <- rbinom(n, 1, expit(b0 + participation_lp(frailty, v, male, cfg)))
+  p_join <- expit(b0 + participation_lp(frailty, v, male, cfg))
+  s <- rbinom(n, 1, p_join)
   a <- ifelse(s == 1, rbinom(n, 1, cfg$p_treat), NA_integer_)
 
   p0 <- outcome_risk(0, frailty, v, male, cfg)
@@ -59,6 +61,6 @@ simulate_cohort <- function(cfg, seed, b0 = participation_intercept(cfg)) {
 
   list(
     observed = data.frame(id = seq_len(n), frailty, v, male, s, a, y),
-    hidden = data.frame(id = seq_len(n), p0, p1)
+    hidden = data.frame(id = seq_len(n), p_join, p0, p1)
   )
 }

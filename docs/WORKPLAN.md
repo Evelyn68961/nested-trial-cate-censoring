@@ -9,7 +9,7 @@ Full rationale: `nested_trial_CATE_censoring_plan.md` (kept outside this reposit
 | Step | Code | Lesson | State |
 |---|---|---|---|
 | 1 | Simulated hospitals; the two true effect curves | 01 The question | Done 2026-10-22 |
-| 2 | The three helper models, fitted with cross-fitting | 02 Helper models | |
+| 2 | The three helper models, fitted with cross-fitting | 02 Helper models | Done 2026-10-22 |
 | 3 | The pseudo-outcome (paper's equation 1) | 03 The pseudo-outcome | |
 | 4 | Smoothing: local linear regression, bandwidth, intervals | 04 Drawing the curve | |
 | 5 | Cross-check against Robertson et al. 2023 code on one dataset | — | |
