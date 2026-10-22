@@ -1,5 +1,6 @@
 .Rhistory
 .RData
 .Rproj.user/
-results/
 *.Rproj
+# Robertson et al. code has no licence: downloaded at run time, never committed
+results/reference/
