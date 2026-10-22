@@ -41,7 +41,7 @@ p <- ggplot(fit, aes(v)) +
   scale_colour_manual(values = c("Estimate (one hospital)" = "steelblue", "True curve" = "black")) +
   labs(x = "Profile value v", y = "Risk difference (treated minus untreated)", colour = NULL,
        title = "The paper's estimator in one simulated hospital",
-       subtitle = sprintf("Super Learner helpers, bandwidth %.1f chosen by cross-validation; band = pointwise 95%% interval", h)) +
+       subtitle = sprintf("Super Learner helpers; bandwidth %.1f (cross-validated); band: 95%% intervals", h)) +
   theme_minimal(base_size = 11) + theme(legend.position = "bottom")
 ggsave("reports/figures/04_one_hospital_curve.png", p, width = 7, height = 4.5, dpi = 150)
 cat("Figure written to reports/figures/04_one_hospital_curve.png\n")

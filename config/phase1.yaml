@@ -20,12 +20,14 @@ baseline:
   v: 0.3
   male: 0.3
 
-# How treatment changes the log-odds of the bad outcome (negative = benefit)
+# How treatment changes the log-odds of the bad outcome (negative = benefit).
+# Changed after the pilot (2026-10-22, see docs/LOG.md): the first values
+# (-0.3, -0.5, 0.15, 0.6) gave a curve too flat to tell the estimators apart.
 effect:
-  intercept: -0.3
-  v: -0.5
-  v_squared: 0.15          # makes the effect curve bend: largest benefit in the middle of v
-  frailty: 0.6             # frail patients benefit less
+  intercept: 1.0
+  v: -1.6
+  v_squared: 0.4           # makes the effect curve bend: benefit in the middle of v, harm at both ends
+  frailty: 1.0             # frail patients benefit less
 
 # Grid of profile values at which the effect curve is evaluated
 v_grid:

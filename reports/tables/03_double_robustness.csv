@@ -1,5 +1,5 @@
 "helpers","outcome_model_alone","with_correction","with_correction_mcse","with_correction_sd"
-"Both right",2e-04,-3e-04,0.0043,0.0603
-"Outcome model wrong",-0.0369,0.0032,0.0048,0.0685
-"Participation model wrong",2e-04,5e-04,0.0037,0.0526
-"Both wrong",-0.0369,-0.0392,0.0029,0.0417
+"Both right",0.0013,-4e-04,0.0041,0.0584
+"Outcome model wrong",-0.0691,0.0051,0.0049,0.0687
+"Participation model wrong",0.0013,0.0014,0.0035,0.0499
+"Both wrong",-0.0691,-0.072,0.003,0.0425
