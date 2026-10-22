@@ -262,3 +262,24 @@ With the old setting, a wrong dropout model cost only 0.015, less than the smoot
 **The price of D3.** About 8% of trial patients now have under a 5% chance of staying to year 5, and 4.5% under 1%. These patients get very large weights in IPCW and AIPCW (a practical positivity problem for dropout), so those methods will be noisier. This is realistic for strongly selective dropout and will be reported, not hidden.
 
 **Test change.** The AIPCW check with both helpers right missed by 0.011 against a fixed limit of 0.01 in a hospital of 600,000. Diagnosis: one patient's extreme weight gave this seed a Monte Carlo standard error of 0.012, so the miss was within one standard error. Two other seeds missed by 0.002, with standard errors of 0.003. Using 200 integration steps instead of 30 changed nothing. The AIPCW tests now use a limit of 3 Monte Carlo standard errors plus 0.002 instead of a fixed 0.01. All 12 Phase 2 tests pass.
+
+### 200-hospital Phase 2 runs, and weight truncation added
+
+**Runs** (17:37 to 18:44, D3 dropout, 200 hospitals per setting). Averages over the ten times:
+
+| Setting | CC | NE | IPCW | AIPCW |
+|---|---|---|---|---|
+| C0 no dropout | 0.022 | 0.022 | 0.022 | 0.022 |
+| C1 random (26% dropped) | 0.020 | **0.038** | 0.025 | 0.021 |
+| C2 dependent (30%) | 0.069 | 0.029 | 0.073, **RMSE 1.10** | 0.038, **RMSE 0.76** |
+| C3 dependent, dropout model wrong | 0.069 | 0.029 | 0.031 | 0.022 |
+
+(Integrated absolute bias; RMSE given only where it is abnormal.)
+
+**Diagnosis of the C2 blow-up.** With the right dropout model, the estimated chance of staying to 5 years reached 0.00006 in the worst hospital, and was below 0.034 in half of them. The weights (1 ÷ chance) then reach tens of thousands. At year 5, the curve missed the truth by more than 0.5 somewhere in 92 of 200 hospitals for IPCW and 50 of 200 for AIPCW, against 6 to 8 for CC and NE. Bias based on medians, which such outliers cannot drag, puts AIPCW best (0.019), then NE (0.029), IPCW (0.035) and CC (0.091). In C3 the wrong dropout model cannot produce small chances (lowest 0.30), so nothing blows up. This is the classic practical-positivity problem of weighting, and it is worse for the right dropout model than for the wrong one.
+
+**Two further points.**
+- NE does well in C2 and C3 (0.029), unlike in C1. Its errors in the two arms happen to cancel in this setting. This is a property of the setting, not a merit of the method; C1 shows it failing.
+- In C3, IPCW is only slightly worse than AIPCW (0.031 against 0.022 on average; 0.037 against 0.027 at year 5). The direction is as expected.
+
+**Change: weight truncation added as two extra estimators,** IPCW_t and AIPCW_t. The estimated chance of staying is never allowed below 0.05, so no weight exceeds 20. Truncation is the standard remedy, at the price of a little bias. The untruncated estimators are kept unchanged, so both are reported. The summary now also reports bias from medians and the number of hospitals whose curve misses by more than 0.5. The 200-hospital results without truncation moved to `results/archive/phase2_200_before_truncation/`, and their summary to `results/archive/summary_phase2_no_truncation.txt`. All four settings are rerun; with the same seeds, the untruncated estimators reproduce exactly.

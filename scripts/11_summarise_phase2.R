@@ -11,7 +11,7 @@ times <- unlist(cfg$times)
 truth <- target_effect_grid(v_grid, times, cfg)
 profiles <- c(1, 2, 3)
 deltas <- c(0.05, 0.10)
-estimators <- c("CC", "NE", "IPCW", "AIPCW")
+estimators <- c("CC", "NE", "IPCW", "AIPCW", "IPCW_t", "AIPCW_t")
 labels <- c(C0 = "C0 no dropout", C1 = "C1 random dropout", C2 = "C2 dependent dropout",
             C3 = "C3 dependent dropout, dropout model wrong")
 
@@ -36,12 +36,18 @@ for (setting in settings) {
     data.frame(estimator = x$estimator[1], t = x$t[1], v = x$v[1], truth = x$truth[1],
                mean_estimate = mean(x$estimate), bias = mean(x$estimate - x$truth),
                rmse = sqrt(mean((x$estimate - x$truth)^2)),
-               coverage = mean(x$lower <= x$truth & x$truth <= x$upper))
+               coverage = mean(x$lower <= x$truth & x$truth <= x$upper),
+               median_bias = median(x$estimate - x$truth))
   }))
+  # Hospitals whose curve misses the truth by more than 0.5 somewhere at 5 years (exploding weights)
+  at5 <- curves[curves$t == 5, ]
+  worst <- aggregate(cbind(err = abs(at5$estimate - at5$truth)) ~ seed + estimator, at5, max)
+  blowups <- tapply(worst$err > 0.5, worst$estimator, sum)
   summ <- do.call(rbind, lapply(split(per, list(per$estimator, per$t), drop = TRUE), function(x) {
     data.frame(setting = setting, estimator = x$estimator[1], t = x$t[1],
                integrated_abs_bias = mean(abs(x$bias)), integrated_rmse = mean(x$rmse),
-               integrated_coverage = 100 * mean(x$coverage))
+               integrated_coverage = 100 * mean(x$coverage),
+               integrated_abs_median_bias = mean(abs(x$median_bias)))
   }))
   by_time[[setting]] <- summ
 
@@ -51,7 +57,9 @@ for (setting in settings) {
                rmse_avg_over_t = round(mean(x$integrated_rmse), 3),
                coverage_avg_over_t = round(mean(x$integrated_coverage), 1),
                abs_bias_at_5y = round(x$integrated_abs_bias[x$t == 5], 3),
-               coverage_at_5y = round(x$integrated_coverage[x$t == 5], 1))
+               coverage_at_5y = round(x$integrated_coverage[x$t == 5], 1),
+               median_bias_at_5y = round(x$integrated_abs_median_bias[x$t == 5], 3),
+               hospitals_off_by_0.5 = as.integer(blowups[x$estimator[1]]))
   }))
   print(overall[match(estimators, overall$estimator), ], row.names = FALSE)
 
@@ -97,7 +105,7 @@ for (setting in settings) {
 }
 if (length(by_time)) {
   out <- do.call(rbind, by_time)
-  out[, 4:6] <- round(out[, 4:6], 3)
+  out[, 4:7] <- round(out[, 4:7], 3)
   write.csv(out, "reports/tables/10_phase2_by_time.csv", row.names = FALSE)
 }
 if (length(ttb_rows)) {

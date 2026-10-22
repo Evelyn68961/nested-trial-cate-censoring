@@ -9,6 +9,10 @@
 #   AIPCW  augmented IPCW: as IPCW, plus a term for what dropouts would likely have done after
 #          leaving, taken from a Weibull outcome model; the outcome model is that Weibull model.
 #          Correct if either the dropout model or the Weibull outcome model is right.
+#   IPCW_t, AIPCW_t  the same with truncated weights: the estimated chance of still being
+#          followed is never allowed below g_floor (0.05), so no patient's weight exceeds 20.
+#          Added after the 200-hospital runs, where strong dependent dropout gave some
+#          patients chances of staying near 0.0001 and weights above 10,000 (docs/LOG.md).
 #
 # Needs R/generate.R, R/nuisance.R, R/pseudo.R, R/smooth.R, R/phase2_generate.R.
 
@@ -18,14 +22,16 @@ weibull_cumhaz <- function(u, lp, scale) (u / exp(lp))^(1 / scale)
 weibull_surv <- function(u, lp, scale) exp(-weibull_cumhaz(u, lp, scale))
 
 # Cross-fitted helpers for IPCW and AIPCW. Returns per-patient quantities for every time.
-fit_phase2_helpers <- function(d, times, censor_formula, follow_up_end, n_folds = 5, seed = 1) {
+fit_phase2_helpers <- function(d, times, censor_formula, follow_up_end, n_folds = 5, seed = 1,
+                               g_floor = 0.05) {
   folds <- make_folds(d$s, n_folds, seed)
   n <- nrow(d)
+  empty <- function() matrix(NA_real_, n, length(times))
   out <- list(p_join = rep(NA_real_, n), p_treat = rep(NA_real_, n),
               cens_lp = rep(NA_real_, n), cens_scale = rep(NA_real_, n),
               lp1 = rep(NA_real_, n), scale1 = rep(NA_real_, n),
               lp0 = rep(NA_real_, n), scale0 = rep(NA_real_, n),
-              ipcw_g1 = matrix(NA_real_, n, length(times)), ipcw_g0 = matrix(NA_real_, n, length(times)))
+              ipcw_g1 = empty(), ipcw_g0 = empty(), ipcw_g1_t = empty(), ipcw_g0_t = empty())
   d$dropped <- as.integer(d$s == 1 & d$event == 0 & d$time < follow_up_end)
   any_dropout <- sum(d$dropped, na.rm = TRUE) > 0
   out_formula <- ~ frailty + v + I(v^2) + male
@@ -72,10 +78,14 @@ fit_phase2_helpers <- function(d, times, censor_formula, follow_up_end, n_folds 
       for (j in seq_along(times)) {
         st <- status_at(tr[tra, ], times[j])
         g_end <- weibull_surv(pmin(tr$time[tra], times[j]), tr_g_lp[tra], tr_g_scale)
-        dat <- cbind(tr[tra, c("frailty", "v", "male")], y = st$y, w = 1 / g_end)[st$known, ]
-        lfit <- suppressWarnings(glm(update(out_formula, y ~ .), quasibinomial(), data = dat, weights = w))
-        pred <- predict(lfit, newd, type = "response")
-        if (arm == 1) out$ipcw_g1[test, j] <- pred else out$ipcw_g0[test, j] <- pred
+        for (truncated in c(FALSE, TRUE)) {
+          g_use <- if (truncated) pmax(g_end, g_floor) else g_end
+          dat <- cbind(tr[tra, c("frailty", "v", "male")], y = st$y, w = 1 / g_use)[st$known, ]
+          lfit <- suppressWarnings(glm(update(out_formula, y ~ .), quasibinomial(), data = dat, weights = w))
+          pred <- predict(lfit, newd, type = "response")
+          key <- paste0("ipcw_g", arm, if (truncated) "_t" else "")
+          out[[key]][test, j] <- pred
+        }
       }
     }
   }
@@ -83,14 +93,14 @@ fit_phase2_helpers <- function(d, times, censor_formula, follow_up_end, n_folds 
 }
 
 # Augmented status at time t for trial patients (AIPCW). For others the value is unused.
-augmented_status <- function(d, t, h, n_steps = 30) {
+augmented_status <- function(d, t, h, n_steps = 30, g_floor = 0) {
   st <- status_at(d, t)
   trial <- which(d$s == 1)
   res <- rep(0, nrow(d))
   a <- d$a[trial]
   lp <- ifelse(a == 1, h$lp1[trial], h$lp0[trial])
   sc <- ifelse(a == 1, h$scale1[trial], h$scale0[trial])
-  G <- function(u) weibull_surv(u, h$cens_lp[trial], h$cens_scale[trial])
+  G <- function(u) pmax(weibull_surv(u, h$cens_lp[trial], h$cens_scale[trial]), g_floor)
   H <- function(u) weibull_cumhaz(u, lp, sc)
   # Chance of the event by t, given event-free at u; written with cumulative hazards so that
   # very high-risk patients do not give 0 / 0
@@ -120,11 +130,12 @@ pseudo_from_status <- function(d, ystar, p_join, p_treat, g1, g0) {
 }
 
 run_phase2_estimators <- function(d, cfg, censor_formula, seed, v_grid,
-                                  bandwidths = c(0.4, 0.6, 0.8, 1.0, 1.3, 1.6, 2.0)) {
+                                  bandwidths = c(0.4, 0.6, 0.8, 1.0, 1.3, 1.6, 2.0),
+                                  g_floor = 0.05) {
   times <- unlist(cfg$times)
-  h <- fit_phase2_helpers(d, times, censor_formula, cfg$follow_up_end, seed = seed)
+  h <- fit_phase2_helpers(d, times, censor_formula, cfg$follow_up_end, seed = seed, g_floor = g_floor)
 
-  xi <- list(CC = list(), NE = list(), IPCW = list(), AIPCW = list())
+  xi <- list(CC = list(), NE = list(), IPCW = list(), AIPCW = list(), IPCW_t = list(), AIPCW_t = list())
   keep_cc <- list()
   for (j in seq_along(times)) {
     t <- times[j]
@@ -151,6 +162,12 @@ run_phase2_estimators <- function(d, cfg, censor_formula, seed, v_grid,
     g1 <- 1 - weibull_surv(t, h$lp1, h$scale1)
     g0 <- 1 - weibull_surv(t, h$lp0, h$scale0)
     xi$AIPCW[[j]] <- pseudo_from_status(d, augmented_status(d, t, h), h$p_join, h$p_treat, g1, g0)
+
+    # Truncated versions: chance of staying never below g_floor
+    ystar_t <- ifelse(d$s == 1, st$known * st$y / pmax(g_end, g_floor), 0)
+    xi$IPCW_t[[j]] <- pseudo_from_status(d, ystar_t, h$p_join, h$p_treat, h$ipcw_g1_t[, j], h$ipcw_g0_t[, j])
+    xi$AIPCW_t[[j]] <- pseudo_from_status(d, augmented_status(d, t, h, g_floor = g_floor),
+                                          h$p_join, h$p_treat, g1, g0)
   }
 
   # One bandwidth per estimator, chosen by cross-validation at the last time, used at every time

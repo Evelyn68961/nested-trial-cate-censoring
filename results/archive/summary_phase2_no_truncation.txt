@@ -1,0 +1,148 @@
+
+C0 no dropout: 200 hospitals; 0% of trial patients dropped out on average; median 15 s per hospital; commits e14f16e,553c245
+ estimator abs_bias_avg_over_t rmse_avg_over_t coverage_avg_over_t
+        CC               0.022           0.088                90.3
+        NE               0.022           0.088                90.3
+      IPCW               0.022           0.088                90.3
+     AIPCW               0.022           0.088                91.0
+ abs_bias_at_5y coverage_at_5y
+          0.024           89.2
+          0.024           89.2
+          0.024           89.2
+          0.024           89.2
+
+C1 random dropout: 200 hospitals; 26% of trial patients dropped out on average; median 14 s per hospital; commits 0d9a0a8,926d81d
+ estimator abs_bias_avg_over_t rmse_avg_over_t coverage_avg_over_t
+        CC               0.020           0.098                90.9
+        NE               0.038           0.100                86.4
+      IPCW               0.025           0.102                91.1
+     AIPCW               0.021           0.093                91.4
+ abs_bias_at_5y coverage_at_5y
+          0.020           90.2
+          0.064           78.8
+          0.026           92.5
+          0.022           90.7
+
+C2 dependent dropout: 200 hospitals; 30% of trial patients dropped out on average; median 15 s per hospital; commits d35c5f6
+ estimator abs_bias_avg_over_t rmse_avg_over_t coverage_avg_over_t
+        CC               0.069           0.123                77.8
+        NE               0.029           0.092                90.8
+      IPCW               0.073           1.097                95.4
+     AIPCW               0.038           0.758                92.3
+ abs_bias_at_5y coverage_at_5y
+          0.093           68.1
+          0.027           92.3
+          0.116           97.3
+          0.048           92.6
+
+C3 dependent dropout, dropout model wrong: 200 hospitals; 30% of trial patients dropped out on average; median 15 s per hospital; commits e42e744
+ estimator abs_bias_avg_over_t rmse_avg_over_t coverage_avg_over_t
+        CC               0.069           0.123                77.8
+        NE               0.029           0.092                90.8
+      IPCW               0.031           0.127                93.6
+     AIPCW               0.022           0.087                84.2
+ abs_bias_at_5y coverage_at_5y
+          0.093           68.1
+          0.027           92.3
+          0.037           94.6
+          0.027           79.9
+
+Time to benefit (years), delta = 0.05:
+ setting profile_v estimator true_ttb median_estimated share_within_half_year
+      C0         1        CC      3.5             3.50                   0.32
+      C0         1        NE      3.5             3.50                   0.32
+      C0         1      IPCW      3.5             3.50                   0.32
+      C0         1     AIPCW      3.5             3.00                   0.32
+      C0         2        CC      2.0             2.50                   0.54
+      C0         2        NE      2.0             2.50                   0.54
+      C0         2      IPCW      2.0             2.50                   0.54
+      C0         2     AIPCW      2.0             2.50                   0.54
+      C0         3        CC      2.5             3.00                   0.44
+      C0         3        NE      2.5             3.00                   0.44
+      C0         3      IPCW      2.5             3.00                   0.44
+      C0         3     AIPCW      2.5             3.00                   0.46
+      C1         1        CC      3.5             3.00                   0.32
+      C1         1        NE      3.5             3.50                   0.20
+      C1         1      IPCW      3.5             3.00                   0.25
+      C1         1     AIPCW      3.5             3.00                   0.28
+      C1         2        CC      2.0             2.50                   0.50
+      C1         2        NE      2.0             2.50                   0.42
+      C1         2      IPCW      2.0             2.50                   0.48
+      C1         2     AIPCW      2.0             2.50                   0.49
+      C1         3        CC      2.5             3.00                   0.45
+      C1         3        NE      2.5             3.50                   0.36
+      C1         3      IPCW      2.5             3.00                   0.46
+      C1         3     AIPCW      2.5             3.00                   0.47
+      C2         1        CC      3.5             4.50                   0.14
+      C2         1        NE      3.5             2.50                   0.23
+      C2         1      IPCW      3.5             2.50                   0.14
+      C2         1     AIPCW      3.5             3.00                   0.24
+      C2         2        CC      2.0             3.00                   0.30
+      C2         2        NE      2.0             2.00                   0.60
+      C2         2      IPCW      2.0             2.00                   0.44
+      C2         2     AIPCW      2.0             2.00                   0.43
+      C2         3        CC      2.5             4.00                   0.28
+      C2         3        NE      2.5             2.25                   0.51
+      C2         3      IPCW      2.5             3.00                   0.30
+      C2         3     AIPCW      2.5             2.50                   0.40
+      C3         1        CC      3.5             4.50                   0.14
+      C3         1        NE      3.5             2.50                   0.23
+      C3         1      IPCW      3.5             2.50                   0.20
+      C3         1     AIPCW      3.5             3.50                   0.28
+      C3         2        CC      2.0             3.00                   0.30
+      C3         2        NE      2.0             2.00                   0.60
+      C3         2      IPCW      2.0             2.00                   0.52
+      C3         2     AIPCW      2.0             2.50                   0.46
+      C3         3        CC      2.5             4.00                   0.28
+      C3         3        NE      2.5             2.25                   0.51
+      C3         3      IPCW      2.5             2.00                   0.42
+      C3         3     AIPCW      2.5             3.00                   0.50
+ share_never_reached
+                0.14
+                0.14
+                0.14
+                0.16
+                0.01
+                0.01
+                0.01
+                0.01
+                0.03
+                0.03
+                0.03
+                0.02
+                0.15
+                0.30
+                0.18
+                0.14
+                0.01
+                0.07
+                0.01
+                0.01
+                0.02
+                0.10
+                0.04
+                0.01
+                0.41
+                0.09
+                0.22
+                0.15
+                0.12
+                0.01
+                0.10
+                0.06
+                0.16
+                0.01
+                0.19
+                0.07
+                0.41
+                0.09
+                0.14
+                0.23
+                0.12
+                0.01
+                0.04
+                0.04
+                0.16
+                0.01
+                0.02
+                0.04
