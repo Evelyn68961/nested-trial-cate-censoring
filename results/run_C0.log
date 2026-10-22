@@ -20,3 +20,5 @@ The following object is masked from 'package:future':
     cluster
 
 16:57  C0 chunk 1 of 2 done (2.3 min)
+17:00  C0 chunk 2 of 2 done (2.3 min)
+All chunks done.

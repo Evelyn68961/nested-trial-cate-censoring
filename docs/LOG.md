@@ -232,3 +232,15 @@ Rscript scripts/11_summarise_phase2.R
 Raw results are in `results/` on this computer's D: drive (not on GitHub). If the next session runs on another computer, either copy `results/` across, or rerun from scratch: the same seeds give the same hospitals.
 
 Also checked before restarting: six R processes still running were started at 12:03, before this work began. They are VS Code's R language servers, not simulation workers, and were left alone.
+
+### Phase 2 first runs, before the shutdown
+
+Ran 16:41 to 17:00: C2, C3, C1, C0, 50 hospitals each, about 15 seconds per hospital. Order chosen so the settings that matter most (dependent dropout) ran first. The results files record different commits per setting (2053465, eaae050, 0d9a0a8, e14f16e). These differ only in results and documents committed by the autosave loop; the R code and config are the same in all four.
+
+**Also found:** the Phase 1 run I thought I had stopped at about 15:00 had kept running and finished all 500 hospitals, and started the 5% trial-share setting (50 hospitals done). Duplicate work would have been harmless, because every hospital has a fixed seed. I had also not checked the clock between 14:53 and 16:40 and assumed much less time had passed.
+
+**Results** (preliminary; `reports/phase2_preliminary.md`). No dropout: all four methods agree. Random dropout: counting dropouts as event-free fails (bias 0.061 at year 5, coverage 79%). Dependent dropout: AIPCW has the smallest error at year 5 (0.025 against 0.033 to 0.038), but within about one Monte Carlo error. Wrong dropout model (C3): IPCW did not fail (0.023).
+
+**Diagnosis:** the dependent-dropout setting is too mild to expose a wrong dropout model. The same problem as the first Phase 1 pilot. Next: a stronger setting chosen by comparing candidates first, then 200 hospitals per setting.
+
+**Saving progress:** `results/` is now committed to git (2.7 MB at the time), except `results/reference/` (the unlicensed download). An autosave loop pushed new results every 4 minutes until 17:28. `docs/HANDOFF.md` lists the state and the commands to resume.

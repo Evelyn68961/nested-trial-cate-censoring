@@ -10,8 +10,8 @@ Written 22 October 2026, 16:45, before the computer's scheduled shutdown at 17:3
 | Phase 1 main run: Super Learner, trial about 500 | **Done, 500 hospitals. Gate 1 passed.** `reports/phase1_results.md` |
 | Phase 1 run: Super Learner, trial about 125 | 50 of 500 hospitals |
 | Phase 2 code (dropout, effect over time) | Done, tested (7 tests) |
-| Phase 2 runs | Started 16:41: C2, then C3, C1, C0, 50 hospitals each. Whatever finished before shutdown is in `results/phase2/` |
-| Lessons | 1 to 4 and 7 to 9 written; 5 and 6 (results) not yet; 10 (Phase 2 results) not yet |
+| Phase 2 runs | **50 hospitals per setting done (C0 to C3), preliminary.** `reports/phase2_preliminary.md`. The dependent-dropout setting is too mild; strengthen it before the 200-hospital runs |
+| Lessons | 1 to 9 written; 10 (Phase 2 results) not yet |
 | Report for Phase 2 | Not yet written |
 
 All code, documents and finished result chunks are on GitHub. An autosave loop pushed new chunks every 4 minutes until 17:28. A chunk that was being written at shutdown is lost, not half-saved, unless the shutdown hit the moment of writing. See "If a chunk file is damaged" below.
