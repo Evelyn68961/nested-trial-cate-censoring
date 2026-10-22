@@ -12,7 +12,7 @@ Written 22 October 2026, 16:45, before the computer's scheduled shutdown at 17:3
 | Phase 2 code (dropout, effect over time) | Done, tested (7 tests) |
 | Phase 2 runs | **50 hospitals per setting done (C0 to C3), preliminary.** `reports/phase2_preliminary.md`. The dependent-dropout setting is too mild; strengthen it before the 200-hospital runs |
 | Lessons | 1 to 9 written; 10 (Phase 2 results) not yet |
-| Report for Phase 2 | Not yet written |
+| Report for Phase 2 | Preliminary only: `reports/phase2_preliminary.md` |
 
 All code, documents and finished result chunks are on GitHub. An autosave loop pushed new chunks every 4 minutes until 17:28. A chunk that was being written at shutdown is lost, not half-saved, unless the shutdown hit the moment of writing. See "If a chunk file is damaged" below.
 
@@ -21,17 +21,17 @@ All code, documents and finished result chunks are on GitHub. An autosave loop p
 1. Turn the computer on. Open the repository folder `nested-trial-cate-censoring`.
 2. Make sure the local copy is complete: `git pull`
 3. Check what finished: `ls results/phase2/*` (each chunk file = 25 hospitals).
-4. Resume the runs. Each command continues from the saved chunks and only adds missing ones:
+4. Phase 2 at 50 hospitals is finished. Next, per `reports/phase2_preliminary.md`: strengthen the dependent-dropout setting in `config/phase2.yaml` (compare candidates first; log it), move the old `results/phase2` to `results/archive/`, then run each setting with 200 hospitals. Each command continues from saved chunks and only adds missing ones:
 
 ```
-Rscript scripts/10_run_phase2.R C2 50 3
-Rscript scripts/10_run_phase2.R C3 50 3
-Rscript scripts/10_run_phase2.R C1 50 3
-Rscript scripts/10_run_phase2.R C0 50 3
+Rscript scripts/10_run_phase2.R C2 200 3
+Rscript scripts/10_run_phase2.R C3 200 3
+Rscript scripts/10_run_phase2.R C1 200 3
+Rscript scripts/10_run_phase2.R C0 200 3
 Rscript scripts/11_summarise_phase2.R
 ```
 
-At about 10 minutes per setting, this takes under an hour. After that, raise 50 to 200 for firmer Phase 2 numbers (about 40 minutes per setting).
+At about 15 seconds per hospital with 3 workers, 200 hospitals take about 17 minutes per setting.
 
 5. Then, when the computer is free for longer:
 
@@ -47,7 +47,7 @@ If a summary script stops with an error reading a `.rds` file, that chunk was be
 ## Still to write after the runs
 
 - `reports/phase2_results.md`: bias and coverage for CC, NE, IPCW and AIPCW under C0 to C3; time to benefit by profile.
-- Lessons 5 (why the shortcuts fail), 6 (judging a method), 10 (Phase 2 results).
+- Lesson 10 (Phase 2 results).
 - An 8–10 slide deck, once Phase 2 holds up (Gate 2).
 - The README section "How this was built": your own account of your role.
 
