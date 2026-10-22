@@ -33,6 +33,17 @@ trial_effect <- function(v_grid, cfg, b0) {
   })
 }
 
+# Chance of joining the trial among patients with profile value v (averaged over frailty and sex).
+# Proportional to how densely trial patients are spread along v.
+join_given_v <- function(v_grid, cfg, b0) {
+  sapply(v_grid, function(v) {
+    sum(sapply(0:1, function(male) {
+      0.5 * integrate(function(f) dnorm(f) * expit(b0 + participation_lp(f, v, male, cfg)),
+                      -Inf, Inf, rel.tol = 1e-10)$value
+    }))
+  })
+}
+
 make_v_grid <- function(cfg) {
   seq(cfg$v_grid$from, cfg$v_grid$to, length.out = cfg$v_grid$length)
 }
