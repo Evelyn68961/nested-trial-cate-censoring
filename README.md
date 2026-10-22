@@ -2,7 +2,7 @@
 
 A simulation study in R. It rebuilds the estimator of Wen, Dahabreh and Chiu, *Generalizing conditional average treatment effects from nested randomized trials to all trial-eligible individuals* (Statistics in Medicine 2026; arXiv:2605.14952). It then asks what happens when trial patients drop out before the end of follow-up, a case the paper sets aside ("no dropout in the trial").
 
-**Status:** in progress. Steps 1 and 2 of 11 done. No estimator results yet.
+**Status:** in progress. Steps 1 to 3 of 11 done. No estimator results yet.
 
 ## The question
 
@@ -17,6 +17,7 @@ From the repository root, with R 4.4 and the packages `yaml`, `ggplot2`, `testth
 ```
 Rscript scripts/01_check_generator.R
 Rscript scripts/02_check_helpers.R
+Rscript scripts/03_check_pseudo_outcome.R
 Rscript -e 'testthat::test_dir("tests/testthat")'
 ```
 

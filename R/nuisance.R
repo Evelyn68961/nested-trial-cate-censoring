@@ -44,7 +44,20 @@ fit_binary <- function(y, x, newx, learner, glm_formula) {
   stop("learner must be 'glm' or 'sl'")
 }
 
-fit_nuisance <- function(d, learner = "glm", n_folds = 5, seed = 1) {
+# Formulas used when learner = "glm". The defaults contain the right terms.
+# Lesson 3 replaces one or both with a wrong formula on purpose:
+#   participation = y ~ 1                  (everyone given the same chance of joining)
+#   outcome       = y ~ v + I(v^2) + male  (frailty left out)
+right_formulas <- list(
+  participation = y ~ frailty + v + male,
+  treatment = y ~ frailty + v + male,
+  outcome = y ~ frailty + v + I(v^2) + male
+)
+
+# trial_only = TRUE: d holds trial patients only; no participation model is fitted and
+# p_join is set to 1, so the pseudo-outcome targets the trial population (estimator T).
+fit_nuisance <- function(d, learner = "glm", n_folds = 5, seed = 1,
+                         formulas = right_formulas, trial_only = FALSE) {
   folds <- make_folds(d$s, n_folds, seed)
   out <- data.frame(id = d$id, fold = folds,
                     p_join = NA_real_, p_treat = NA_real_, g1 = NA_real_, g0 = NA_real_)
@@ -56,17 +69,21 @@ fit_nuisance <- function(d, learner = "glm", n_folds = 5, seed = 1) {
     trial <- train & d$s == 1
     newx <- x_all[test, , drop = FALSE]
 
-    out$p_join[test] <- fit_binary(d$s[train], x_all[train, , drop = FALSE], newx, learner,
-                                   y ~ frailty + v + male)
+    if (trial_only) {
+      out$p_join[test] <- 1
+    } else {
+      out$p_join[test] <- fit_binary(d$s[train], x_all[train, , drop = FALSE], newx, learner,
+                                     formulas$participation)
+    }
 
     # Treatment was randomized, so a simple logistic model is enough here whatever the learner
     out$p_treat[test] <- fit_binary(d$a[trial], x_all[trial, , drop = FALSE], newx, "glm",
-                                    y ~ frailty + v + male)
+                                    formulas$treatment)
 
     for (arm in 0:1) {
       in_arm <- trial & d$a == arm
       pred <- fit_binary(d$y[in_arm], x_all[in_arm, , drop = FALSE], newx, learner,
-                         y ~ frailty + v + I(v^2) + male)
+                         formulas$outcome)
       if (arm == 1) out$g1[test] <- pred else out$g0[test] <- pred
     }
   }
