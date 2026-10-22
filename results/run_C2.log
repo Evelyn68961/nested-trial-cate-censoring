@@ -1,0 +1,30 @@
+
+Attaching package: 'survival'
+
+The following object is masked from 'package:future':
+
+    cluster
+
+
+Attaching package: 'survival'
+
+The following object is masked from 'package:future':
+
+    cluster
+
+
+Attaching package: 'survival'
+
+The following object is masked from 'package:future':
+
+    cluster
+
+18:52  C2 chunk 1 of 8 done (3.3 min)
+18:55  C2 chunk 2 of 8 done (3.2 min)
+18:58  C2 chunk 3 of 8 done (3.2 min)
+19:01  C2 chunk 4 of 8 done (3.1 min)
+19:04  C2 chunk 5 of 8 done (3.1 min)
+19:08  C2 chunk 6 of 8 done (3.5 min)
+19:12  C2 chunk 7 of 8 done (3.7 min)
+19:15  C2 chunk 8 of 8 done (3.7 min)
+All chunks done.
