@@ -96,3 +96,55 @@ The correction's price: standard deviation across hospitals 0.060, against 0.052
 - Warnings inside a hospital's fit are suppressed in the runner (mostly Super Learner learners failing on small arms); failures show up as missing estimates, which the summary counts.
 - **Scoring** as in the paper's Table 1: bias, RMSE and coverage at each grid value, then averaged over the 37 values ("integrated").
 - **Plan:** pilot of 50 hospitals with `glm` helpers, then 500 hospitals each for `sl` with 20% and 5% trial shares (about 500 and 125 trial patients).
+
+### First pilot, and a change to the design (commit c6a650d)
+
+**First pilot:** 50 hospitals, logistic-regression helpers, original effect settings. It ran cleanly (5 minutes, no missing estimates), but could not tell the estimators apart:
+
+| Estimator | Integrated absolute bias | Integrated RMSE | Coverage |
+|---|---|---|---|
+| P (paper) | 0.023 | 0.098 | 94.3% |
+| L (straight line) | 0.029 | 0.082 | 94.3% |
+| T (trial only) | 0.029 | 0.071 | 92.6% of the target curve |
+| G (outcome model alone) | 0.015 | 0.070 | — |
+
+**Why:** the true curve only ran from −0.12 to −0.02. The trial-to-target gap (about 0.036 on average) and the straight line's misfit were small against the noise of one hospital. The paper's own curve runs from about +0.4 to −0.7.
+
+**Change:** treatment-effect coefficients from (intercept −0.3, v −0.5, v² 0.15, frailty 0.6) to (1.0, −1.6, 0.4, 1.0). Three candidate designs were compared on their exact curves before choosing:
+
+| Design | Target curve range | Mean trial-to-target gap | Largest straight-line misfit |
+|---|---|---|---|
+| Original | −0.120 to −0.017 | 0.039 | 0.062 |
+| A (chosen) | −0.086 to +0.158 | 0.072 | 0.138 |
+| B | −0.095 to +0.128 | 0.060 | 0.129 |
+
+A was chosen because it separates the estimators most. Its curve also changes sign: the drug harms at both ends of v and helps in the middle, so the question "for whom does it help?" has a real answer. Steps 1 to 5 were rerun: all 22 tests pass, and the reference check still matches to 10⁻¹⁴. Lessons 1 to 3 were updated to the new numbers (commit a9a8cd8). The old pilot's results are kept in `results/archive/`.
+
+### Second pilot, and the bandwidth question
+
+**Second pilot:** 100 hospitals, logistic-regression helpers, new design:
+
+| Estimator | Integrated absolute bias | Integrated RMSE | Coverage |
+|---|---|---|---|
+| P (paper) | 0.021 | 0.104 | 91.4% of θ(v); 93.0% of θ\*(v) |
+| L (straight line) | 0.060 | 0.098 | 80.4% |
+| T (trial only) | 0.060 | 0.097 | 83.6% of the target curve; 90.6% of its own trial curve |
+| G (outcome model alone) | 0.007 | 0.075 | — |
+
+The shortcuts now fail as they should. P's numbers are close to the paper's Table 1 for the same sizes (integrated absolute bias 0.020, coverage 92%).
+
+G does best here because its outcome model has exactly the right terms. That is the point of running Super Learner next: in real data nobody hands you the right terms.
+
+**P's bias has a pattern:** too high in the middle of v (about +0.03), too low at the ends (about −0.02). That is what over-smoothing does. In 48 of 100 hospitals, cross-validation picked the largest allowed bandwidth, 2.0.
+
+**Check:** is the cap of 2.0 (my choice, not the paper's) causing this? 60 hospitals were rerun with bandwidths allowed up to 4.0.
+
+- Cross-validation's choices spread over the whole range (10 of 60 at the new cap of 4.0).
+- The average cross-validation score is almost flat: the best and worst bandwidths differ by under 0.1%. The pseudo-outcomes are so noisy that cross-validation cannot tell bandwidths apart.
+- Bias and RMSE barely changed: 0.022 and 0.105 with the wider range, against 0.020 and 0.103 with the cap at 2.0.
+
+**Decision:** keep the range 0.3 to 2.0. The over-smoothing is a property of cross-validation on noisy pseudo-outcomes, not of the cap. The paper's discussion points the same way: it names bias correction and undersmoothing as future work, because coverage of the exact curve suffers.
+
+### Main runs started
+
+Super Learner helpers, 500 hospitals each: trial share 20% (about 500 trial patients) and 5% (about 125). Commit a9a8cd8. While they run, no file they use (`R/` files and `config/phase1.yaml`) is edited; Phase 2 code goes in new files.

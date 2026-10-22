@@ -33,13 +33,17 @@ The bandwidth is chosen by **leave-one-out cross-validation**. For each candidat
 
 Each estimate gets a 95% interval from the paper's "sandwich" formula. It measures how much the pseudo-outcomes scatter around the line inside the window. More scatter, or fewer patients in the window, gives a wider interval.
 
-One subtlety the paper points out: the interval is centred on a slightly smoothed version of the true curve, not the exact curve. Smoothing always flattens peaks and valleys a little. With a small bandwidth the difference is tiny. In our hospital the true curve at v = 2 is −0.120 and its smoothed version −0.119.
+One subtlety the paper points out: the interval is centred on a smoothed version of the true curve, not the exact curve. Smoothing always flattens peaks and valleys. With a small bandwidth the difference is tiny; with a large one it is not. In our hospital the bandwidth was 2.0, half the whole range of v. At v = 2 the true curve is −0.085, but its smoothed version is only −0.032.
 
 ## What one hospital looks like
 
-`reports/figures/04_one_hospital_curve.png` shows one hospital. The estimated curve wanders far from the true one. At v = 0.2 it says +0.72 when the truth is −0.04. Yet the intervals are wide enough that 35 of the 37 contain the truth.
+`reports/figures/04_one_hospital_curve.png` shows one hospital. The estimated curve is much flatter than the true one: at v = 2 it says +0.025 when the truth is −0.085. The intervals are wide, and all 37 contain the truth.
 
 This is not a fault in the code. With 500 trial patients, some carrying weights above 100, one hospital simply cannot pin down a profile-specific curve. The paper reports the same level of error for the same sizes. Whether the method is right on average is answered by running hundreds of hospitals (step 7).
+
+## Why the bandwidth is often large
+
+The pilot runs found that cross-validation often picks the widest window allowed. The reason: the pseudo-outcomes are so noisy (some above 50) that every bandwidth predicts the hidden patient about equally badly. The cross-validation scores of the best and worst bandwidths differed by less than 0.1%. When the scores are that flat, the choice is close to arbitrary and leans wide, and wide windows flatten the curve. This shows up later as a small but systematic error: too high where the curve dips, too low where it rises. The paper names this as a limitation and future work.
 
 ## Step 5: checking against someone else's code
 
