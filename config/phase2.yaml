@@ -31,7 +31,8 @@ follow_up_end: 5           # years; everyone still event-free at 5 years is cens
 censoring:
   none:      {base_rate: 0,    frailty: 0,   treated: 0}
   random:    {base_rate: 0.08, frailty: 0,   treated: 0}
-  dependent: {base_rate: 0.06, frailty: 0.7, treated: 0.6}   # frail and treated patients drop out sooner
+  dependent: {base_rate: 0.10, frailty: 1.5, treated: 1.0}   # frail and treated patients drop out sooner
+  # Strengthened 2026-10-22 from (0.06, 0.7, 0.6), which was too mild to expose a wrong dropout model (docs/LOG.md)
 
 times: [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]
 v_grid:

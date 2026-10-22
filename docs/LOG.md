@@ -244,3 +244,21 @@ Ran 16:41 to 17:00: C2, C3, C1, C0, 50 hospitals each, about 15 seconds per hosp
 **Diagnosis:** the dependent-dropout setting is too mild to expose a wrong dropout model. The same problem as the first Phase 1 pilot. Next: a stronger setting chosen by comparing candidates first, then 200 hospitals per setting.
 
 **Saving progress:** `results/` is now committed to git (2.7 MB at the time), except `results/reference/` (the unlicensed download). An autosave loop pushed new results every 4 minutes until 17:28. `docs/HANDOFF.md` lists the state and the commands to resume.
+
+### Session resumed 17:34: stronger dependent dropout
+
+The computer was still on (or back) at 17:34; all results and commits were intact.
+
+**Why the preliminary C2/C3 results were flat.** Five candidate analyses were run on one hospital of 400,000 at year 5. The dropout bias appears in each arm's risk, but it partly **cancels when the arms are subtracted**. Bias in the effect at year 5 (treated arm minus untreated arm):
+
+| Dropout setting (base rate, frailty, treated) | Share dropped | CC | NE | IPCW, dropout model without frailty |
+|---|---|---|---|---|
+| (0.06, 0.7, 0.6), the old setting | 20% | +0.006 | −0.004 | −0.015 |
+| D2 (0.08, 1.2, 0.8) | 25% | −0.005 | −0.016 | −0.031 |
+| D3 (0.10, 1.5, 1.0), chosen | 30% | −0.016 | −0.026 | −0.046 |
+
+With the old setting, a wrong dropout model cost only 0.015, less than the smoothing error (about 0.026), so no number of hospitals in this design would show it clearly. D3 makes it 0.046. **Changed `config/phase2.yaml` to D3.** Only C2 and C3 use this setting, so their 50-hospital results moved to `results/archive/phase2_mild_dropout/`; C0 and C1 are unaffected and their chunks are kept and extended.
+
+**The price of D3.** About 8% of trial patients now have under a 5% chance of staying to year 5, and 4.5% under 1%. These patients get very large weights in IPCW and AIPCW (a practical positivity problem for dropout), so those methods will be noisier. This is realistic for strongly selective dropout and will be reported, not hidden.
+
+**Test change.** The AIPCW check with both helpers right missed by 0.011 against a fixed limit of 0.01 in a hospital of 600,000. Diagnosis: one patient's extreme weight gave this seed a Monte Carlo standard error of 0.012, so the miss was within one standard error. Two other seeds missed by 0.002, with standard errors of 0.003. Using 200 integration steps instead of 30 changed nothing. The AIPCW tests now use a limit of 3 Monte Carlo standard errors plus 0.002 instead of a fixed 0.01. All 12 Phase 2 tests pass.

@@ -61,24 +61,27 @@ tr <- sim$observed$s == 1
 treated <- tr & sim$observed$a == 1
 t <- 3
 truth_treated <- mean(sim$hidden$t1[treated] <= t)
+# Limit: 3 Monte Carlo standard errors plus 0.002. Strong dependent dropout gives some
+# patients very large weights, so a fixed limit would fail on noise alone (docs/LOG.md).
+within <- function(ystar) 3 * sd(ystar[treated]) / sqrt(sum(treated)) + 0.002
 
 test_that("AIPCW status averages to the true risk with both helpers right", {
   ystar <- augmented_status(sim$observed, t, oracle_helpers(sim, "dependent"))
-  expect_lt(abs(mean(ystar[treated]) - truth_treated), 0.01)
+  expect_lt(abs(mean(ystar[treated]) - truth_treated), within(ystar))
 })
 
 test_that("AIPCW status is still right with a wrong outcome model", {
   h <- oracle_helpers(sim, "dependent")
   h$lp1 <- rep(mean(h$lp1[treated]), length(h$lp1))   # ignores every patient characteristic
   ystar <- augmented_status(sim$observed, t, h)
-  expect_lt(abs(mean(ystar[treated]) - truth_treated), 0.01)
+  expect_lt(abs(mean(ystar[treated]) - truth_treated), within(ystar))
 })
 
 test_that("AIPCW status is still right with a wrong dropout model", {
   h <- oracle_helpers(sim, "dependent")
   h$cens_lp <- rep(mean(h$cens_lp[treated]), length(h$cens_lp))   # same dropout rate for all
   ystar <- augmented_status(sim$observed, t, h)
-  expect_lt(abs(mean(ystar[treated]) - truth_treated), 0.01)
+  expect_lt(abs(mean(ystar[treated]) - truth_treated), within(ystar))
 })
 
 test_that("with both wrong, AIPCW status is off; so is counting dropouts as event-free", {
@@ -86,7 +89,7 @@ test_that("with both wrong, AIPCW status is off; so is counting dropouts as even
   h$lp1 <- rep(mean(h$lp1[treated]), length(h$lp1))
   h$cens_lp <- rep(Inf, length(h$cens_lp))   # pretends nobody drops out
   ystar <- augmented_status(sim$observed, t, h)
-  expect_gt(abs(mean(ystar[treated]) - truth_treated), 0.01)
+  expect_gt(abs(mean(ystar[treated]) - truth_treated), within(ystar))
   st <- status_at(sim$observed[treated, ], t)
   expect_lt(mean(st$y), truth_treated - 0.01)
 })
