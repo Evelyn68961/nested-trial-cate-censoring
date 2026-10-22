@@ -1,0 +1,40 @@
+# Phase 2: event times, dropout, and the effect traced over follow-up.
+# Characteristics and trial participation are the same as in Phase 1.
+# All values are design choices for the simulation, not estimates from any real study.
+
+cohort_size: 2500
+trial_fraction: 0.20
+participation:
+  frailty: -0.8
+  v: 0.4
+  male: 0.2
+p_treat: 0.5
+
+# Event times: Weibull with a different shape in each arm.
+# Cumulative risk by time t under treatment a: 1 - exp(-exp(lp0 + a * effect) * t^shape_a)
+baseline:                  # lp0, the log-scale of the untreated hazard
+  intercept: -3.0
+  frailty: 0.6
+  v: 0.3
+  male: 0.3
+effect:                    # how treatment shifts lp0 (negative = fewer events)
+  intercept: 0.8
+  v: -1.4
+  v_squared: 0.35
+  frailty: 0.8             # frail patients benefit less
+shape_untreated: 1.3
+shape_treated: 1.0         # a flatter shape than untreated: the benefit grows with time
+
+follow_up_end: 5           # years; everyone still event-free at 5 years is censored then
+
+# Dropout before 5 years (exponential): log-rate = log(base_rate) + frailty * f + treated * a
+censoring:
+  none:      {base_rate: 0,    frailty: 0,   treated: 0}
+  random:    {base_rate: 0.08, frailty: 0,   treated: 0}
+  dependent: {base_rate: 0.06, frailty: 0.7, treated: 0.6}   # frail and treated patients drop out sooner
+
+times: [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]
+v_grid:
+  from: 0.2
+  to: 3.8
+  length: 37
