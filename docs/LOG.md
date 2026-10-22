@@ -148,3 +148,62 @@ G does best here because its outcome model has exactly the right terms. That is 
 ### Main runs started
 
 Super Learner helpers, 500 hospitals each: trial share 20% (about 500 trial patients) and 5% (about 125). Commit a9a8cd8. While they run, no file they use (`R/` files and `config/phase1.yaml`) is edited; Phase 2 code goes in new files.
+
+### Phase 2 code (commit ef4577a)
+
+Written while the Phase 1 main runs were going, in new files only.
+
+**Event times, and why** (`config/phase2.yaml`). Patients, trial participation and randomization are the same as in Phase 1. Each patient's event time under each treatment comes from a Weibull model. The risk by time t under treatment a is 1 − exp(−exp(lp0 + a × effect) × t^shape_a).
+
+| Setting | Value | Why |
+|---|---|---|
+| Untreated log-scale lp0 | −3.0 + 0.6 frailty + 0.3 v + 0.3 male | Untreated risk about 12% by year 1 and 58% by year 5: enough events in a trial of 500 |
+| Treatment shift | 0.8 − 1.4 v + 0.35 v² + 0.8 frailty | Same shape as Phase 1: harm at the ends of v, benefit in the middle, less benefit for frail patients |
+| Weibull shape | 1.3 untreated, 1.0 treated | A flatter shape under treatment makes the benefit grow over time. |
+| Follow-up | 5 years | |
+| Times | 0.5 to 5 years in steps of 0.5 | Ten time points, so time to benefit can be read to half a year |
+
+Two candidate designs were compared on their exact curves first. The chosen one (A) gives, for all eligible patients: at v = 2, no effect at year 1 and −0.235 by year 5; at v = 0.2, early harm (+0.11) fading to +0.05; at v = 3.8, harm that turns into a small benefit by year 5. So time to benefit differs by profile.
+
+**Dropout settings.** Exponential dropout times, plus everyone censored at 5 years.
+
+| Setting | Dropout | Share of trial patients dropped out (one hospital) |
+|---|---|---|
+| C0 | none | 0% |
+| C1 | random, rate 0.08 per year | 26% |
+| C2 | rate 0.06 per year × exp(0.7 frailty + 0.6 treated): frail and treated patients leave sooner | 20% |
+| C3 | the same hospitals as C2, analysed with a dropout model that leaves out frailty | 20% |
+
+C2 and C3 use the same seeds, so the only difference between them is the dropout model used in the analysis.
+
+**The four estimators**, each feeding the Phase 1 method (pseudo-outcome, then local linear curve) at each time:
+
+- **CC (complete case):** trial patients whose status at t is unknown are removed.
+- **NE (no event):** unknown status is counted as no event by t.
+- **IPCW:** status known at t, divided by the estimated chance of still being followed at min(time, t). The outcome model is a logistic regression of status at t, weighted the same way.
+- **AIPCW (augmented IPCW):** IPCW plus a correction for each dropout, using a Weibull outcome model fitted in each arm to predict what would likely have happened after they left. The outcome model is that Weibull model. It is correct if either the dropout model or the outcome model is right.
+
+**Helper models.** All parametric, not Super Learner:
+- the dropout model is a Weibull regression on treatment, frailty, v and sex;
+- the outcome model is a Weibull regression in each arm on frailty, v, v² and sex, which is the true form;
+- participation and treatment are logistic models.
+
+All are cross-fitted with five folds. Parametric models were chosen because the question here is dropout, not flexible learning, and because the AIPCW correction needs a model that predicts survival over time. CC and NE use the Phase 1 logistic helpers for status at t.
+
+**Bandwidth.** One bandwidth per estimator per hospital, chosen by cross-validation at 5 years and used at every time. Grid 0.4, 0.6, 0.8, 1.0, 1.3, 1.6, 2.0. Reasons: Phase 1 showed the cross-validation score is nearly flat anyway, and choosing it ten times per hospital would multiply the run time.
+
+**The AIPCW correction, in formula form.** For a trial patient with follow-up time T̃ and status at t:
+
+Y\* = known × status / G(min(T̃, t)) + [dropped before t] × F(t | T̃) / G(T̃) − ∫₀^min(T̃,t) F(t | u) d(1/G(u))
+
+Here G is the chance of not having dropped out, and F(t | u) is the chance of the event by t given event-free at u, from the Weibull outcome model. The integral is computed with 30 midpoint steps.
+
+**Tweaks during writing.**
+
+- The first version computed F(t | u) as 1 − S(t)/S(u). For very high-risk patients both survival values underflow to 0, giving 0/0. It is now computed from cumulative hazards: 1 − exp(−(H(t) − H(u))).
+- A test first used single numbers for the Weibull scales where the code expects one value per patient, which produced NA. The test was fixed; the code was right.
+- One planned test expected simple dropping to be biased among treated patients at year 3 under dependent dropout. In this setting it was not (difference 0.0008): frail patients drop out more and also have more events, and the two biases cancel. The test now checks counting dropouts as event-free, which is biased in a known direction.
+
+**Checks.** Seven tests. The key ones use true helper values in a hospital of 600,000. The augmented status averages to the true risk among treated patients at year 3 with both helpers right, with the outcome model wrong, and with the dropout model wrong (each within 0.01). It misses when both are wrong. All 29 tests pass.
+
+**One hospital per setting** (`scripts/09_check_phase2.R`): 16 to 20 seconds each while the Phase 1 runs shared the computer. With no dropout, CC, NE and IPCW give identical answers, as they should (all weights 1), and AIPCW differs slightly because it uses the Weibull outcome model.
