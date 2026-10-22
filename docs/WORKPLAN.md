@@ -22,10 +22,10 @@ Full rationale: `nested_trial_CATE_censoring_plan.md` (kept outside this reposit
 
 | Step | Code | Lesson | State |
 |---|---|---|---|
-| 8 | Event times (Weibull per arm); true risk-difference curves at years 1 to 5 | 07 Effects that grow over time | |
-| 9 | Dropout settings C0 to C3 | 08 What dropout does | |
-| 10 | Four ways of handling dropout, including the weighted one | 09 Weighting for dropout | |
-| 11 | Runs, time to benefit by profile, tables and figures | — | |
+| 8 | Event times (Weibull per arm); true risk-difference curves at years 1 to 5 | 07 Effects that grow over time | Done 2026-10-22 |
+| 9 | Dropout settings C0 to C3 | 08 What dropout does | Done 2026-10-22 (dependent dropout strengthened after first runs) |
+| 10 | Four ways of handling dropout, plus truncated versions of the two weighted ones | 09 Weighting for dropout | Done 2026-10-22 |
+| 11 | Runs, time to benefit by profile, tables and figures | 10 Phase 2 results | Done 2026-10-22: 200 hospitals per setting. Gate 2 passed for bias, not for stability or intervals. See reports/phase2_results.md |
 
 **Gate 2:** C0 reproduces Phase 1 at every year; the weighted estimator has small bias in C1 and C2.
 

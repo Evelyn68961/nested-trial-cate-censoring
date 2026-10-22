@@ -1,5 +1,7 @@
 # Phase 2: preliminary results (50 hospitals per setting)
 
+> **Superseded** by `reports/phase2_results.md` (200 hospitals per setting, stronger dependent dropout, truncated weights). Kept for the record.
+
 22 October 2026, 17:00. Runs finished 16:46 to 17:00, shortly before the computer's scheduled shutdown. **Preliminary:** 50 hospitals per setting is too few to separate methods whose errors differ by about 0.01. Full tables: `reports/tables/10_phase2_by_time.csv` and `10_phase2_time_to_benefit.csv`. Figures: `reports/figures/10_C*_effect_over_time.png`.
 
 ## Error at 5 years, when dropout has accumulated most

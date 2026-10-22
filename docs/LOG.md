@@ -283,3 +283,21 @@ With the old setting, a wrong dropout model cost only 0.015, less than the smoot
 - In C3, IPCW is only slightly worse than AIPCW (0.031 against 0.022 on average; 0.037 against 0.027 at year 5). The direction is as expected.
 
 **Change: weight truncation added as two extra estimators,** IPCW_t and AIPCW_t. The estimated chance of staying is never allowed below 0.05, so no weight exceeds 20. Truncation is the standard remedy, at the price of a little bias. The untruncated estimators are kept unchanged, so both are reported. The summary now also reports bias from medians and the number of hospitals whose curve misses by more than 0.5. The 200-hospital results without truncation moved to `results/archive/phase2_200_before_truncation/`, and their summary to `results/archive/summary_phase2_no_truncation.txt`. All four settings are rerun; with the same seeds, the untruncated estimators reproduce exactly.
+
+### Phase 2 final runs with truncation (18:48 to 20:36)
+
+All four settings, 200 hospitals each, with IPCW_t and AIPCW_t added. The untruncated estimators reproduced the archived numbers exactly (same seeds), as expected. The runs took about 25 minutes per setting (21 s per hospital), longer than estimated, because the AIPCW status is now computed twice.
+
+**Key results at 5 years** (full tables in `reports/phase2_results.md`):
+- No dropout: all methods identical (bias 0.024).
+- Random dropout: NE fails (0.064, coverage 79%).
+- Dependent dropout: CC fails (0.093, coverage 68%). Untruncated IPCW and AIPCW break in 92 and 50 of 200 hospitals; truncated in 83 and 27, against 0 or 1 with no dropout.
+- Wrong dropout model: AIPCW 0.027, IPCW 0.037; AIPCW coverage 80%.
+
+**Why truncation did not cure it:** the dropout weight multiplies the trial-joining weight (which can exceed 100), so the combined weight stays in the thousands even with the dropout part capped at 20. Not yet tried: truncating the combined weight, or a higher floor.
+
+**AIPCW undercoverage in C3:** the sandwich treats helper models as known. With one helper model wrong, the estimate stays consistent but that variance formula is no longer valid.
+
+**Time to benefit:** even with no dropout, only 32% to 54% of hospitals put a profile's time to benefit within half a year of the truth. Medians run about half a year late, from smoothing. CC delays it by 1 to 1.5 years under dependent dropout; truncated AIPCW keeps the median on target.
+
+**Gate 2:** passed for bias; not for stability under strong dependent dropout, and not for AIPCW intervals with a wrong dropout model. Both are known limits of weighting methods, reported as findings. Report: `reports/phase2_results.md`; lesson 10.
