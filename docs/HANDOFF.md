@@ -10,7 +10,7 @@ Written 22 October 2026, 16:45, before the computer's scheduled shutdown at 17:3
 | Phase 1 main run: Super Learner, trial about 500 | **Done, 500 hospitals. Gate 1 passed.** `reports/phase1_results.md` |
 | Phase 1 run: Super Learner, trial about 125 | 50 of 500 hospitals |
 | Phase 2 code (dropout, effect over time) | Done, tested (7 tests) |
-| Phase 2 runs | Dependent dropout strengthened to D3 at 17:37 (LOG). 200-hospital runs started 17:37 in order C2, C3, C1, C0; check `results/phase2/*` for how far they got |
+| Phase 2 runs | D3 dropout; 200 hospitals done at 18:44 but IPCW/AIPCW blew up from extreme weights (LOG). Truncated versions added; all four settings rerun from 18:48 in order C2, C3, C1, C0 (about 70 min). Check `results/phase2/*` for how far it got |
 | Lessons | 1 to 9 written; 10 (Phase 2 results) not yet |
 | Report for Phase 2 | Preliminary only: `reports/phase2_preliminary.md` |
 
