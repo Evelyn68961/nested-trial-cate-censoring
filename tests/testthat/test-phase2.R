@@ -93,3 +93,35 @@ test_that("with both wrong, AIPCW status is off; so is counting dropouts as even
   st <- status_at(sim$observed[treated, ], t)
   expect_lt(mean(st$y), truth_treated - 0.01)
 })
+
+test_that("Buckley-James status equals AIPCW status with the dropout model switched off", {
+  h <- oracle_helpers(sim, "dependent")
+  bj <- augmented_status(sim$observed, t, h, use_dropout_model = FALSE)
+  h_off <- h
+  h_off$cens_lp <- rep(Inf, length(h$cens_lp))   # chance of staying = 1 for everyone
+  expect_equal(bj, augmented_status(sim$observed, t, h_off))
+})
+
+test_that("Buckley-James status is right with the right outcome model, wrong with a wrong one", {
+  h <- oracle_helpers(sim, "dependent")
+  bj <- augmented_status(sim$observed, t, h, use_dropout_model = FALSE)
+  expect_lt(abs(mean(bj[treated]) - truth_treated), within(bj))
+  h$lp1 <- rep(mean(h$lp1[treated]), length(h$lp1))
+  bj_wrong <- augmented_status(sim$observed, t, h, use_dropout_model = FALSE)
+  expect_gt(abs(mean(bj_wrong[treated]) - truth_treated), within(bj_wrong))
+})
+
+test_that("with no dropout, BJ gives the same curve as AIPCW, and the weight checks are near 1", {
+  d0 <- simulate_cohort_surv(cfg, "none", 11, b0)$observed
+  small <- cfg
+  small$times <- list(1, 5)
+  res <- suppressWarnings(run_phase2_estimators(d0, small, ~ a + frailty + v + male, 11,
+                                                c(1, 2, 3), bandwidths = 1))
+  cv <- res$curves
+  expect_equal(cv$estimate[cv$estimator == "BJ"], cv$estimate[cv$estimator == "AIPCW"])
+  w <- res$info
+  for (k in c("mean_w_join", "mean_w_arm1", "mean_w_arm0", "mean_wc_arm1", "mean_wc_arm0")) {
+    expect_lt(abs(w[[k]] - 1), 0.3)
+  }
+  expect_equal(w$mean_wc_arm1, w$mean_w_arm1)   # nobody drops out, so status is always known
+})

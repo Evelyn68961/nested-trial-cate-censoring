@@ -3,7 +3,8 @@
 # Usage, from the repository root:
 #   Rscript scripts/10_run_phase2.R <setting> <n_hospitals> <workers>
 #   setting: C0 (no dropout), C1 (random), C2 (dependent), C3 (dependent, dropout model leaves
-#   out frailty). C2 and C3 use the same hospitals (same seeds); only the analysis differs.
+#   out frailty), C4 (dependent; dropout model right, outcome models leave out frailty).
+#   C2, C3 and C4 use the same hospitals (same seeds); only the analysis differs.
 #
 # Results go to results/phase2/<setting>/chunk_<k>.rds, 25 hospitals per chunk; finished chunks
 # are skipped. Refuses to run on uncommitted code and records the commit in every row.
@@ -22,8 +23,11 @@ spec <- list(
   C0 = list(censoring = "none", formula = "~ a + frailty + v + male"),
   C1 = list(censoring = "random", formula = "~ a + frailty + v + male"),
   C2 = list(censoring = "dependent", formula = "~ a + frailty + v + male"),
-  C3 = list(censoring = "dependent", formula = "~ a + v + male")
+  C3 = list(censoring = "dependent", formula = "~ a + v + male"),
+  C4 = list(censoring = "dependent", formula = "~ a + frailty + v + male",
+            out_formula = "~ v + I(v^2) + male")
 )[[setting]]
+if (is.null(spec$out_formula)) spec$out_formula <- "~ frailty + v + I(v^2) + male"
 
 out_dir <- file.path("results", "phase2", setting)
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
@@ -38,7 +42,8 @@ one_hospital <- function(seed, spec, commit) {
   b0 <- participation_intercept(cfg)
   d <- simulate_cohort_surv(cfg, spec$censoring, seed = seed, b0 = b0)$observed
   t0 <- Sys.time()
-  res <- suppressWarnings(run_phase2_estimators(d, cfg, as.formula(spec$formula), seed, make_v_grid(cfg)))
+  res <- suppressWarnings(run_phase2_estimators(d, cfg, as.formula(spec$formula), seed, make_v_grid(cfg),
+                                                out_formula = as.formula(spec$out_formula)))
   seconds <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
   list(curves = cbind(seed = seed, res$curves),
        info = cbind(seed = seed, res$info, seconds = seconds, commit = commit))

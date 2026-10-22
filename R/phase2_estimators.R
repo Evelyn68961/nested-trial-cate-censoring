@@ -13,6 +13,11 @@
 #          followed is never allowed below g_floor (0.05), so no patient's weight exceeds 20.
 #          Added after the 200-hospital runs, where strong dependent dropout gave some
 #          patients chances of staying near 0.0001 and weights above 10,000 (docs/LOG.md).
+#   BJ     Buckley-James: no dropout weight at all. Each dropout's status at t is filled
+#          in with the Weibull outcome model's chance of an event between leaving and t. It is
+#          AIPCW with the chance of staying set to 1 for everyone (Steingrimsson & Morrison,
+#          Stat Med 2020). Correct only if the outcome model is right. Added 2026-10-23 to see
+#          whether the C2 blow-ups come from the dropout weight or the trial-joining weight.
 #
 # Needs R/generate.R, R/nuisance.R, R/pseudo.R, R/smooth.R, R/phase2_generate.R.
 
@@ -22,8 +27,10 @@ weibull_cumhaz <- function(u, lp, scale) (u / exp(lp))^(1 / scale)
 weibull_surv <- function(u, lp, scale) exp(-weibull_cumhaz(u, lp, scale))
 
 # Cross-fitted helpers for IPCW and AIPCW. Returns per-patient quantities for every time.
+# out_formula is the analyst's outcome model, used for the Weibull models and the IPCW logistic
+# models; setting C4 leaves frailty out of it.
 fit_phase2_helpers <- function(d, times, censor_formula, follow_up_end, n_folds = 5, seed = 1,
-                               g_floor = 0.05) {
+                               g_floor = 0.05, out_formula = ~ frailty + v + I(v^2) + male) {
   folds <- make_folds(d$s, n_folds, seed)
   n <- nrow(d)
   empty <- function() matrix(NA_real_, n, length(times))
@@ -34,7 +41,6 @@ fit_phase2_helpers <- function(d, times, censor_formula, follow_up_end, n_folds 
               ipcw_g1 = empty(), ipcw_g0 = empty(), ipcw_g1_t = empty(), ipcw_g0_t = empty())
   d$dropped <- as.integer(d$s == 1 & d$event == 0 & d$time < follow_up_end)
   any_dropout <- sum(d$dropped, na.rm = TRUE) > 0
-  out_formula <- ~ frailty + v + I(v^2) + male
 
   for (k in seq_len(n_folds)) {
     train <- folds != k
@@ -93,14 +99,21 @@ fit_phase2_helpers <- function(d, times, censor_formula, follow_up_end, n_folds 
 }
 
 # Augmented status at time t for trial patients (AIPCW). For others the value is unused.
-augmented_status <- function(d, t, h, n_steps = 30, g_floor = 0) {
+# With use_dropout_model = FALSE the chance of staying is 1 for everyone: the IPCW part becomes
+# the observed status, the compensator vanishes, and each dropout gets the outcome model's
+# chance of an event between leaving and t (the Buckley-James status).
+augmented_status <- function(d, t, h, n_steps = 30, g_floor = 0, use_dropout_model = TRUE) {
   st <- status_at(d, t)
   trial <- which(d$s == 1)
   res <- rep(0, nrow(d))
   a <- d$a[trial]
   lp <- ifelse(a == 1, h$lp1[trial], h$lp0[trial])
   sc <- ifelse(a == 1, h$scale1[trial], h$scale0[trial])
-  G <- function(u) pmax(weibull_surv(u, h$cens_lp[trial], h$cens_scale[trial]), g_floor)
+  G <- if (use_dropout_model) {
+    function(u) pmax(weibull_surv(u, h$cens_lp[trial], h$cens_scale[trial]), g_floor)
+  } else {
+    function(u) rep(1, length(trial))
+  }
   H <- function(u) weibull_cumhaz(u, lp, sc)
   # Chance of the event by t, given event-free at u; written with cumulative hazards so that
   # very high-risk patients do not give 0 / 0
@@ -131,11 +144,13 @@ pseudo_from_status <- function(d, ystar, p_join, p_treat, g1, g0) {
 
 run_phase2_estimators <- function(d, cfg, censor_formula, seed, v_grid,
                                   bandwidths = c(0.4, 0.6, 0.8, 1.0, 1.3, 1.6, 2.0),
-                                  g_floor = 0.05) {
+                                  g_floor = 0.05, out_formula = ~ frailty + v + I(v^2) + male) {
   times <- unlist(cfg$times)
-  h <- fit_phase2_helpers(d, times, censor_formula, cfg$follow_up_end, seed = seed, g_floor = g_floor)
+  h <- fit_phase2_helpers(d, times, censor_formula, cfg$follow_up_end, seed = seed, g_floor = g_floor,
+                          out_formula = out_formula)
 
-  xi <- list(CC = list(), NE = list(), IPCW = list(), AIPCW = list(), IPCW_t = list(), AIPCW_t = list())
+  xi <- list(CC = list(), NE = list(), IPCW = list(), AIPCW = list(), IPCW_t = list(), AIPCW_t = list(),
+             BJ = list())
   keep_cc <- list()
   for (j in seq_along(times)) {
     t <- times[j]
@@ -168,6 +183,10 @@ run_phase2_estimators <- function(d, cfg, censor_formula, seed, v_grid,
     xi$IPCW_t[[j]] <- pseudo_from_status(d, ystar_t, h$p_join, h$p_treat, h$ipcw_g1_t[, j], h$ipcw_g0_t[, j])
     xi$AIPCW_t[[j]] <- pseudo_from_status(d, augmented_status(d, t, h, g_floor = g_floor),
                                           h$p_join, h$p_treat, g1, g0)
+
+    # Buckley-James: no dropout weight, dropouts filled in by the outcome model
+    xi$BJ[[j]] <- pseudo_from_status(d, augmented_status(d, t, h, use_dropout_model = FALSE),
+                                     h$p_join, h$p_treat, g1, g0)
   }
 
   # One bandwidth per estimator, chosen by cross-validation at the last time, used at every time
@@ -185,7 +204,35 @@ run_phase2_estimators <- function(d, cfg, censor_formula, seed, v_grid,
   curves <- do.call(rbind, rows)
   dropped <- with(d[d$s == 1, ], mean(event == 0 & time < cfg$follow_up_end))
   list(curves = curves,
-       info = data.frame(n_trial = sum(d$s), share_dropped = dropped,
-                         min_p_join = min(h$p_join), min_g = min(weibull_surv(pmin(d$time[d$s == 1], 5),
-                                                                              h$cens_lp[d$s == 1], h$cens_scale[d$s == 1]))))
+       info = cbind(data.frame(n_trial = sum(d$s), share_dropped = dropped,
+                               min_p_join = min(h$p_join), min_g = min(weibull_surv(pmin(d$time[d$s == 1], 5),
+                                                                                    h$cens_lp[d$s == 1], h$cens_scale[d$s == 1]))),
+                    weight_checks(d, h, times[last])))
+}
+
+# Weight checks recommended by Dahabreh et al. (Stat Med 2020, p. 16), at time t, computed
+# over all eligible patients. Each mean should be close to 1:
+#   mean_w_join        S / P(trial)
+#   mean_w_arm1, _arm0 S * [A = a] / (P(trial) * P(arm a))
+#   mean_wc_arm1, _arm0  the same times [status known at t] / P(still followed)  (untruncated)
+# Also, for the combined weight in each arm: the largest weight, the share of the arm's total
+# weight carried by the single largest one, and the effective sample size (sum w)^2 / sum w^2.
+weight_checks <- function(d, h, t) {
+  st <- status_at(d, t)
+  a <- ifelse(is.na(d$a), 0, d$a)
+  known <- ifelse(d$s == 1, st$known, 0)
+  g_end <- weibull_surv(pmin(d$time, t), h$cens_lp, h$cens_scale)
+  w_join <- d$s / h$p_join
+  out <- data.frame(mean_w_join = mean(w_join))
+  for (arm in 1:0) {
+    p_arm <- if (arm == 1) h$p_treat else 1 - h$p_treat
+    w <- w_join * (a == arm) / p_arm
+    wc <- ifelse(d$s == 1, w * known / g_end, 0)
+    out[[paste0("mean_w_arm", arm)]] <- mean(w)
+    out[[paste0("mean_wc_arm", arm)]] <- mean(wc)
+    out[[paste0("max_wc_arm", arm)]] <- max(wc)
+    out[[paste0("top_share_wc_arm", arm)]] <- max(wc) / sum(wc)
+    out[[paste0("ess_wc_arm", arm)]] <- sum(wc)^2 / sum(wc^2)
+  }
+  out
 }

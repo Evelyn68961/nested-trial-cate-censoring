@@ -11,9 +11,17 @@ times <- unlist(cfg$times)
 truth <- target_effect_grid(v_grid, times, cfg)
 profiles <- c(1, 2, 3)
 deltas <- c(0.05, 0.10)
-estimators <- c("CC", "NE", "IPCW", "AIPCW", "IPCW_t", "AIPCW_t")
+estimators <- c("CC", "NE", "IPCW", "AIPCW", "IPCW_t", "AIPCW_t", "BJ")
 labels <- c(C0 = "C0 no dropout", C1 = "C1 random dropout", C2 = "C2 dependent dropout",
-            C3 = "C3 dependent dropout, dropout model wrong")
+            C3 = "C3 dependent dropout, dropout model wrong",
+            C4 = "C4 dependent dropout, outcome model wrong")
+# Weight-check rules (Dahabreh et al., Stat Med 2020, p. 16); each flags a hospital
+rules <- list(
+  "a combined-weight mean off 1 by > 0.2" = function(i) pmax(abs(i$mean_wc_arm1 - 1), abs(i$mean_wc_arm0 - 1)) > 0.2,
+  "one patient carries > 10% of an arm's weight" = function(i) pmax(i$top_share_wc_arm1, i$top_share_wc_arm0) > 0.10,
+  "effective sample size < 50 in an arm" = function(i) pmin(i$ess_wc_arm1, i$ess_wc_arm0) < 50,
+  "trial-joining weight mean off 1 by > 0.2" = function(i) abs(i$mean_w_join - 1) > 0.2)
+check_rows <- list()
 
 settings <- intersect(names(labels), list.dirs(file.path("results", "phase2"), recursive = FALSE, full.names = FALSE))
 by_time <- list()
@@ -63,6 +71,21 @@ for (setting in settings) {
   }))
   print(overall[match(estimators, overall$estimator), ], row.names = FALSE)
 
+  # Do the weight checks flag the hospitals whose curve breaks?
+  if ("mean_wc_arm1" %in% names(info)) {
+    broken <- tapply(worst$err > 0.5, list(worst$seed, worst$estimator), any)
+    broken <- broken[as.character(info$seed), , drop = FALSE]
+    for (r in names(rules)) {
+      flag <- rules[[r]](info)
+      for (est in c("IPCW", "AIPCW", "IPCW_t", "AIPCW_t", "BJ")) {
+        b <- broken[, est]
+        check_rows[[length(check_rows) + 1]] <- data.frame(
+          setting = setting, rule = r, estimator = est, flagged = sum(flag), broken = sum(b),
+          broken_flagged = sum(b & flag), unbroken_flagged = sum(!b & flag))
+      }
+    }
+  }
+
   # Time to benefit by profile
   for (p in profiles) {
     pv <- which(abs(v_grid - p) < 1e-9)
@@ -107,6 +130,12 @@ if (length(by_time)) {
   out <- do.call(rbind, by_time)
   out[, 4:7] <- round(out[, 4:7], 3)
   write.csv(out, "reports/tables/10_phase2_by_time.csv", row.names = FALSE)
+}
+if (length(check_rows)) {
+  checks <- do.call(rbind, check_rows)
+  write.csv(checks, "reports/tables/11_weight_checks.csv", row.names = FALSE)
+  cat("\nWeight checks: hospitals flagged, and how many of the broken ones they catch:\n")
+  print(checks, row.names = FALSE)
 }
 if (length(ttb_rows)) {
   ttb <- do.call(rbind, ttb_rows)
