@@ -207,3 +207,28 @@ Here G is the chance of not having dropped out, and F(t | u) is the chance of th
 **Checks.** Seven tests. The key ones use true helper values in a hospital of 600,000. The augmented status averages to the true risk among treated patients at year 3 with both helpers right, with the outcome model wrong, and with the dropout model wrong (each within 0.01). It misses when both are wrong. All 29 tests pass.
 
 **One hospital per setting** (`scripts/09_check_phase2.R`): 16 to 20 seconds each while the Phase 1 runs shared the computer. With no dropout, CC, NE and IPCW give identical answers, as they should (all weights 1), and AIPCW differs slightly because it uses the Weibull outcome model.
+
+### Main runs shortened: the computer shuts down at 17:30
+
+Learned at 14:55 that this computer shuts down automatically at 17:30. At about 5.5 minutes per 25 hospitals, the planned runs (500 + 500 hospitals in Phase 1, then Phase 2) would not finish. Changed at 14:58:
+
+- The first main run (Super Learner, 20% trial share) was stopped after 25 hospitals. The chunk in progress was lost (at most 25 hospitals, about 5 minutes).
+- It was restarted with **300 hospitals** instead of 500.
+- Then **Phase 2 at 100 hospitals per setting** (C0 to C3) instead of 200.
+- The 5% trial-share run (about 125 trial patients) is **postponed**.
+
+Nothing is lost by shortening. Chunks hold 25 hospitals with fixed seeds, so rerunning a command with a larger number continues from the saved chunks and adds only the missing ones.
+
+**To resume on the next session**, from the repository root:
+
+```
+Rscript scripts/07_run_phase1.R sl 0.20 500 3     # extends Phase 1 from 300 to 500 hospitals
+Rscript scripts/07_run_phase1.R sl 0.05 500 3     # the postponed 125-trial-patient setting
+Rscript scripts/10_run_phase2.R C0 200 3          # and likewise C1, C2, C3: extends Phase 2 to 200
+Rscript scripts/08_summarise_phase1.R
+Rscript scripts/11_summarise_phase2.R
+```
+
+Raw results are in `results/` on this computer's D: drive (not on GitHub). If the next session runs on another computer, either copy `results/` across, or rerun from scratch: the same seeds give the same hospitals.
+
+Also checked before restarting: six R processes still running were started at 12:03, before this work began. They are VS Code's R language servers, not simulation workers, and were left alone.
