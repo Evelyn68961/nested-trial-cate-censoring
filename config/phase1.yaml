@@ -1,0 +1,34 @@
+# Phase 1: binary outcome, no dropout.
+# All values are design choices for the simulation, not estimates from any real study.
+
+cohort_size: 2500          # all trial-eligible patients in one simulated hospital
+trial_fraction: 0.20       # expected share who join the trial (about 500 of 2,500)
+
+# Who joins the trial: log-odds of joining
+participation:
+  frailty: -0.8            # frail patients join less often
+  v: 0.4                   # higher profile score: joins more often (centred at v = 2)
+  male: 0.2
+
+# Chance of treatment inside the trial (fixed by randomization)
+p_treat: 0.5
+
+# Risk of the bad outcome without treatment: log-odds
+baseline:
+  intercept: -1.0
+  frailty: 0.6
+  v: 0.3
+  male: 0.3
+
+# How treatment changes the log-odds of the bad outcome (negative = benefit)
+effect:
+  intercept: -0.3
+  v: -0.5
+  v_squared: 0.15          # makes the effect curve bend: largest benefit in the middle of v
+  frailty: 0.6             # frail patients benefit less
+
+# Grid of profile values at which the effect curve is evaluated
+v_grid:
+  from: 0.2
+  to: 3.8
+  length: 37
