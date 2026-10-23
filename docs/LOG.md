@@ -357,3 +357,22 @@ For each rule, it counts how many broken hospitals (curve off by more than 0.5 s
 The 200-hospital results of 22 October moved to `results/archive/phase2_200_before_bj/`. All five settings were rerun at commit 2b38cab, 3 workers, starting 06:08. The six existing estimators use the same seeds and code paths, so they must reproduce the archived numbers exactly; this is checked below.
 
 Commits after 2b38cab during the runs change only docs/ (checked with `git diff --stat 2b38cab -- R config scripts`, which is empty), so settings that started later may record a later commit hash with the same code.
+
+### Results (runs 06:08 to 08:42)
+
+**Reproduction.** The six existing estimators reproduced the archived 22 October results exactly in C0 to C3 (444,000 rows each; largest difference in estimate, standard error and bandwidth: 0). Script: `scripts/12_check_reproduction.R`.
+
+**Gate 3:**
+
+| Condition | Result |
+|---|---|
+| Existing estimators reproduce exactly | **Yes** |
+| BJ stable in C2 | **Yes.** 1 of 200 hospitals broken, against 92 (IPCW) and 50 (AIPCW); bias 0.025 at 5 years. The dropout weight caused the breaks. |
+| BJ biased in C4; IPCW and AIPCW not | **Yes for BJ** (0.064, coverage 76%). **IPCW and AIPCW: yes by medians** (0.030, 0.027), but averages are dragged by broken hospitals (90 and 73). |
+| A weight check flags the broken hospitals | **No.** Effective sample size below 50 catches 47 of 50 broken AIPCW hospitals in C2 but flags 171 of 200. The combined-weight mean instead flags a wrong dropout model (187 of 200 in C3). |
+
+**Unplanned finding.** BJ's intervals undercover even with the right outcome model: 72% in C2, 86% in C1. The likely reason is that filled-in values are less variable than real outcomes and the sandwich treats them as observed. Not tested; a bootstrap would.
+
+**Time to benefit under C4.** BJ puts it too early: for v = 1, median 2.0 years against a true 3.5; for v = 3, 2.0 against 2.5.
+
+Report: the new last section of `reports/phase2_results.md`. Lesson 11. Summary output: `results/summary_phase2_20261023.txt`; tables in `reports/tables/10_*.csv` and `11_weight_checks.csv`.

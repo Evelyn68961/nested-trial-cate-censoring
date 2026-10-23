@@ -1,6 +1,6 @@
 # Phase 2 results: dropout, and the effect traced over follow-up
 
-22 October 2026, 20:40. 200 simulated hospitals per setting (2,500 eligible patients, about 500 in the trial). Event times from Weibull models in which the benefit grows over time; follow-up 5 years; effect estimated at ten times from 0.5 to 5 years. Settings: `config/phase2.yaml`. Every decision and change: `docs/LOG.md`. Supersedes `reports/phase2_preliminary.md`.
+22 October 2026, 20:40; additions (Buckley-James, setting C4, weight checks) on 23 October, at the end. 200 simulated hospitals per setting (2,500 eligible patients, about 500 in the trial). Event times from Weibull models in which the benefit grows over time; follow-up 5 years; effect estimated at ten times from 0.5 to 5 years. Settings: `config/phase2.yaml`. Every decision and change: `docs/LOG.md`. Supersedes `reports/phase2_preliminary.md`.
 
 ## The settings
 
@@ -84,3 +84,58 @@ Both are open questions: how to stabilise the combined weights, and how to build
 - One truncation level (0.05) was tried. Truncation shifts the estimand (Dahabreh et al., Stat Med 2020, p. 16), so the truncated methods' small bias is partly a change of target.
 - Time to benefit is read on a half-year grid.
 - 200 hospitals per setting: Monte Carlo error on integrated bias is about 0.005 to 0.01.
+
+## Additions of 23 October: where the instability comes from, and a wrong outcome model
+
+Three additions taken from Steingrimsson's work, rerun on the same 200 hospitals per setting. The six methods above reproduced the 22 October numbers exactly (largest difference 0, `scripts/12_check_reproduction.R`), so the tables above stand. Full output: `results/summary_phase2_20261023.txt`.
+
+- **BJ (Buckley-James):** no dropout weight. Each dropout's status is filled in with the outcome model's chance of an event after leaving. Right only if the outcome model is right.
+- **C4:** the C2 hospitals, with the right dropout model and outcome models that leave out frailty.
+- **Weight checks:** for each hospital, the mean of the weights (which should be close to 1), the largest weight's share, and the effective sample size.
+
+### Error and coverage at 5 years
+
+Integrated absolute bias, (hospitals off by more than 0.5), and coverage. In brackets after the bias: the bias from medians, which broken hospitals cannot drag.
+
+| Method | C2 dependent | C3 dropout model wrong | C4 outcome model wrong |
+|---|---|---|---|
+| IPCW | 0.116 [0.035] (92), 97% | 0.037 [0.030] (30), 95% | 0.112 [0.030] (90), 97% |
+| AIPCW | 0.048 [0.019] (50), 93% | 0.027 [0.029] (4), 80% | 0.065 [0.027] (73), 95% |
+| AIPCW, truncated | 0.029 [0.024] (27), 91% | 0.027 [0.029] (4), 80% | 0.019 [0.026] (55), 95% |
+| **BJ** | **0.025** [0.026] (**1**), **72%** | 0.025 [0.026] (1), 72% | **0.064** [0.066] (4), **76%** |
+
+BJ in C0: identical to AIPCW (0.024, 89%), as it must be. In C1: 0.021, 4 hospitals broken, coverage 86%. BJ gives the same answer in C2 and C3 because it never uses the dropout model.
+
+### What the additions show
+
+1. **The dropout weight causes the breaks, not the trial-joining weight.** BJ keeps the trial-joining weight and drops the dropout weight; it broke in 1 of 200 hospitals in C2, against 92 for IPCW and 50 for AIPCW. The trial-joining weight's mean stayed between 0.96 and 1.06 in 98% of hospitals.
+2. **BJ is biased when the outcome model is wrong** (C4: 0.064 against 0.025 with the right model), and the bias moves time to benefit: for v = 1, the median estimate is 2.0 years against a true 3.5. The wrong model underestimates the risk of the frail patients who leave, most of whom were treated, so the drug looks better sooner.
+3. **IPCW and AIPCW are unbiased in C4 in the typical hospital** (median-based bias 0.030 and 0.027), as double robustness predicts. But the averages are dragged up by broken hospitals (90 and 73). With a wrong outcome model, the augmentation term cancels less of the weights' noise, so AIPCW breaks more often in C4 (73) than in C2 (50).
+4. **BJ's intervals are too narrow even with the right outcome model** (72% coverage in C2). The likely reason: the filled-in chance replaces an unknown 0 or 1, so the data look less variable than they are, and the sandwich formula treats the filled-in values as observed.
+5. **So there is a trade-off, and no method wins every setting.** BJ is stable but trusts the outcome model completely, and its intervals undercover. AIPCW is right if either model is right, but unstable when weights are extreme. Truncated AIPCW had the smallest average error in C4 (0.019), at the cost of a shifted target.
+
+### Do the weight checks flag the broken hospitals?
+
+Rules fixed before the results were seen. Counts out of 200 hospitals, for AIPCW (broken: 50 in C2, 4 in C3, 73 in C4):
+
+| Rule | C2: flagged / broken caught | C3: flagged / broken caught | C4: flagged / broken caught |
+|---|---|---|---|
+| Combined-weight mean off 1 by more than 0.2 | 73 / 33 | **187** / 4 | 73 / 41 |
+| One patient carries more than 10% of an arm's weight | 145 / 43 | 0 / 0 | 145 / 64 |
+| Effective sample size below 50 in an arm | 171 / 47 | 0 / 0 | 171 / 68 |
+| Trial-joining weight mean off 1 by more than 0.2 | 0 / 0 | 0 / 0 | 0 / 0 |
+
+- **No rule picks out the broken hospitals.** The effective-sample-size rule catches most of them (47 of 50), but flags 171 of 200 hospitals. It says "this design is fragile", not "this hospital's curve is wrong".
+- **The mean-weight check detects a wrong dropout model.** In C3, the middle 80% of hospitals had combined-weight means of 0.71 to 0.79 in the treated arm and 0.80 to 0.88 in the untreated arm, and the rule flagged 187 of 200. With the right dropout model (C2), the medians were 0.95 and 0.99. This is a check of the dropout model, not of stability.
+- **The trial-joining weight never failed a check,** consistent with point 1.
+
+### What this adds to the open questions
+
+- The instability under dependent dropout comes from the dropout weight. Methods that avoid it (BJ) are stable but lean entirely on the outcome model. How to choose between them, or combine them, is open.
+- A simple check (the mean of the combined weights) detects a wrong dropout model, but no simple check identified the hospitals whose curve broke.
+
+### Limits of the additions
+
+- One misspecification per model (frailty left out). Other kinds of wrong model could behave differently.
+- BJ's undercoverage is explained by a likely reason, not a demonstrated one. A bootstrap would test it.
+- The weight-check thresholds (0.2, 10%, 50) are conventional choices, not tuned.

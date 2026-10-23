@@ -1,0 +1,101 @@
+"setting","rule","estimator","flagged","broken","broken_flagged","unbroken_flagged"
+"C0","a combined-weight mean off 1 by > 0.2","IPCW",1,0,0,1
+"C0","a combined-weight mean off 1 by > 0.2","AIPCW",1,1,0,1
+"C0","a combined-weight mean off 1 by > 0.2","IPCW_t",1,0,0,1
+"C0","a combined-weight mean off 1 by > 0.2","AIPCW_t",1,1,0,1
+"C0","a combined-weight mean off 1 by > 0.2","BJ",1,1,0,1
+"C0","one patient carries > 10% of an arm's weight","IPCW",2,0,0,2
+"C0","one patient carries > 10% of an arm's weight","AIPCW",2,1,0,2
+"C0","one patient carries > 10% of an arm's weight","IPCW_t",2,0,0,2
+"C0","one patient carries > 10% of an arm's weight","AIPCW_t",2,1,0,2
+"C0","one patient carries > 10% of an arm's weight","BJ",2,1,0,2
+"C0","effective sample size < 50 in an arm","IPCW",2,0,0,2
+"C0","effective sample size < 50 in an arm","AIPCW",2,1,0,2
+"C0","effective sample size < 50 in an arm","IPCW_t",2,0,0,2
+"C0","effective sample size < 50 in an arm","AIPCW_t",2,1,0,2
+"C0","effective sample size < 50 in an arm","BJ",2,1,0,2
+"C0","trial-joining weight mean off 1 by > 0.2","IPCW",0,0,0,0
+"C0","trial-joining weight mean off 1 by > 0.2","AIPCW",0,1,0,0
+"C0","trial-joining weight mean off 1 by > 0.2","IPCW_t",0,0,0,0
+"C0","trial-joining weight mean off 1 by > 0.2","AIPCW_t",0,1,0,0
+"C0","trial-joining weight mean off 1 by > 0.2","BJ",0,1,0,0
+"C1","a combined-weight mean off 1 by > 0.2","IPCW",1,10,0,1
+"C1","a combined-weight mean off 1 by > 0.2","AIPCW",1,9,0,1
+"C1","a combined-weight mean off 1 by > 0.2","IPCW_t",1,10,0,1
+"C1","a combined-weight mean off 1 by > 0.2","AIPCW_t",1,9,0,1
+"C1","a combined-weight mean off 1 by > 0.2","BJ",1,4,0,1
+"C1","one patient carries > 10% of an arm's weight","IPCW",2,10,0,2
+"C1","one patient carries > 10% of an arm's weight","AIPCW",2,9,0,2
+"C1","one patient carries > 10% of an arm's weight","IPCW_t",2,10,0,2
+"C1","one patient carries > 10% of an arm's weight","AIPCW_t",2,9,0,2
+"C1","one patient carries > 10% of an arm's weight","BJ",2,4,0,2
+"C1","effective sample size < 50 in an arm","IPCW",1,10,0,1
+"C1","effective sample size < 50 in an arm","AIPCW",1,9,0,1
+"C1","effective sample size < 50 in an arm","IPCW_t",1,10,0,1
+"C1","effective sample size < 50 in an arm","AIPCW_t",1,9,0,1
+"C1","effective sample size < 50 in an arm","BJ",1,4,0,1
+"C1","trial-joining weight mean off 1 by > 0.2","IPCW",0,10,0,0
+"C1","trial-joining weight mean off 1 by > 0.2","AIPCW",0,9,0,0
+"C1","trial-joining weight mean off 1 by > 0.2","IPCW_t",0,10,0,0
+"C1","trial-joining weight mean off 1 by > 0.2","AIPCW_t",0,9,0,0
+"C1","trial-joining weight mean off 1 by > 0.2","BJ",0,4,0,0
+"C2","a combined-weight mean off 1 by > 0.2","IPCW",73,92,44,29
+"C2","a combined-weight mean off 1 by > 0.2","AIPCW",73,50,33,40
+"C2","a combined-weight mean off 1 by > 0.2","IPCW_t",73,83,37,36
+"C2","a combined-weight mean off 1 by > 0.2","AIPCW_t",73,27,16,57
+"C2","a combined-weight mean off 1 by > 0.2","BJ",73,1,0,73
+"C2","one patient carries > 10% of an arm's weight","IPCW",145,92,77,68
+"C2","one patient carries > 10% of an arm's weight","AIPCW",145,50,43,102
+"C2","one patient carries > 10% of an arm's weight","IPCW_t",145,83,68,77
+"C2","one patient carries > 10% of an arm's weight","AIPCW_t",145,27,23,122
+"C2","one patient carries > 10% of an arm's weight","BJ",145,1,0,145
+"C2","effective sample size < 50 in an arm","IPCW",171,92,89,82
+"C2","effective sample size < 50 in an arm","AIPCW",171,50,47,124
+"C2","effective sample size < 50 in an arm","IPCW_t",171,83,80,91
+"C2","effective sample size < 50 in an arm","AIPCW_t",171,27,26,145
+"C2","effective sample size < 50 in an arm","BJ",171,1,0,171
+"C2","trial-joining weight mean off 1 by > 0.2","IPCW",0,92,0,0
+"C2","trial-joining weight mean off 1 by > 0.2","AIPCW",0,50,0,0
+"C2","trial-joining weight mean off 1 by > 0.2","IPCW_t",0,83,0,0
+"C2","trial-joining weight mean off 1 by > 0.2","AIPCW_t",0,27,0,0
+"C2","trial-joining weight mean off 1 by > 0.2","BJ",0,1,0,0
+"C3","a combined-weight mean off 1 by > 0.2","IPCW",187,30,29,158
+"C3","a combined-weight mean off 1 by > 0.2","AIPCW",187,4,4,183
+"C3","a combined-weight mean off 1 by > 0.2","IPCW_t",187,30,29,158
+"C3","a combined-weight mean off 1 by > 0.2","AIPCW_t",187,4,4,183
+"C3","a combined-weight mean off 1 by > 0.2","BJ",187,1,1,186
+"C3","one patient carries > 10% of an arm's weight","IPCW",0,30,0,0
+"C3","one patient carries > 10% of an arm's weight","AIPCW",0,4,0,0
+"C3","one patient carries > 10% of an arm's weight","IPCW_t",0,30,0,0
+"C3","one patient carries > 10% of an arm's weight","AIPCW_t",0,4,0,0
+"C3","one patient carries > 10% of an arm's weight","BJ",0,1,0,0
+"C3","effective sample size < 50 in an arm","IPCW",0,30,0,0
+"C3","effective sample size < 50 in an arm","AIPCW",0,4,0,0
+"C3","effective sample size < 50 in an arm","IPCW_t",0,30,0,0
+"C3","effective sample size < 50 in an arm","AIPCW_t",0,4,0,0
+"C3","effective sample size < 50 in an arm","BJ",0,1,0,0
+"C3","trial-joining weight mean off 1 by > 0.2","IPCW",0,30,0,0
+"C3","trial-joining weight mean off 1 by > 0.2","AIPCW",0,4,0,0
+"C3","trial-joining weight mean off 1 by > 0.2","IPCW_t",0,30,0,0
+"C3","trial-joining weight mean off 1 by > 0.2","AIPCW_t",0,4,0,0
+"C3","trial-joining weight mean off 1 by > 0.2","BJ",0,1,0,0
+"C4","a combined-weight mean off 1 by > 0.2","IPCW",73,90,47,26
+"C4","a combined-weight mean off 1 by > 0.2","AIPCW",73,73,41,32
+"C4","a combined-weight mean off 1 by > 0.2","IPCW_t",73,80,40,33
+"C4","a combined-weight mean off 1 by > 0.2","AIPCW_t",73,55,27,46
+"C4","a combined-weight mean off 1 by > 0.2","BJ",73,4,1,72
+"C4","one patient carries > 10% of an arm's weight","IPCW",145,90,77,68
+"C4","one patient carries > 10% of an arm's weight","AIPCW",145,73,64,81
+"C4","one patient carries > 10% of an arm's weight","IPCW_t",145,80,67,78
+"C4","one patient carries > 10% of an arm's weight","AIPCW_t",145,55,48,97
+"C4","one patient carries > 10% of an arm's weight","BJ",145,4,2,143
+"C4","effective sample size < 50 in an arm","IPCW",171,90,85,86
+"C4","effective sample size < 50 in an arm","AIPCW",171,73,68,103
+"C4","effective sample size < 50 in an arm","IPCW_t",171,80,75,96
+"C4","effective sample size < 50 in an arm","AIPCW_t",171,55,52,119
+"C4","effective sample size < 50 in an arm","BJ",171,4,3,168
+"C4","trial-joining weight mean off 1 by > 0.2","IPCW",0,90,0,0
+"C4","trial-joining weight mean off 1 by > 0.2","AIPCW",0,73,0,0
+"C4","trial-joining weight mean off 1 by > 0.2","IPCW_t",0,80,0,0
+"C4","trial-joining weight mean off 1 by > 0.2","AIPCW_t",0,55,0,0
+"C4","trial-joining weight mean off 1 by > 0.2","BJ",0,4,0,0

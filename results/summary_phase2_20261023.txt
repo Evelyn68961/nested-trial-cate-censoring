@@ -1,0 +1,261 @@
+
+C0 no dropout: 200 hospitals; 0% of trial patients dropped out on average; median 25 s per hospital; commits 2b38cab
+ estimator abs_bias_avg_over_t rmse_avg_over_t coverage_avg_over_t abs_bias_at_5y coverage_at_5y median_bias_at_5y hospitals_off_by_0.5
+        CC               0.022           0.088                90.3          0.024           89.2             0.023                    0
+        NE               0.022           0.088                90.3          0.024           89.2             0.023                    0
+      IPCW               0.022           0.088                90.3          0.024           89.2             0.023                    0
+     AIPCW               0.022           0.088                91.0          0.024           89.2             0.023                    1
+    IPCW_t               0.022           0.088                90.3          0.024           89.2             0.023                    0
+   AIPCW_t               0.022           0.088                91.0          0.024           89.2             0.023                    1
+        BJ               0.022           0.088                91.0          0.024           89.2             0.023                    1
+
+C1 random dropout: 200 hospitals; 26% of trial patients dropped out on average; median 25 s per hospital; commits 2dc5901
+ estimator abs_bias_avg_over_t rmse_avg_over_t coverage_avg_over_t abs_bias_at_5y coverage_at_5y median_bias_at_5y hospitals_off_by_0.5
+        CC               0.020           0.098                90.9          0.020           90.2             0.022                    7
+        NE               0.038           0.100                86.4          0.064           78.8             0.067                    6
+      IPCW               0.025           0.102                91.1          0.026           92.5             0.028                   10
+     AIPCW               0.021           0.093                91.4          0.022           90.7             0.025                    9
+    IPCW_t               0.025           0.102                91.1          0.026           92.5             0.028                   10
+   AIPCW_t               0.021           0.093                91.4          0.022           90.7             0.025                    9
+        BJ               0.020           0.087                89.2          0.021           85.5             0.023                    4
+
+C2 dependent dropout: 200 hospitals; 30% of trial patients dropped out on average; median 25 s per hospital; commits 2dc5901
+ estimator abs_bias_avg_over_t rmse_avg_over_t coverage_avg_over_t abs_bias_at_5y coverage_at_5y median_bias_at_5y hospitals_off_by_0.5
+        CC               0.069           0.123                77.8          0.093           68.1             0.091                    8
+        NE               0.029           0.092                90.8          0.027           92.3             0.029                    6
+      IPCW               0.073           1.097                95.4          0.116           97.3             0.035                   92
+     AIPCW               0.038           0.758                92.3          0.048           92.6             0.019                   50
+    IPCW_t               0.022           0.243                95.3          0.022           97.3             0.033                   83
+   AIPCW_t               0.024           0.158                91.6          0.029           91.4             0.024                   27
+        BJ               0.020           0.083                80.2          0.025           72.4             0.026                    1
+
+C3 dependent dropout, dropout model wrong: 200 hospitals; 30% of trial patients dropped out on average; median 28 s per hospital; commits 2dc5901
+ estimator abs_bias_avg_over_t rmse_avg_over_t coverage_avg_over_t abs_bias_at_5y coverage_at_5y median_bias_at_5y hospitals_off_by_0.5
+        CC               0.069           0.123                77.8          0.093           68.1             0.091                    8
+        NE               0.029           0.092                90.8          0.027           92.3             0.029                    6
+      IPCW               0.031           0.127                93.6          0.037           94.6             0.030                   30
+     AIPCW               0.022           0.087                84.2          0.027           79.9             0.029                    4
+    IPCW_t               0.031           0.127                93.6          0.037           94.6             0.030                   30
+   AIPCW_t               0.022           0.087                84.2          0.027           79.9             0.029                    4
+        BJ               0.020           0.083                80.2          0.025           72.4             0.026                    1
+
+C4 dependent dropout, outcome model wrong: 200 hospitals; 30% of trial patients dropped out on average; median 25 s per hospital; commits 2b38cab,2dc5901
+ estimator abs_bias_avg_over_t rmse_avg_over_t coverage_avg_over_t abs_bias_at_5y coverage_at_5y median_bias_at_5y hospitals_off_by_0.5
+        CC               0.069           0.123                77.8          0.093           68.1             0.091                    8
+        NE               0.029           0.092                90.8          0.027           92.3             0.029                    6
+      IPCW               0.072           1.093                95.1          0.112           97.3             0.030                   90
+     AIPCW               0.055           0.914                94.2          0.065           95.2             0.027                   73
+    IPCW_t               0.023           0.234                95.0          0.021           97.2             0.029                   80
+   AIPCW_t               0.021           0.211                94.1          0.019           95.0             0.026                   55
+        BJ               0.044           0.093                83.8          0.064           75.5             0.066                    4
+
+Weight checks: hospitals flagged, and how many of the broken ones they catch:
+ setting                                         rule estimator flagged broken broken_flagged unbroken_flagged
+      C0        a combined-weight mean off 1 by > 0.2      IPCW       1      0              0                1
+      C0        a combined-weight mean off 1 by > 0.2     AIPCW       1      1              0                1
+      C0        a combined-weight mean off 1 by > 0.2    IPCW_t       1      0              0                1
+      C0        a combined-weight mean off 1 by > 0.2   AIPCW_t       1      1              0                1
+      C0        a combined-weight mean off 1 by > 0.2        BJ       1      1              0                1
+      C0 one patient carries > 10% of an arm's weight      IPCW       2      0              0                2
+      C0 one patient carries > 10% of an arm's weight     AIPCW       2      1              0                2
+      C0 one patient carries > 10% of an arm's weight    IPCW_t       2      0              0                2
+      C0 one patient carries > 10% of an arm's weight   AIPCW_t       2      1              0                2
+      C0 one patient carries > 10% of an arm's weight        BJ       2      1              0                2
+      C0         effective sample size < 50 in an arm      IPCW       2      0              0                2
+      C0         effective sample size < 50 in an arm     AIPCW       2      1              0                2
+      C0         effective sample size < 50 in an arm    IPCW_t       2      0              0                2
+      C0         effective sample size < 50 in an arm   AIPCW_t       2      1              0                2
+      C0         effective sample size < 50 in an arm        BJ       2      1              0                2
+      C0     trial-joining weight mean off 1 by > 0.2      IPCW       0      0              0                0
+      C0     trial-joining weight mean off 1 by > 0.2     AIPCW       0      1              0                0
+      C0     trial-joining weight mean off 1 by > 0.2    IPCW_t       0      0              0                0
+      C0     trial-joining weight mean off 1 by > 0.2   AIPCW_t       0      1              0                0
+      C0     trial-joining weight mean off 1 by > 0.2        BJ       0      1              0                0
+      C1        a combined-weight mean off 1 by > 0.2      IPCW       1     10              0                1
+      C1        a combined-weight mean off 1 by > 0.2     AIPCW       1      9              0                1
+      C1        a combined-weight mean off 1 by > 0.2    IPCW_t       1     10              0                1
+      C1        a combined-weight mean off 1 by > 0.2   AIPCW_t       1      9              0                1
+      C1        a combined-weight mean off 1 by > 0.2        BJ       1      4              0                1
+      C1 one patient carries > 10% of an arm's weight      IPCW       2     10              0                2
+      C1 one patient carries > 10% of an arm's weight     AIPCW       2      9              0                2
+      C1 one patient carries > 10% of an arm's weight    IPCW_t       2     10              0                2
+      C1 one patient carries > 10% of an arm's weight   AIPCW_t       2      9              0                2
+      C1 one patient carries > 10% of an arm's weight        BJ       2      4              0                2
+      C1         effective sample size < 50 in an arm      IPCW       1     10              0                1
+      C1         effective sample size < 50 in an arm     AIPCW       1      9              0                1
+      C1         effective sample size < 50 in an arm    IPCW_t       1     10              0                1
+      C1         effective sample size < 50 in an arm   AIPCW_t       1      9              0                1
+      C1         effective sample size < 50 in an arm        BJ       1      4              0                1
+      C1     trial-joining weight mean off 1 by > 0.2      IPCW       0     10              0                0
+      C1     trial-joining weight mean off 1 by > 0.2     AIPCW       0      9              0                0
+      C1     trial-joining weight mean off 1 by > 0.2    IPCW_t       0     10              0                0
+      C1     trial-joining weight mean off 1 by > 0.2   AIPCW_t       0      9              0                0
+      C1     trial-joining weight mean off 1 by > 0.2        BJ       0      4              0                0
+      C2        a combined-weight mean off 1 by > 0.2      IPCW      73     92             44               29
+      C2        a combined-weight mean off 1 by > 0.2     AIPCW      73     50             33               40
+      C2        a combined-weight mean off 1 by > 0.2    IPCW_t      73     83             37               36
+      C2        a combined-weight mean off 1 by > 0.2   AIPCW_t      73     27             16               57
+      C2        a combined-weight mean off 1 by > 0.2        BJ      73      1              0               73
+      C2 one patient carries > 10% of an arm's weight      IPCW     145     92             77               68
+      C2 one patient carries > 10% of an arm's weight     AIPCW     145     50             43              102
+      C2 one patient carries > 10% of an arm's weight    IPCW_t     145     83             68               77
+      C2 one patient carries > 10% of an arm's weight   AIPCW_t     145     27             23              122
+      C2 one patient carries > 10% of an arm's weight        BJ     145      1              0              145
+      C2         effective sample size < 50 in an arm      IPCW     171     92             89               82
+      C2         effective sample size < 50 in an arm     AIPCW     171     50             47              124
+      C2         effective sample size < 50 in an arm    IPCW_t     171     83             80               91
+      C2         effective sample size < 50 in an arm   AIPCW_t     171     27             26              145
+      C2         effective sample size < 50 in an arm        BJ     171      1              0              171
+      C2     trial-joining weight mean off 1 by > 0.2      IPCW       0     92              0                0
+      C2     trial-joining weight mean off 1 by > 0.2     AIPCW       0     50              0                0
+      C2     trial-joining weight mean off 1 by > 0.2    IPCW_t       0     83              0                0
+      C2     trial-joining weight mean off 1 by > 0.2   AIPCW_t       0     27              0                0
+      C2     trial-joining weight mean off 1 by > 0.2        BJ       0      1              0                0
+      C3        a combined-weight mean off 1 by > 0.2      IPCW     187     30             29              158
+      C3        a combined-weight mean off 1 by > 0.2     AIPCW     187      4              4              183
+      C3        a combined-weight mean off 1 by > 0.2    IPCW_t     187     30             29              158
+      C3        a combined-weight mean off 1 by > 0.2   AIPCW_t     187      4              4              183
+      C3        a combined-weight mean off 1 by > 0.2        BJ     187      1              1              186
+      C3 one patient carries > 10% of an arm's weight      IPCW       0     30              0                0
+      C3 one patient carries > 10% of an arm's weight     AIPCW       0      4              0                0
+      C3 one patient carries > 10% of an arm's weight    IPCW_t       0     30              0                0
+      C3 one patient carries > 10% of an arm's weight   AIPCW_t       0      4              0                0
+      C3 one patient carries > 10% of an arm's weight        BJ       0      1              0                0
+      C3         effective sample size < 50 in an arm      IPCW       0     30              0                0
+      C3         effective sample size < 50 in an arm     AIPCW       0      4              0                0
+      C3         effective sample size < 50 in an arm    IPCW_t       0     30              0                0
+      C3         effective sample size < 50 in an arm   AIPCW_t       0      4              0                0
+      C3         effective sample size < 50 in an arm        BJ       0      1              0                0
+      C3     trial-joining weight mean off 1 by > 0.2      IPCW       0     30              0                0
+      C3     trial-joining weight mean off 1 by > 0.2     AIPCW       0      4              0                0
+      C3     trial-joining weight mean off 1 by > 0.2    IPCW_t       0     30              0                0
+      C3     trial-joining weight mean off 1 by > 0.2   AIPCW_t       0      4              0                0
+      C3     trial-joining weight mean off 1 by > 0.2        BJ       0      1              0                0
+      C4        a combined-weight mean off 1 by > 0.2      IPCW      73     90             47               26
+      C4        a combined-weight mean off 1 by > 0.2     AIPCW      73     73             41               32
+      C4        a combined-weight mean off 1 by > 0.2    IPCW_t      73     80             40               33
+      C4        a combined-weight mean off 1 by > 0.2   AIPCW_t      73     55             27               46
+      C4        a combined-weight mean off 1 by > 0.2        BJ      73      4              1               72
+      C4 one patient carries > 10% of an arm's weight      IPCW     145     90             77               68
+      C4 one patient carries > 10% of an arm's weight     AIPCW     145     73             64               81
+      C4 one patient carries > 10% of an arm's weight    IPCW_t     145     80             67               78
+      C4 one patient carries > 10% of an arm's weight   AIPCW_t     145     55             48               97
+      C4 one patient carries > 10% of an arm's weight        BJ     145      4              2              143
+      C4         effective sample size < 50 in an arm      IPCW     171     90             85               86
+      C4         effective sample size < 50 in an arm     AIPCW     171     73             68              103
+      C4         effective sample size < 50 in an arm    IPCW_t     171     80             75               96
+      C4         effective sample size < 50 in an arm   AIPCW_t     171     55             52              119
+      C4         effective sample size < 50 in an arm        BJ     171      4              3              168
+      C4     trial-joining weight mean off 1 by > 0.2      IPCW       0     90              0                0
+      C4     trial-joining weight mean off 1 by > 0.2     AIPCW       0     73              0                0
+      C4     trial-joining weight mean off 1 by > 0.2    IPCW_t       0     80              0                0
+      C4     trial-joining weight mean off 1 by > 0.2   AIPCW_t       0     55              0                0
+      C4     trial-joining weight mean off 1 by > 0.2        BJ       0      4              0                0
+
+Time to benefit (years), delta = 0.05:
+ setting profile_v estimator true_ttb median_estimated share_within_half_year share_never_reached
+      C0         1        CC      3.5             3.50                   0.32                0.14
+      C0         1        NE      3.5             3.50                   0.32                0.14
+      C0         1      IPCW      3.5             3.50                   0.32                0.14
+      C0         1     AIPCW      3.5             3.00                   0.32                0.16
+      C0         1    IPCW_t      3.5             3.50                   0.32                0.14
+      C0         1   AIPCW_t      3.5             3.00                   0.32                0.16
+      C0         1        BJ      3.5             3.00                   0.32                0.16
+      C0         2        CC      2.0             2.50                   0.54                0.01
+      C0         2        NE      2.0             2.50                   0.54                0.01
+      C0         2      IPCW      2.0             2.50                   0.54                0.01
+      C0         2     AIPCW      2.0             2.50                   0.54                0.01
+      C0         2    IPCW_t      2.0             2.50                   0.54                0.01
+      C0         2   AIPCW_t      2.0             2.50                   0.54                0.01
+      C0         2        BJ      2.0             2.50                   0.54                0.01
+      C0         3        CC      2.5             3.00                   0.44                0.03
+      C0         3        NE      2.5             3.00                   0.44                0.03
+      C0         3      IPCW      2.5             3.00                   0.44                0.03
+      C0         3     AIPCW      2.5             3.00                   0.46                0.02
+      C0         3    IPCW_t      2.5             3.00                   0.44                0.03
+      C0         3   AIPCW_t      2.5             3.00                   0.46                0.02
+      C0         3        BJ      2.5             3.00                   0.46                0.02
+      C1         1        CC      3.5             3.00                   0.32                0.15
+      C1         1        NE      3.5             3.50                   0.20                0.30
+      C1         1      IPCW      3.5             3.00                   0.25                0.18
+      C1         1     AIPCW      3.5             3.00                   0.28                0.14
+      C1         1    IPCW_t      3.5             3.00                   0.25                0.18
+      C1         1   AIPCW_t      3.5             3.00                   0.28                0.14
+      C1         1        BJ      3.5             3.00                   0.28                0.16
+      C1         2        CC      2.0             2.50                   0.50                0.01
+      C1         2        NE      2.0             2.50                   0.42                0.07
+      C1         2      IPCW      2.0             2.50                   0.48                0.01
+      C1         2     AIPCW      2.0             2.50                   0.49                0.01
+      C1         2    IPCW_t      2.0             2.50                   0.48                0.01
+      C1         2   AIPCW_t      2.0             2.50                   0.49                0.01
+      C1         2        BJ      2.0             2.50                   0.51                0.01
+      C1         3        CC      2.5             3.00                   0.45                0.02
+      C1         3        NE      2.5             3.50                   0.36                0.10
+      C1         3      IPCW      2.5             3.00                   0.46                0.04
+      C1         3     AIPCW      2.5             3.00                   0.47                0.01
+      C1         3    IPCW_t      2.5             3.00                   0.46                0.04
+      C1         3   AIPCW_t      2.5             3.00                   0.47                0.01
+      C1         3        BJ      2.5             3.00                   0.47                0.01
+      C2         1        CC      3.5             4.50                   0.14                0.41
+      C2         1        NE      3.5             2.50                   0.23                0.09
+      C2         1      IPCW      3.5             2.50                   0.14                0.22
+      C2         1     AIPCW      3.5             3.00                   0.24                0.15
+      C2         1    IPCW_t      3.5             2.50                   0.14                0.23
+      C2         1   AIPCW_t      3.5             3.00                   0.22                0.18
+      C2         1        BJ      3.5             3.50                   0.29                0.25
+      C2         2        CC      2.0             3.00                   0.30                0.12
+      C2         2        NE      2.0             2.00                   0.60                0.01
+      C2         2      IPCW      2.0             2.00                   0.44                0.10
+      C2         2     AIPCW      2.0             2.00                   0.43                0.06
+      C2         2    IPCW_t      2.0             2.00                   0.44                0.09
+      C2         2   AIPCW_t      2.0             2.00                   0.44                0.06
+      C2         2        BJ      2.0             2.50                   0.45                0.04
+      C2         3        CC      2.5             4.00                   0.28                0.16
+      C2         3        NE      2.5             2.25                   0.51                0.01
+      C2         3      IPCW      2.5             3.00                   0.30                0.19
+      C2         3     AIPCW      2.5             2.50                   0.40                0.07
+      C2         3    IPCW_t      2.5             2.75                   0.30                0.19
+      C2         3   AIPCW_t      2.5             2.50                   0.41                0.07
+      C2         3        BJ      2.5             3.00                   0.51                0.04
+      C3         1        CC      3.5             4.50                   0.14                0.41
+      C3         1        NE      3.5             2.50                   0.23                0.09
+      C3         1      IPCW      3.5             2.50                   0.20                0.14
+      C3         1     AIPCW      3.5             3.50                   0.28                0.23
+      C3         1    IPCW_t      3.5             2.50                   0.20                0.14
+      C3         1   AIPCW_t      3.5             3.50                   0.28                0.23
+      C3         1        BJ      3.5             3.50                   0.29                0.25
+      C3         2        CC      2.0             3.00                   0.30                0.12
+      C3         2        NE      2.0             2.00                   0.60                0.01
+      C3         2      IPCW      2.0             2.00                   0.52                0.04
+      C3         2     AIPCW      2.0             2.50                   0.46                0.04
+      C3         2    IPCW_t      2.0             2.00                   0.52                0.04
+      C3         2   AIPCW_t      2.0             2.50                   0.46                0.04
+      C3         2        BJ      2.0             2.50                   0.45                0.04
+      C3         3        CC      2.5             4.00                   0.28                0.16
+      C3         3        NE      2.5             2.25                   0.51                0.01
+      C3         3      IPCW      2.5             2.00                   0.42                0.02
+      C3         3     AIPCW      2.5             3.00                   0.50                0.04
+      C3         3    IPCW_t      2.5             2.00                   0.42                0.02
+      C3         3   AIPCW_t      2.5             3.00                   0.50                0.04
+      C3         3        BJ      2.5             3.00                   0.51                0.04
+      C4         1        CC      3.5             4.50                   0.14                0.41
+      C4         1        NE      3.5             2.50                   0.23                0.09
+      C4         1      IPCW      3.5             2.50                   0.20                0.19
+      C4         1     AIPCW      3.5             2.50                   0.22                0.15
+      C4         1    IPCW_t      3.5             2.50                   0.21                0.20
+      C4         1   AIPCW_t      3.5             2.50                   0.23                0.15
+      C4         1        BJ      3.5             2.00                   0.28                0.04
+      C4         2        CC      2.0             3.00                   0.30                0.12
+      C4         2        NE      2.0             2.00                   0.60                0.01
+      C4         2      IPCW      2.0             2.00                   0.50                0.13
+      C4         2     AIPCW      2.0             2.00                   0.50                0.10
+      C4         2    IPCW_t      2.0             2.00                   0.50                0.12
+      C4         2   AIPCW_t      2.0             2.00                   0.50                0.09
+      C4         2        BJ      2.0             1.75                   0.64                0.00
+      C4         3        CC      2.5             4.00                   0.28                0.16
+      C4         3        NE      2.5             2.25                   0.51                0.01
+      C4         3      IPCW      2.5             3.00                   0.30                0.22
+      C4         3     AIPCW      2.5             3.00                   0.34                0.18
+      C4         3    IPCW_t      2.5             3.00                   0.30                0.21
+      C4         3   AIPCW_t      2.5             3.00                   0.34                0.18
+      C4         3        BJ      2.5             2.00                   0.58                0.01

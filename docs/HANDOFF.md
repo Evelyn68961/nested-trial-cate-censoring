@@ -1,10 +1,16 @@
 # Handoff: where the project stands, and what is next
 
-Updated 22 October 2026, 20:40.
+Updated 23 October 2026, 09:00.
 
-## 23 October 2026: in progress
+## 23 October 2026: steps 12 to 15 done
 
-Steps 12 to 15 (Buckley-James, setting C4, weight checks, rerun) are in `docs/WORKPLAN.md` and `docs/LOG.md`. Code is committed (2b38cab). If the runs were cut off, restart each unfinished setting with `Rscript scripts/10_run_phase2.R <C0..C4> 200 3`; finished chunks are skipped. Then run `Rscript scripts/11_summarise_phase2.R`.
+Buckley-James estimator, setting C4 (wrong outcome model), weight checks, and a rerun of all five settings at 200 hospitals. Gate 3 passed, except that no weight check identifies the broken hospitals, which is itself a finding. Results: the last section of `reports/phase2_results.md`; lesson 11; `docs/LOG.md`.
+
+Next, optional: step 16 (Brier score and calibration of each arm's risk model among all eligible patients, with dropout), about 1 to 2 days. Plan in `docs/WORKPLAN.md`.
+
+New open questions from the additions:
+- BJ's intervals undercover even with the right outcome model (72% in C2). A bootstrap would test the likely reason.
+- AIPCW is right in the typical hospital under either wrong model, but its breaks remain. Truncating the combined weight (open question 1 below) is still untried.
 
 ## State
 
