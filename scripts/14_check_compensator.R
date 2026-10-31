@@ -160,4 +160,87 @@ if (mode == "integrate") {
                 k, length(chunks), as.numeric(difftime(Sys.time(), t0, units = "mins"))))
   }
   cat("All chunks done.\n")
+} else if (mode == "patients") {
+  # Per hospital at t = 5: the largest 30-step compensator error relative to 3000 steps, and how
+  # much of AIPCW's curve change comes from one patient. The curve is linear in the pseudo-outcome
+  # for a fixed bandwidth, so each patient's part of the change is known exactly; the hospital's
+  # saved AIPCW bandwidth is used.
+  # Usage: Rscript scripts/14_check_compensator.R patients <setting> <n_hospitals> <workers>
+  # Results go to results/check_step2/compensator/patients/<setting>/chunk_<k>.rds
+  setting <- args[2]
+  n_hospitals <- as.integer(args[3])
+  workers <- as.integer(args[4])
+  if (length(system("git status --porcelain -- R config scripts", intern = TRUE)) > 0) {
+    stop("Uncommitted changes in R/, config/ or scripts/. Commit first so results can be traced.")
+  }
+  commit <- system("git rev-parse --short HEAD", intern = TRUE)
+  out_formula <- list(C2 = right_outcome, C4 = ~ v + I(v^2) + male)[[setting]]
+  source("scripts/14_common.R")
+  saved <- read_chunks(file.path("results", "phase2", setting))
+  saved <- saved[saved$estimator == "AIPCW" & saved$t == 5 & abs(saved$v - saved$v[1]) < 1e-9, ]
+  bandwidth <- setNames(saved$h, saved$seed)
+  out_dir <- file.path("results", "check_step2", "compensator", "patients", setting)
+  dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+  chunks <- split(seq_len(n_hospitals), ceiling(seq_len(n_hospitals) / 25))
+  future::plan(future::multisession, workers = workers)
+
+  one_hospital <- function(seed, bw, out_formula, commit) {
+    for (f in phase2_files) source(sprintf("R/%s.R", f))
+    cfg <- load_config("config/phase2.yaml")
+    b0 <- participation_intercept(cfg)
+    d <- simulate_cohort_surv(cfg, "dependent", seed = seed, b0 = b0)$observed
+    t <- 5
+    times <- unlist(cfg$times)
+    h <- suppressWarnings(fit_phase2_helpers(d, times, right_formula, cfg$follow_up_end, seed = seed,
+                                             out_formula = out_formula))
+    use_n_steps(30)
+    y30 <- augmented_status(d, t, h)
+    use_n_steps(3000)
+    y3000 <- augmented_status(d, t, h)
+    g1 <- 1 - weibull_surv(t, h$lp1, h$scale1)
+    g0 <- 1 - weibull_surv(t, h$lp0, h$scale0)
+    xi30 <- pseudo_from_status(d, y30, h$p_join, h$p_treat, g1, g0)
+    xi3000 <- pseudo_from_status(d, y3000, h$p_join, h$p_treat, g1, g0)
+    v_grid <- make_v_grid(cfg)
+    fit30 <- local_linear(d$v, xi30, v_grid, bw)$estimate
+    fit3000 <- local_linear(d$v, xi3000, v_grid, bw)$estimate
+    dxi <- xi3000 - xi30
+    # parts[k, i]: patient i's part of the curve change at v_grid[k]
+    parts <- t(sapply(v_grid, function(v0) {
+      dv <- d$v - v0
+      w <- epanechnikov(dv / bw) / bw
+      Dinv <- solve(matrix(c(mean(w), mean(w * dv), mean(w * dv), mean(w * dv^2)), 2, 2))
+      (Dinv[1, 1] + Dinv[1, 2] * dv) * w * dxi / length(dv)
+    }))
+    change <- fit3000 - fit30
+    stopifnot(max(abs(rowSums(parts) - change)) < 1e-8)
+    per_patient <- colSums(abs(parts))
+    top <- which.max(per_patient)
+    y_error <- y3000 - y30    # the compensator error, 30 minus 3000 steps
+    worst <- which.max(abs(y_error))
+    i <- d$s == 1
+    data.frame(seed = seed, setting_h = bw,
+               largest_compensator_error_30_vs_3000 = y_error[worst],
+               one_over_G_of_that_patient = 1 / weibull_surv(pmin(d$time[worst], t), h$cens_lp[worst], h$cens_scale[worst]),
+               n_patients_error_above_0.01 = sum(abs(y_error[i]) > 0.01),
+               integrated_absolute_curve_change = mean(abs(change)),
+               largest_absolute_curve_change = max(abs(change)),
+               top_patient_share_of_absolute_parts = per_patient[top] / sum(per_patient),
+               integrated_absolute_change_without_top_patient = mean(abs(change - parts[, top])),
+               commit = commit)
+  }
+
+  for (k in seq_along(chunks)) {
+    path <- file.path(out_dir, sprintf("chunk_%03d.rds", k))
+    if (file.exists(path)) next
+    res <- future.apply::future_lapply(chunks[[k]], function(s) {
+      one_hospital(s, bandwidth[[as.character(s)]], out_formula, commit)
+    }, future.seed = TRUE)
+    saveRDS(list(patients = do.call(rbind, res)), path)
+    cat(sprintf("%s  %s patients chunk %d of %d done\n", format(Sys.time(), "%H:%M"), setting, k, length(chunks)))
+  }
+  all_rows <- read_chunks(out_dir, "patients")
+  all_rows <- cbind(setting = setting, all_rows)
+  write.csv(round_numeric(all_rows), sprintf("reports/tables/14_compensator_patients_%s.csv", setting), row.names = FALSE)
+  cat("All chunks done.\n")
 }
