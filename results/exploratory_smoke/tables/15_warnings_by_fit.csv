@@ -1,0 +1,17 @@
+"run","setting","fit_type","estimators","t","arm","message","n_warnings","n_hospitals"
+"control","C2","logistic outcome","CC",0.5,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"B","C2m","logistic outcome","CC",0.5,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"B","C3m","logistic outcome","CC",0.5,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"control","C4","logistic outcome","CC",0.5,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"C","C5a","logistic outcome","CC",0.5,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"B","C2m","logistic outcome","NE",0.5,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"B","C3m","logistic outcome","NE",0.5,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"control","C2","logistic outcome","NE",1,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"control","C4","logistic outcome","NE",1,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"C","C5a","logistic outcome","NE",1,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"control","C2","logistic outcome","CC",1.5,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"control","C4","logistic outcome","CC",1.5,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"C","C5a","logistic outcome","CC",1.5,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"control","C2","logistic outcome","NE",1.5,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"control","C4","logistic outcome","NE",1.5,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"C","C5a","logistic outcome","NE",1.5,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1

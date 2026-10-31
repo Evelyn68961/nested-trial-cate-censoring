@@ -10,7 +10,7 @@ Next, optional: step 16 (Brier score and calibration of each arm's risk model am
 
 New open questions from the additions:
 - BJ's intervals undercover even with the right outcome model (72% in C2). A bootstrap would test the likely reason.
-- AIPCW is right in the typical hospital under either wrong model, but its breaks remain. Truncating the combined weight (open question 1 below) is still untried.
+- AIPCW has small median-based bias under either wrong model taken alone, but its large errors remain. Truncating the combined weight (open question 1 below) is now Run A in `docs/exploratory_prespecification.md`.
 
 ## State
 
@@ -19,7 +19,7 @@ New open questions from the additions:
 | Phase 1 (binary outcome, no dropout) | **Done.** 500 hospitals, Gate 1 passed. `reports/phase1_results.md` |
 | Phase 1, trial of about 125 | 50 of 500 hospitals (preliminary) |
 | Phase 2 (dropout, effect over time) | **Done.** 200 hospitals per setting, with truncated weights. Gate 2 passed for bias, not for stability or intervals. `reports/phase2_results.md` |
-| Lessons | 1 to 10 written, in `docs/lessons/` |
+| Lessons | 1 to 11 written, in `docs/lessons/` (lessons 5 and 6 share one file) |
 | Process log | `docs/LOG.md`: every setting, change and check, with reasons |
 | Slide deck | Not started |
 

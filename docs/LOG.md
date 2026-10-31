@@ -10,7 +10,7 @@ What was decided, changed and checked, in order, with the reason for each. Newes
 
 - **Language: R only.** The paper's software (Super Learner) is in R and the reference code is in R.
 - **Repository private** until Gate 2 passes (Phase 2 checks). Nothing goes public before the results have been checked.
-- **Raw results are not committed** (`results/` is in `.gitignore`). Summary tables and figures in `reports/` are committed.
+- **Raw results were at first not committed.** This changed later: `results/` is no longer in `.gitignore`, only `results/reference/` is, and the run files in `results/` are in the repository. Summary tables and figures in `reports/` are committed.
 
 ### Step 1: simulated hospitals (commit 3532169)
 

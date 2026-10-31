@@ -2,7 +2,7 @@
 
 A simulation study in R. It rebuilds the estimator of Wen, Dahabreh and Chiu, *Generalizing conditional average treatment effects from nested randomized trials to all trial-eligible individuals* (Statistics in Medicine 2026; arXiv:2605.14952). It then asks what happens when trial patients drop out before the end of follow-up, a case the paper sets aside ("no dropout in the trial").
 
-**Status:** Phase 1 complete (Gate 1 passed; `reports/phase1_results.md`). Phase 2 complete at 200 hospitals per setting (Gate 2 passed for bias, not for stability or intervals; `reports/phase2_results.md`). Process log: `docs/LOG.md`.
+**Status:** Phase 1 complete (Gate 1 passed; `reports/phase1_results.md`). Phase 2 complete at 200 hospitals per setting (Gate 2 passed for median-based bias, not for stability or intervals; `reports/phase2_results.md`). The results have been reviewed and rechecked, and exploratory follow-up runs are pre-specified in `docs/exploratory_prespecification.md`. Process log: `docs/LOG.md`.
 
 ## The question
 
@@ -12,7 +12,7 @@ Phase 1 rebuilds the paper's estimator for a binary outcome and checks it in sim
 
 ## Running it
 
-From the repository root, with R 4.4 and the packages `yaml`, `ggplot2`, `testthat`, `SuperLearner`, `gam` and `ranger`:
+From the repository root, with R 4.4 and the packages `yaml`, `ggplot2`, `testthat`, `SuperLearner`, `gam`, `ranger`, `future`, `future.apply` and `survival`:
 
 ```
 Rscript scripts/01_check_generator.R

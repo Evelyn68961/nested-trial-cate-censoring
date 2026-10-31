@@ -1,6 +1,6 @@
 # Pre-specification of the exploratory runs
 
-Committed before any full run of A, B or C. Only a 3-hospital smoke test had been run through this code, and it was read for controls and timing only.
+Committed before any full run of A, B or C. Only a 3-hospital smoke test has been run through this code. It was read for controls, timing, and a check that each new setting changes the estimates, and not for performance.
 
 **These runs follow first results and are exploratory (Pawel et al.).** They were chosen after the reported Phase 2 results and the review of them had been seen. They do not confirm anything, and their results are labelled exploratory throughout. A prediction that fails is reported as failed, not revised.
 
