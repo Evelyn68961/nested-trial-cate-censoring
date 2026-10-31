@@ -85,3 +85,25 @@ out <- out[order(out$setting, -out$arm, out$helper), ]
 options(width = 160)
 print(out, row.names = FALSE, digits = 4)
 write.csv(out, "reports/tables/14_helper_specification.csv", row.names = FALSE)
+
+# Paired by hospital: logistic RMSE minus Weibull RMSE, with bootstrap intervals over hospitals
+source("scripts/14_common.R")
+set.seed(20261031)
+counts <- resample_counts(n_hospitals)
+pairs <- list()
+for (setting in c("C0", "C2")) for (arm in 1:0) for (n in setdiff(unique(rows$helper), "weibull_AIPCW")) {
+  this <- rows[rows$setting == setting & rows$arm == arm, ]
+  logistic <- this[this$helper == n, ]
+  weibull <- this[this$helper == "weibull_AIPCW", ]
+  gap <- logistic$rmse - weibull$rmse[match(logistic$seed, weibull$seed)]
+  boot <- as.vector(counts %*% gap) / n_hospitals
+  pairs[[length(pairs) + 1]] <- data.frame(
+    setting = setting, arm = arm, helper = n, n_hospitals = n_hospitals,
+    mean_rmse_difference_logistic_minus_weibull = mean(gap),
+    difference_ci95_lower = unname(quantile(boot, 0.025)),
+    difference_ci95_upper = unname(quantile(boot, 0.975)),
+    n_hospitals_logistic_worse = sum(gap > 0), commit = commit)
+}
+pairs <- do.call(rbind, pairs)
+print(pairs, row.names = FALSE, digits = 4)
+write.csv(round_numeric(pairs), "reports/tables/14_helper_specification_paired.csv", row.names = FALSE)
