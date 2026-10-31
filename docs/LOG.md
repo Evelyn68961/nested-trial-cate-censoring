@@ -384,3 +384,5 @@ The review of Phase 2 (Steps 2a and 2b, issue #1) found claims the numbers did n
 - `reports/phase2_results.md`: corrected claims, and the section "Corrections, disclosures and checks after review". This includes the condition for AIPCW's consistency, and that the source of the large errors is not established.
 - `docs/lessons/10_phase2_results.md` and `11_which_model_to_trust.md`: the same corrections.
 - `docs/exploratory_prespecification.md`: Runs A, B and C, exploratory, with expected directions and a decision rule fixed before any full run.
+
+Full runs at commit `da5c483`, 3 workers, 200 hospitals, finished at 22:55. All 30 controls were exactly 0 and no hospital failed. Predictions: AIPCW and BJ in C5a held; BJ in C5b held; AIPCW and IPCW in C5b not determined; IPCW in C5a reported without a decision, as fixed in advance. No floor was chosen. The floor of 0.05 never applied in Run B. Results are in the section "Exploratory runs" of `reports/phase2_results.md`, tables in `reports/tables/15_*`, chunks in `results/exploratory/`, and the final smoke test in `results/exploratory_smoke_final/`. These results await review.

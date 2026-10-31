@@ -2,7 +2,7 @@
 
 22 October 2026, 20:40; additions (Buckley-James, setting C4, weight checks) on 23 October, at the end. 200 simulated hospitals per setting (2,500 eligible patients, about 500 in the trial). Event times from Weibull models in which the benefit grows over time; follow-up 5 years; effect estimated at ten times from 0.5 to 5 years. Settings: `config/phase2.yaml`. Every decision and change: `docs/LOG.md`. Supersedes `reports/phase2_preliminary.md`.
 
-**Draft corrected after review, 31 October 2026.** Every reported number stands; claims the numbers did not support have been corrected, and disclosures added at the end. Gaps for the exploratory runs are marked **[PENDING]**.
+**Draft corrected after review, 31 October 2026.** Every reported number stands; claims the numbers did not support have been corrected, and disclosures added at the end. Exploratory results were added the same day, at commit `da5c483`, and are awaiting review.
 
 ## The settings
 
@@ -167,7 +167,7 @@ Averaged over the v grid, from saved rows (`reports/tables/15_sd_at_t5.csv`).
 - **CC refits the trial-joining model on the reduced data,** so its p_join is P(S = 1, status known | X). Taking both models from the full cohort does not repair it: at 5 years in C2, bias falls from 0.093 to 0.084, but coverage falls from 68.1% to 50.6%. Reported CC is unchanged.
 - **IPCW's outcome model is logistic, while the generator has a complementary log-log form.** Over 25 hospitals at 5 years, logistic RMSE exceeded Weibull RMSE on average in every row, by about 0.01 in C0 (interval 0.004 to 0.016, logistic worse in 19 of 25 hospitals) and 0.013 to 0.054 for IPCW in C2. CC's and NE's larger errors in C2 come mostly from their mean errors, not from the link.
 - **Run sizes differ:** Phase 1 used 500 hospitals with a Super Learner, its 5% trial setting 50 hospitals (preliminary), and Phase 2 200 hospitals with parametric models. These are not directly comparable.
-- **Warnings.** The original runs suppressed warnings. Counted later, over 200 hospitals, C2 and C4 each gave 246 "fitted probabilities 0 or 1" (77 hospitals) and 4 "did not converge" (3 hospitals), all from logistic fits. CC's fits account for 123 of the 250; the rest were not attributed. The exploratory runs record each by fit. **[PENDING]**
+- **Warnings.** The original runs suppressed warnings. Counted later, over 200 hospitals, C2 and C4 each gave 246 "fitted probabilities 0 or 1" (77 hospitals) and 4 "did not converge" (3 hospitals), all from logistic fits. The exploratory control runs attribute all 250 in each setting: 123 to CC's fits and 127 to NE's. The code also suppresses warnings in IPCW's outcome fits, which that count did not include; see "Warnings by fit" below.
 - **The original tables give coverage of the exact target only.** Coverage of the smoothed and median targets is added below.
 
 ### Coverage against other targets
@@ -222,32 +222,120 @@ Compared at t = 5 in C2, on the survival difference with repository signs flippe
 
 Floors 0.01, 0.02, 0.05 and 0.10, on G alone, on p(S=1|X) alone, and on their product, for IPCW and AIPCW in C2 and C4. The lower bound on the product also floors p where p is below the floor. **No floor was chosen, and none is called best.**
 
-**[PENDING: results table, `reports/tables/15_runA_performance.csv`, `15_runA_paired.csv`.]**
+Each cell, at t = 5: median-based bias / RMSE / coverage of the exact target, % / median interval width / hospitals of 200 with absolute error above 0.5. All metrics, and paired differences against the reported rows: `reports/tables/15_runA_performance.csv`, `15_runA_paired.csv`.
+
+**C2**
+
+| Scheme | Floor | IPCW | AIPCW |
+|---|---|---|---|
+| G | 0.01 | 0.034 / 0.733 / 97.3 / 0.78 / 92 | 0.020 / 0.369 / 92.4 / 0.46 / 47 |
+| G | 0.02 | 0.034 / 0.481 / 97.4 / 0.78 / 92 | 0.020 / 0.256 / 92.3 / 0.46 / 40 |
+| G | 0.05 | 0.033 / 0.315 / 97.3 / 0.78 / 83 | 0.024 / 0.175 / 91.4 / 0.44 / 27 |
+| G | 0.10 | 0.030 / 0.246 / 97.1 / 0.74 / 72 | 0.026 / 0.141 / 90.6 / 0.41 / 19 |
+| p | 0.01 | 0.035 / 1.652 / 97.3 / 0.78 / 92 | 0.019 / 1.272 / 92.6 / 0.47 / 50 |
+| p | 0.02 | 0.036 / 1.651 / 97.2 / 0.77 / 90 | 0.019 / 1.272 / 92.6 / 0.47 / 50 |
+| p | 0.05 | 0.031 / 1.047 / 97.0 / 0.72 / 85 | 0.019 / 1.179 / 92.6 / 0.46 / 46 |
+| p | 0.10 | 0.026 / 0.608 / 95.3 / 0.57 / 58 | 0.017 / 0.893 / 91.4 / 0.40 / 29 |
+| p G | 0.01 | 0.032 / 0.215 / 96.7 / 0.72 / 66 | 0.026 / 0.129 / 90.4 / 0.39 / 13 |
+| p G | 0.02 | 0.029 / 0.182 / 95.8 / 0.63 / 45 | 0.029 / 0.117 / 89.0 / 0.35 / 6 |
+| p G | 0.05 | 0.023 / 0.145 / 95.0 / 0.48 / 14 | 0.029 / 0.105 / 84.2 / 0.28 / 2 |
+| p G | 0.10 | 0.017 / 0.109 / 93.9 / 0.36 / 2 | 0.025 / 0.097 / 76.7 / 0.22 / 2 |
+
+**C4**
+
+| Scheme | Floor | IPCW | AIPCW |
+|---|---|---|---|
+| G | 0.01 | 0.029 / 0.726 / 97.3 / 0.71 / 90 | 0.026 / 0.585 / 95.2 / 0.62 / 71 |
+| G | 0.02 | 0.029 / 0.471 / 97.3 / 0.71 / 90 | 0.025 / 0.387 / 95.1 / 0.61 / 68 |
+| G | 0.05 | 0.029 / 0.301 / 97.2 / 0.70 / 80 | 0.026 / 0.250 / 95.0 / 0.60 / 55 |
+| G | 0.10 | 0.027 / 0.234 / 96.9 / 0.68 / 73 | 0.028 / 0.198 / 94.4 / 0.57 / 48 |
+| p | 0.01 | 0.030 / 1.645 / 97.3 / 0.71 / 89 | 0.027 / 1.173 / 95.2 / 0.62 / 73 |
+| p | 0.02 | 0.030 / 1.645 / 97.4 / 0.71 / 89 | 0.027 / 1.173 / 95.2 / 0.62 / 72 |
+| p | 0.05 | 0.031 / 1.045 / 97.0 / 0.68 / 84 | 0.030 / 0.850 / 94.5 / 0.60 / 63 |
+| p | 0.10 | 0.032 / 0.608 / 94.7 / 0.56 / 59 | 0.031 / 0.511 / 92.8 / 0.49 / 51 |
+| p G | 0.01 | 0.029 / 0.198 / 96.7 / 0.66 / 57 | 0.028 / 0.173 / 93.7 / 0.56 / 35 |
+| p G | 0.02 | 0.028 / 0.166 / 95.8 / 0.57 / 25 | 0.028 / 0.145 / 92.1 / 0.48 / 16 |
+| p G | 0.05 | 0.025 / 0.124 / 93.4 / 0.41 / 8 | 0.046 / 0.118 / 88.8 / 0.36 / 3 |
+| p G | 0.10 | 0.038 / 0.105 / 88.2 / 0.30 / 3 | 0.063 / 0.109 / 79.4 / 0.26 / 3 |
+
+Reported rows without a floor, as RMSE / coverage / hospitals above 0.5: C2 IPCW 1.652 / 97.3 / 92, C2 AIPCW 1.272 / 92.6 / 50, C4 IPCW 1.645 / 97.3 / 90, C4 AIPCW 1.173 / 95.2 / 73.
+
+- **Large errors fell furthest under the bound on the product.** At 0.10 it left 2 to 3 hospitals above 0.5 for each method. A floor of 0.10 on G alone left 19 to 73, and on p alone 29 to 59. So flooring either weight alone did not remove them, at any floor tried.
+- **The cost grew with the bound, for both methods.** Under the same bound at 0.10, AIPCW's coverage was 76.7% in C2 and 79.4% in C4, and intervals narrowed. In C4, where the outcome model is wrong, AIPCW's median-based bias rose from 0.028 at 0.02 to 0.046 at 0.05 and 0.063 at 0.10, and IPCW's reached 0.038 at 0.10. Why was not tested.
+- **Floors of 0.01 and 0.02 on p alone left the rows almost as reported.**
+
+These rows describe a trade-off. They do not select a floor.
 
 ### Run B: mild dropout
 
 Rates (0.06, 0.7, 0.6), dropout model right (C2m) and wrong (C3m), all seven methods.
 
-**[PENDING: results table, `15_runB_performance.csv`, `15_runB_paired.csv`; share with G(5) below 0.05 and smallest chance of staying, `15_runB_dropout_summary.csv`.]**
+Each cell as in Run A, at t = 5. All metrics: `reports/tables/15_runB_performance.csv`, `15_runB_paired.csv`.
+
+| Method | C2m dropout model right | C3m dropout model wrong |
+|---|---|---|
+| CC | 0.043 / 0.108 / 87.2 / 0.32 / 3 | 0.043 / 0.108 / 87.2 / 0.32 / 3 |
+| NE | 0.033 / 0.109 / 90.6 / 0.33 / 3 | 0.033 / 0.109 / 90.6 / 0.33 / 3 |
+| IPCW | 0.032 / 0.156 / 93.1 / 0.45 / 25 | 0.022 / 0.121 / 93.9 / 0.38 / 13 |
+| AIPCW | 0.026 / 0.117 / 91.0 / 0.35 / 14 | 0.023 / 0.097 / 88.6 / 0.29 / 4 |
+| BJ | 0.022 / 0.091 / 84.4 / 0.25 / 2 | 0.022 / 0.091 / 84.4 / 0.25 / 2 |
+
+CC, NE and BJ use no dropout model, so their two columns are the same by construction. C2m and C3m are the same data.
+
+From `15_runB_dropout_summary.csv`: 19.9% of trial patients dropped out, against 30% in C2. The true G(5) was below 0.05 for 0.04% of trial patients; the estimated G(5) for 0.15% in C2m and for none in C3m. The smallest chance of staying, taken at each patient's own follow-up time up to 5 years, was 0.084 in C2m and 0.390 in C3m.
+
+- **The floor of 0.05 never applied.** In all 200 hospitals the chance of staying stayed above 0.05, so IPCW_t and AIPCW_t equal IPCW and AIPCW exactly, at every point of every curve, and are not shown.
+- **Large errors fell but did not vanish.** In C2m, hospitals above 0.5 at t = 5 were 25 for IPCW (92 in C2) and 14 for AIPCW (50 in C2). So dropout weights near the floor are not needed for an error above 0.5. Those errors could come from the joining weight, from the dropout weights that remain, or from both; this run does not separate them.
+- **BJ's coverage rose to 84.4% from 72.4%, and stayed below 95%,** with RMSE about the same.
 
 ### Run C: wrong participation model
 
 C2 data, participation model omitting frailty. C5a: outcome model right. C5b: outcome model also wrong, for every helper including CC and NE. This differs from C4, where CC and NE keep frailty.
 
-**[PENDING: results table, `15_runC_performance.csv`, `15_runC_paired.csv`.]**
+Each cell as in Run A, at t = 5. All metrics: `reports/tables/15_runC_performance.csv`, `15_runC_paired.csv`.
 
-| Expected, fixed in advance | Result |
-|---|---|
-| C5a: AIPCW and BJ stay consistent | **[PENDING]** |
-| C5a: IPCW uncertain | **[PENDING]** |
-| C5b: AIPCW biased at n = 2,500 | **[PENDING]** |
-| C5b: BJ biased at n = 2,500 | **[PENDING]** |
-| C5b: IPCW biased at n = 2,500 | **[PENDING]** |
+| Method | C5a outcome model right | C5b outcome model wrong |
+|---|---|---|
+| CC | 0.090 / 0.128 / 66.7 / 0.29 / 3 | 0.021 / 0.095 / 95.1 / 0.34 / 5 |
+| NE | 0.029 / 0.087 / 87.2 / 0.24 / 2 | 0.052 / 0.091 / 85.8 / 0.24 / 2 |
+| IPCW | 0.031 / 0.504 / 93.3 / 0.42 / 35 | 0.040 / 0.493 / 95.2 / 0.42 / 31 |
+| AIPCW | 0.023 / 0.557 / 90.3 / 0.34 / 23 | 0.040 / 0.419 / 93.0 / 0.39 / 32 |
+| IPCW_t | 0.029 / 0.152 / 93.1 / 0.42 / 23 | 0.041 / 0.140 / 94.8 / 0.42 / 20 |
+| AIPCW_t | 0.027 / 0.118 / 89.0 / 0.33 / 11 | 0.040 / 0.130 / 92.6 / 0.38 / 16 |
+| BJ | 0.025 / 0.094 / 75.3 / 0.21 / 1 | 0.073 / 0.108 / 72.3 / 0.23 / 2 |
 
-Every run uses one cohort size, so whether a bias shrinks with sample size cannot be observed here.
+Scored by the rule fixed before the runs (`15_runC_predictions.csv`): the paired difference in median-based bias at t = 5 against C2 on the same seeds, with its 95% interval, and a margin of 0.01.
+
+| Expected, fixed in advance | Difference (95% interval) | Result |
+|---|---|---|
+| C5a: AIPCW stays consistent | 0.003 (-0.004, 0.008) | Held |
+| C5a: BJ stays consistent | -0.001 (-0.004, 0.003) | Held |
+| C5a: IPCW uncertain | -0.003 (-0.020, 0.011) | No decision, as fixed in advance |
+| C5b: AIPCW biased at n = 2,500 | 0.021 (-0.002, 0.036) | Not determined |
+| C5b: BJ biased at n = 2,500 | 0.047 (0.034, 0.060) | Held |
+| C5b: IPCW biased at n = 2,500 | 0.005 (-0.018, 0.024) | Not determined |
+
+Every run uses one cohort size, so whether a bias shrinks with sample size cannot be observed here. "Held" for "stays consistent" means only that bias did not rise by 0.01 at this size. It is not a proof of consistency. "Held" for "biased" means only that bias rose by more than 0.01 at this size.
+
+- **AIPCW's and IPCW's large errors remained in C5a,** with 23 and 35 hospitals above 0.5. A small median-based bias does not make an estimate stable.
+- **Those counts were lower than in C2,** where they were 50 and 92. For IPCW the paired difference in the proportion is -0.285 (-0.350, -0.215) and for AIPCW -0.135 (-0.185, -0.085). Leaving frailty out of the participation model is the change that produced this. A possible reason, not tested: a model that ignores frailty gives less extreme chances of joining.
+- **No direction was fixed for CC and NE.** In C5b, CC's median-based bias was 0.021 against 0.091 in C2, a difference of -0.071 (-0.081, -0.061), with coverage of 95.1%. This run does not show that CC improved: its participation and outcome models were wrong together, and the reason was not examined. NE's rose by 0.023 (0.017, 0.030).
 
 ### Warnings by fit
 
-These totals are not comparable with the 250 above, because warnings that the code suppresses are now counted too.
+These totals are not directly comparable with the 250 above, because warnings that the code suppresses are now counted too. Details by time, arm and estimator: `reports/tables/15_warnings_by_fit.csv`.
 
-**[PENDING: `reports/tables/15_warnings_by_fit.csv`.]**
+| Run, setting | CC outcome fits | NE outcome fits | IPCW outcome fits |
+|---|---|---|---|
+| Control, C2 | 123 | 127 | 14 |
+| Control, C4 | 123 | 127 | 0 |
+| A, C2 | not refitted | not refitted | 70 |
+| A, C4 | not refitted | not refitted | 0 |
+| B, C2m | 83 | 80 | 4 |
+| B, C3m | 83 | 80 | 4 |
+| C, C5a | 123 | 127 | 14 |
+| C, C5b | 91 | 100 | 0 |
+
+- **CC and NE reproduce the 250 exactly** in both control runs, as 246 "fitted probabilities 0 or 1" and 4 "did not converge".
+- **All IPCW warnings are "did not converge".** Each variant has its own fits: 7 warnings for each of IPCW and IPCW_t in the control, and 7 for each of 10 variants in Run A. The floor on p shares IPCW's fits.
+- **No other fit gave a warning:** none from the Weibull, participation or treatment models. All warnings fall at t = 2 or earlier.
