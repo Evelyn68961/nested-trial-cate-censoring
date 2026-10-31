@@ -1,0 +1,3 @@
+"setting","run","message","call","n_warnings","n_hospitals","commit"
+"C1","cc_fullp","glm.fit: fitted probabilities numerically # or # occurred","NULL",70,38,"a9c1710"
+"C1","cc_fullp","glm.fit: algorithm did not converge","NULL",2,2,"a9c1710"
