@@ -219,7 +219,7 @@ if (mode == "integrate") {
     y_error <- y3000 - y30    # the compensator error, 30 minus 3000 steps
     worst <- which.max(abs(y_error))
     i <- d$s == 1
-    data.frame(seed = seed, setting_h = bw,
+    data.frame(seed = seed, bandwidth = bw,
                largest_compensator_error_30_vs_3000 = y_error[worst],
                one_over_G_of_that_patient = 1 / weibull_surv(pmin(d$time[worst], t), h$cens_lp[worst], h$cens_scale[worst]),
                n_patients_error_above_0.01 = sum(abs(y_error[i]) > 0.01),
