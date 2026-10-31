@@ -8,7 +8,8 @@
 #          logistic regression of status at t
 #   AIPCW  augmented IPCW: as IPCW, plus a term for what dropouts would likely have done after
 #          leaving, taken from a Weibull outcome model; the outcome model is that Weibull model.
-#          Correct if either the dropout model or the Weibull outcome model is right.
+#          Consistent if the Weibull outcome model is right, or if the participation and dropout
+#          models are both right.
 #   IPCW_t, AIPCW_t  the same with truncated weights: the estimated chance of still being
 #          followed is never allowed below g_floor (0.05), so no patient's weight exceeds 20.
 #          Added after the 200-hospital runs, where strong dependent dropout gave some
@@ -16,8 +17,8 @@
 #   BJ     Buckley-James: no dropout weight at all. Each dropout's status at t is filled
 #          in with the Weibull outcome model's chance of an event between leaving and t. It is
 #          AIPCW with the chance of staying set to 1 for everyone (Steingrimsson & Morrison,
-#          Stat Med 2020). Correct only if the outcome model is right. Added 2026-10-23 to see
-#          whether the C2 blow-ups come from the dropout weight or the trial-joining weight.
+#          Stat Med 2020). Consistent only if the outcome model is right. Added 2026-10-23 to see
+#          whether the large errors in C2 remain without the dropout weight.
 #
 # Needs R/generate.R, R/nuisance.R, R/pseudo.R, R/smooth.R, R/phase2_generate.R.
 

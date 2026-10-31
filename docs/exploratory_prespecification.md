@@ -23,6 +23,8 @@ Committed before any full run of A, B or C. Only a 3-hospital smoke test has bee
 - For schemes on G and on the product, IPCW's logistic outcome model uses the same floored weights, as IPCW_t does at 0.05. For the scheme on p it is the reported IPCW model, whose weights do not involve p.
 - **No floor is to be selected or called best anywhere, and the report says none was chosen.**
 - Control: G floor 0.05 must reproduce saved AIPCW_t and IPCW_t exactly on 3 hospitals.
+- Control: schemes G, p and the product at floor 0 must reproduce saved IPCW and AIPCW exactly in C2 and C4 on 3 hospitals. Floor 0 is a control only and is not one of the reported floors.
+- Control: the reported analysis through this path must reproduce the saved rows exactly in C2 and C4 at 200 hospitals.
 
 ## Run B: mild dropout
 
@@ -48,14 +50,25 @@ AIPCW as coded is consistent if the outcome model is right, or if participation 
 |---|---|---|
 | C5a | AIPCW, BJ | Stay consistent |
 | C5a | IPCW | Uncertain, given its logistic gamma. IPCW needs dropout right and either participation or its own gamma right |
-| C5b | AIPCW | Bias that does not shrink |
-| C5b | BJ | Bias that does not shrink |
-| C5b | IPCW | Biased |
+| C5b | AIPCW | Biased at n = 2,500 |
+| C5b | BJ | Biased at n = 2,500 |
+| C5b | IPCW | Biased at n = 2,500 |
 
 No direction is stated for CC, NE, Run A or Run B.
 
 **Limit on testing these.** Every run uses one cohort size, 2,500, so whether a bias shrinks with sample size cannot be observed. These runs show only the size of the bias at this size, against C2 on the same seeds.
 
+## Decision rule
+
+Fixed before the runs, because "held" is otherwise undefined at one cohort size.
+
+- **Metric:** integrated absolute median-based bias at t = 5, as the paired difference against C2 on the same seeds, with its 95% bootstrap interval over hospitals. Medians are recomputed in each resample.
+- **Margin:** 0.01.
+- **"Stay consistent":** held if the upper limit is below 0.01, failed if the lower limit is above 0.01, otherwise not determined.
+- **"Biased at n = 2,500":** held if the lower limit is above 0.01, failed if the upper limit is below 0.01, otherwise not determined.
+- Mean-based bias is shown but does not decide, because it is unstable.
+- IPCW in C5a is uncertain in advance, so it is reported without a decision.
+
 ## How results will be reported
 
-Each prediction is reported as held, failed or not determined by the intervals. A failed prediction is reported as failed and is not revised. Nothing beyond the runs above starts without a separate decision.
+Each prediction is reported as held, failed or not determined by this rule. A failed prediction is reported as failed and is not revised. Nothing beyond the runs above starts without a separate decision.

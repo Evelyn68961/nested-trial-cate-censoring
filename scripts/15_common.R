@@ -22,6 +22,7 @@ base_spec <- list(censoring = "dependent", censor = right_censor, out = right_ou
 make_spec <- function(...) modifyList(base_spec, list(...), keep.null = TRUE)
 exploratory_specs <- list(
   control = list(C2 = make_spec(), C4 = make_spec(out = wrong_outcome)),
+  zero = list(C2 = make_spec(), C4 = make_spec(out = wrong_outcome)),
   A = list(C2 = make_spec(), C4 = make_spec(out = wrong_outcome)),
   B = list(C2m = make_spec(censoring = "mild"), C3m = make_spec(censoring = "mild", censor = wrong_censor)),
   C = list(C5a = make_spec(join = wrong_join, formulas = no_frailty_join),
@@ -132,11 +133,11 @@ floored <- function(scheme, f, p_join) {
 # fit_phase2_helpers. The joining and dropout models are refits of those already recorded there,
 # so stats::glm and survival::survreg are called directly and their warnings are not counted twice.
 fit_floor_gamma <- function(d, times, censor_formula, follow_up_end, seed, out_formula, join_formula,
-                            n_folds = 5) {
+                            floor_values = floors, n_folds = 5) {
   folds <- make_folds(d$s, n_folds, seed)
   d$dropped <- as.integer(d$s == 1 & d$event == 0 & d$time < follow_up_end)
   out <- list()
-  for (scheme in c("G", "pG")) for (f in floors) for (arm in 0:1) {
+  for (scheme in c("G", "pG")) for (f in floor_values) for (arm in 0:1) {
     out[[paste(scheme, f, arm)]] <- matrix(NA_real_, nrow(d), length(times))
   }
   for (k in seq_len(n_folds)) {
@@ -153,7 +154,7 @@ fit_floor_gamma <- function(d, times, censor_formula, follow_up_end, seed, out_f
       for (j in seq_along(times)) {
         st <- status_at(tr[tra, ], times[j])
         g_end <- weibull_surv(pmin(tr$time[tra], times[j]), tr_lp[tra], cfit$scale)
-        for (scheme in c("G", "pG")) for (f in floors) {
+        for (scheme in c("G", "pG")) for (f in floor_values) {
           fit_tag <- empty_tag("logistic IPCW outcome", sprintf("IPCW_%s_%g", scheme, f), times[j], arm, k)
           g_use <- pmax(g_end, floored(scheme, f, p_tr[tra])$g_floor)
           dat <- cbind(tr[tra, c("frailty", "v", "male")], y = st$y, w = 1 / g_use)[st$known, ]
@@ -167,14 +168,15 @@ fit_floor_gamma <- function(d, times, censor_formula, follow_up_end, seed, out_f
   out
 }
 
-run_truncation <- function(d, cfg, spec, seed, v_grid, bandwidths = c(0.4, 0.6, 0.8, 1.0, 1.3, 1.6, 2.0)) {
+run_truncation <- function(d, cfg, spec, seed, v_grid, floor_values = floors,
+                           bandwidths = c(0.4, 0.6, 0.8, 1.0, 1.3, 1.6, 2.0)) {
   times <- unlist(cfg$times)
   h <- fit_phase2_helpers(d, times, spec$censor, cfg$follow_up_end, seed = seed, out_formula = spec$out,
                           join_formula = spec$join)
-  gamma <- fit_floor_gamma(d, times, spec$censor, cfg$follow_up_end, seed, spec$out, spec$join)
+  gamma <- fit_floor_gamma(d, times, spec$censor, cfg$follow_up_end, seed, spec$out, spec$join, floor_values)
   trial <- d$s == 1
   xi <- list()
-  for (scheme in c("G", "p", "pG")) for (f in floors) {
+  for (scheme in c("G", "p", "pG")) for (f in floor_values) {
     w <- floored(scheme, f, h$p_join)
     ipcw <- paste0("IPCW_", scheme, "_", f)
     aipcw <- paste0("AIPCW_", scheme, "_", f)
@@ -207,6 +209,11 @@ run_truncation <- function(d, cfg, spec, seed, v_grid, bandwidths = c(0.4, 0.6, 
     }
   }
   list(curves = do.call(rbind, rows), info = hospital_info(d, h, cfg, spec$censoring))
+}
+
+# Control only: at floor 0 every scheme must reproduce the reported IPCW and AIPCW
+run_zero_floor <- function(d, cfg, spec, seed, v_grid) {
+  run_truncation(d, cfg, spec, seed, v_grid, floor_values = 0)
 }
 
 run_seven <- function(d, cfg, spec, seed, v_grid) {

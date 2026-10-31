@@ -3,11 +3,13 @@
 #
 # Usage, from the repository root:  Rscript scripts/15_summarise_exploratory.R [folder] [tables]
 #   folder: results/exploratory; tables: reports/tables. Files are named 15_*.csv.
+#   A third argument, controls, stops after the controls and reads no performance.
 # Stops if a control differs from the saved rows or a hospital failed.
 
 args <- commandArgs(trailingOnly = TRUE)
 folder <- if (length(args) >= 1) args[1] else file.path("results", "exploratory")
 tables <- if (length(args) >= 2) args[2] else file.path("reports", "tables")
+controls_only <- length(args) >= 3 && args[3] == "controls"
 dir.create(tables, recursive = TRUE, showWarnings = FALSE)
 
 for (f in c("generate", "truth", "smooth", "phase2_generate", "phase2_truth")) source(sprintf("R/%s.R", f))
@@ -47,6 +49,42 @@ median_target <- function(x, n, counts) {
              integrated_coverage_median_estimate_percent = 100 * sapply(scopes, function(j) mean(value[j])),
              integrated_coverage_median_estimate_mcse_bootstrap = 100 * apply(boots, 1, sd), row.names = NULL)
 }
+
+# Paired difference in integrated absolute median-based bias, the metric of the decision rule.
+# Both medians are recomputed in each resample, on the same hospitals. Columns as paired_rows.
+paired_median_bias <- function(setting, estimator, label_b, x, y, n, counts) {
+  err_a <- as_hospital_matrix(x, "estimate", n) - as_hospital_matrix(x, "truth", n)
+  err_b <- as_hospital_matrix(y, "estimate", n) - as_hospital_matrix(y, "truth", n)
+  score <- function(err) {
+    medians <- apply(err, 2, median)
+    sapply(scopes, function(j) mean(abs(medians[j])))
+  }
+  value_a <- score(err_a)
+  value_b <- score(err_b)
+  boots <- sapply(seq_len(n_boot), function(b) {
+    idx <- rep(seq_len(n), counts[b, ])
+    score(err_a[idx, , drop = FALSE]) - score(err_b[idx, , drop = FALSE])
+  })
+  data.frame(setting = setting, estimator = estimator, variant_a = estimator, variant_b = label_b,
+             time_scope = names(scopes), metric = "integrated_absolute_median_bias",
+             value_a = value_a, value_b = value_b, difference_a_minus_b = value_a - value_b,
+             difference_mcse_bootstrap = apply(boots, 1, sd),
+             difference_ci95_lower = apply(boots, 1, quantile, 0.025),
+             difference_ci95_upper = apply(boots, 1, quantile, 0.975), row.names = NULL)
+}
+
+# The decision rule in docs/exploratory_prespecification.md
+margin <- 0.01
+decide <- function(expected, lower, upper) {
+  if (expected == "consistent") {
+    if (upper < margin) "held" else if (lower > margin) "failed" else "not determined"
+  } else {
+    if (lower > margin) "held" else if (upper < margin) "failed" else "not determined"
+  }
+}
+predictions <- data.frame(setting = c("C5a", "C5a", "C5b", "C5b", "C5b"),
+                          estimator = c("AIPCW", "BJ", "AIPCW", "BJ", "IPCW"),
+                          expected = c("consistent", "consistent", "biased", "biased", "biased"))
 
 reference_setting <- c(C2 = "C2", C4 = "C4", C2m = "C2", C3m = "C3", C5a = "C2", C5b = "C2")
 info_rows <- list()
@@ -89,6 +127,13 @@ for (setting in dirs("control")) {
   saved <- saved_rows(setting, unique(new$seed))
   for (est in seven) controls[[length(controls) + 1]] <- compare(new, saved, est, est, setting, "control")
 }
+for (setting in dirs("zero")) {
+  new <- read_run("zero", setting)$curves
+  saved <- saved_rows(setting, unique(new$seed))
+  for (type in c("IPCW", "AIPCW")) for (scheme in c("G", "p", "pG")) {
+    controls[[length(controls) + 1]] <- compare(new, saved, paste(type, scheme, 0, sep = "_"), type, setting, "zero")
+  }
+}
 
 score_rows <- list()
 pair_rows <- list()
@@ -104,6 +149,7 @@ for (run in c("A", "B", "C")) {
         controls[[length(controls) + 1]] <- compare(curves, saved, paste0(type, "_G_0.05"), paste0(type, "_t"), setting, "A")
       }
     }
+    if (controls_only) next
     reference <- list()
     for (est in unique(curves$estimator)) {
       base <- sub("_(G|p|pG)_[0-9.]+$", "", est)
@@ -117,6 +163,12 @@ for (run in c("A", "B", "C")) {
       pair_rows[[length(pair_rows) + 1]] <- cbind(
         run = run, paired_rows(setting, est, est, sprintf("%s reported %s", base, reference_setting[[setting]]),
                                this, reference[[base]], scopes))
+      if (run == "C") {
+        m <- paired_median_bias(setting, est, sprintf("%s reported %s", base, reference_setting[[setting]]),
+                                x, saved[saved$estimator == base, ], n, counts)
+        stopifnot(max(abs(m$value_a - this$rows$integrated_absolute_median_bias)) < 1e-10)
+        pair_rows[[length(pair_rows) + 1]] <- cbind(run = run, m)
+      }
     }
   }
 }
@@ -129,12 +181,23 @@ if (length(controls)) {
   if (any(controls$largest_difference_estimate != 0 | controls$largest_difference_interval != 0 |
           controls$bandwidth_differs_in_hospitals != 0)) stop("A control differs from the saved rows.")
 }
+if (controls_only) quit(save = "no")
 if (length(score_rows)) {
   scores <- do.call(rbind, score_rows)
   pairs <- do.call(rbind, pair_rows)
   for (run in unique(scores$run)) {
     write.csv(round_numeric(scores[scores$run == run, ]), file.path(tables, sprintf("15_run%s_performance.csv", run)), row.names = FALSE)
     write.csv(round_numeric(pairs[pairs$run == run, ]), file.path(tables, sprintf("15_run%s_paired.csv", run)), row.names = FALSE)
+  }
+  if ("C" %in% scores$run) {
+    rule <- pairs[pairs$metric == "integrated_absolute_median_bias" & pairs$time_scope == "t = 5", ]
+    predictions <- merge(predictions, rule[, c("setting", "estimator", "value_a", "value_b", "difference_a_minus_b",
+                                               "difference_ci95_lower", "difference_ci95_upper")],
+                         by = c("setting", "estimator"))
+    predictions$result <- mapply(decide, predictions$expected, predictions$difference_ci95_lower,
+                                 predictions$difference_ci95_upper)
+    write.csv(round_numeric(predictions), file.path(tables, "15_runC_predictions.csv"), row.names = FALSE)
+    print(predictions, row.names = FALSE, digits = 4)
   }
 }
 info <- do.call(rbind, info_rows)

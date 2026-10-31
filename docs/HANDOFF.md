@@ -27,7 +27,7 @@ All code, documents and results are on GitHub (private repository).
 
 ## Open questions from Phase 2, in order of value
 
-1. **Combined weights.** Truncating only the dropout weight left 27 to 83 hospitals broken under strong dependent dropout. Try truncating the combined weight (joining × arm × staying), or a higher floor. One extra estimator; rerun C2 (about 25 minutes).
+1. **Combined weights.** With only the dropout weight truncated, 27 to 83 hospitals still had an absolute error above 0.5 under strong dependent dropout. Truncating the product of the joining and staying chances, and other floors, is Run A in `docs/exploratory_prespecification.md`, exploratory, with no floor chosen.
 2. **AIPCW intervals with a wrong dropout model** covered 80%. A bootstrap over the whole procedure would show whether the undercoverage is the variance formula. Expensive: about 200 refits per hospital. Try on 50 hospitals first.
 3. **Phase 1, trial of about 125:** extend from 50 to 500 hospitals (`Rscript scripts/07_run_phase1.R sl 0.05 500 3`, about 1.5 hours).
 

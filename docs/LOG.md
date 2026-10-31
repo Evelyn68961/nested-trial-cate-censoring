@@ -376,3 +376,11 @@ Commits after 2b38cab during the runs change only docs/ (checked with `git diff 
 **Time to benefit under C4.** BJ puts it too early: for v = 1, median 2.0 years against a true 3.5; for v = 3, 2.0 against 2.5.
 
 Report: the new last section of `reports/phase2_results.md`. Lesson 11. Summary output: `results/summary_phase2_20261023.txt`; tables in `reports/tables/10_*.csv` and `11_weight_checks.csv`.
+
+## 31 October 2026: review corrections and exploratory runs
+
+The review of Phase 2 (Steps 2a and 2b, issue #1) found claims the numbers did not support. Reported numbers stand. Entries above stay as written, as history, and some of their wording is superseded by:
+
+- `reports/phase2_results.md`: corrected claims, and the section "Corrections, disclosures and checks after review". This includes the condition for AIPCW's consistency, and that the source of the large errors is not established.
+- `docs/lessons/10_phase2_results.md` and `11_which_model_to_trust.md`: the same corrections.
+- `docs/exploratory_prespecification.md`: Runs A, B and C, exploratory, with expected directions and a decision rule fixed before any full run.

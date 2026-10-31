@@ -6,6 +6,7 @@
 #   run B: mild dropout, settings C2m C3m
 #   run C: wrong participation model, settings C5a C5b
 #   run control: the reported analysis through this path, settings C2 C4
+#   run zero: every truncation scheme at floor 0, settings C2 C4, 3 hospitals
 #
 # Same seeds as the reported runs, 30 compensator steps. Results go to
 # results/exploratory/<run>/<setting>/chunk_<k>.rds, 25 hospitals per chunk; finished chunks are
@@ -40,7 +41,7 @@ one_hospital <- function(seed, run, setting, commit) {
   d <- simulate_cohort_surv(cfg, spec$censoring, seed = seed, b0 = b0)$observed
   reset_fit_log()
   t0 <- Sys.time()
-  analyse <- if (run == "A") run_truncation else run_seven
+  analyse <- switch(run, A = run_truncation, zero = run_zero_floor, run_seven)
   res <- tryCatch(withCallingHandlers(
     analyse(d, cfg, spec, seed, make_v_grid(cfg)),
     warning = function(w) {
