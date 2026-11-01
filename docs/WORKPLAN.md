@@ -38,10 +38,21 @@ Ranked in a notes file kept outside this repository.
 | 12 | Buckley-James estimator: no dropout weight, dropouts filled in by the outcome model | 11 Which model to trust | Done 2026-10-23 |
 | 13 | Setting C4: right dropout model, outcome models without frailty | 11 | Done 2026-10-23 |
 | 14 | Weight checks per hospital, and four flagging rules | 11 | Done 2026-10-23 |
-| 15 | Rerun C0 to C4 at 200 hospitals; report and lesson | 11 | Done 2026-10-23, 08:42. Gate 3 passed, except that no weight check identifies broken hospitals (a finding) |
-| 16 | Optional: Brier score and calibration of each arm's risk model among all eligible patients, with dropout | 12 | Not started |
+| 15 | Rerun C0 to C4 at 200 hospitals; report and lesson | 11 | Done 2026-10-23, 08:42. Gate 3 passed, except that no weight check identifies the hospitals with large errors (a finding) |
+| 16 | Optional: Brier score and calibration of each arm's risk model among all eligible patients, with dropout | Not assigned | Not started |
 
-**Gate 3:** the six existing estimators reproduce the 22 October numbers exactly; BJ is stable in C2 if the dropout weight caused the breaks; BJ is biased in C4 while IPCW and AIPCW are not; the report says which weight check, if any, flags the broken hospitals.
+**Gate 3:** the six existing estimators reproduce the 22 October numbers exactly; BJ has few hospitals with large errors in C2 if the dropout weight is needed for them; BJ is biased in C4 while IPCW and AIPCW are not; the report says which weight check, if any, flags the hospitals with large errors.
+
+## Review and exploratory runs
+
+| Step | Code | Lesson | State |
+|---|---|---|---|
+| Review | Rechecks of Phase 2, independent second method, corrected report | 12 What the review changed | Done 2026-10-31 |
+| Run A | Floors on G, on p and on their product, in C2 and C4 | 12 | Done 2026-10-31, no floor chosen |
+| Run B | Mild dropout, dropout model right and wrong | 12 | Done 2026-10-31 |
+| Run C | Wrong participation model, outcome model right and wrong | 12 | Done 2026-10-31 |
+
+Pre-specification: `docs/exploratory_prespecification.md`. Results: `reports/phase2_results.md`.
 
 ## Output
 

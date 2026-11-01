@@ -2,7 +2,7 @@
 
 22 October 2026, 20:40; additions (Buckley-James, setting C4, weight checks) on 23 October, at the end. 200 simulated hospitals per setting (2,500 eligible patients, about 500 in the trial). Event times from Weibull models in which the benefit grows over time; follow-up 5 years; effect estimated at ten times from 0.5 to 5 years. Settings: `config/phase2.yaml`. Every decision and change: `docs/LOG.md`. Supersedes `reports/phase2_preliminary.md`.
 
-**Draft corrected after review, 31 October 2026.** Every reported number stands; claims the numbers did not support have been corrected, and disclosures added at the end. Exploratory results were added the same day, at commit `da5c483`, and are awaiting review.
+**Draft corrected after review, 31 October 2026.** Every reported number stands; claims the numbers did not support have been corrected, and disclosures added at the end. Exploratory results were added the same day, at commit `da5c483`.
 
 ## The settings
 

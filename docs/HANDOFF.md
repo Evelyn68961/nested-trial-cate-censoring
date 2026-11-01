@@ -1,14 +1,20 @@
 # Handoff: where the project stands, and what is next
 
-Updated 31 October 2026, 23:30.
+Updated 1 November 2026.
 
-## 31 October 2026: exploratory runs done
+## Next
 
-Runs A, B and C finished at 200 hospitals on branch `step4-exploratory`, and await review. Results: the section "Exploratory runs" of `reports/phase2_results.md`. No floor was chosen.
+1. Read the lessons, 1 to 12, until you can answer each "check yourself" list.
+2. Write the README section "How this was built": your own account of your role.
+3. Then the slide deck.
+
+## 31 October 2026: review and exploratory runs done
+
+The review of Phase 2 and Runs A, B and C at 200 hospitals are finished, checked and merged into `main`. Results: the sections "Corrections, disclosures and checks after review" and "Exploratory runs" of `reports/phase2_results.md`; lesson 12. No floor was chosen.
 
 ## 23 October 2026: steps 12 to 15 done
 
-Buckley-James estimator, setting C4 (wrong outcome model), weight checks, and a rerun of all five settings at 200 hospitals. Gate 3 passed, except that no weight check identifies the broken hospitals, which is itself a finding. Results: the last section of `reports/phase2_results.md`; lesson 11; `docs/LOG.md`.
+Buckley-James estimator, setting C4 (wrong outcome model), weight checks, and a rerun of all five settings at 200 hospitals. Gate 3 passed, except that no weight check identifies the hospitals with large errors, which is itself a finding. Results: the last section of `reports/phase2_results.md`; lesson 11; `docs/LOG.md`.
 
 Next, optional: step 16 (Brier score and calibration of each arm's risk model among all eligible patients, with dropout), about 1 to 2 days. Plan in `docs/WORKPLAN.md`.
 
@@ -23,7 +29,8 @@ New open questions from the additions:
 | Phase 1 (binary outcome, no dropout) | **Done.** 500 hospitals, Gate 1 passed. `reports/phase1_results.md` |
 | Phase 1, trial of about 125 | 50 of 500 hospitals (preliminary) |
 | Phase 2 (dropout, effect over time) | **Done.** 200 hospitals per setting, with truncated weights. Gate 2 passed for bias, not for stability or intervals. `reports/phase2_results.md` |
-| Lessons | 1 to 11 written, in `docs/lessons/` (lessons 5 and 6 share one file) |
+| Review and exploratory runs A to C | **Done.** Exploratory, no floor chosen. `reports/phase2_results.md` |
+| Lessons | 1 to 12 written, in `docs/lessons/` (lessons 5 and 6 share one file) |
 | Process log | `docs/LOG.md`: every setting, change and check, with reasons |
 | Slide deck | Not started |
 
@@ -37,8 +44,8 @@ All code, documents and results are on GitHub (private repository).
 
 ## Still to do
 
-- An 8–10 slide deck from the two reports. Only after you have read the lessons and the reports, and can explain each slide yourself.
 - The README section "How this was built": your own account of your role.
+- An 8–10 slide deck from the two reports. Only after you have read the lessons and the reports, and can explain each slide yourself.
 - Make the repository public only when you decide to share it.
 
 ## If a chunk file is damaged
