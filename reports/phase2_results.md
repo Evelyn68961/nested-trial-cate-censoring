@@ -74,7 +74,7 @@ The first time at which the drug lowers the risk by at least 5 points (δ = 0.05
 
 The estimator of Wen, Dahabreh and Chiu can be carried to censored outcomes and traced over follow-up by adding a dropout weight (or the augmented version) inside its pseudo-outcome. In this simulation, median-based bias at 5 years was 0.019 for AIPCW against 0.091 for CC in C2, and 0.025 for AIPCW against 0.067 for NE in C1. NE in C2 (0.029) and CC in C1 (0.022) were not worse by this measure. We found no paper with all of these elements. Two problems appear that the no-dropout setting hides:
 
-- The trial-joining weight and the dropout weight multiply, so practical positivity may fail sooner. The source of the large errors is not established.
+- The trial-joining weight and the dropout weight multiply, so practical positivity may fail sooner. The source of the large errors is not established. In C2 at t = 5, against 50 of 200 hospitals with an absolute error above 0.5 for AIPCW, the exploratory runs measured the following. BJ, without the dropout weight, has 1 hospital above 0.5. For AIPCW, a floor of 0.10 on p alone leaves 29, omitting frailty from the participation model leaves 23, and the bound on the product at 0.10 leaves 2. These results are exploratory, and they involve both weights without separating them.
 - The sandwich intervals are not validated for this estimator, and they undercover in several settings.
 
 Both are open questions: how to stabilise the combined weights, and how to build intervals that account for estimated dropout weights.
@@ -83,7 +83,7 @@ Both are open questions: how to stabilise the combined weights, and how to build
 
 - The data-generating mechanism is ours and is not calibrated to any disease.
 - The helper models are parametric Weibull and logistic regressions; the Super Learner was not used in Phase 2.
-- One truncation level (0.05) was tried. Truncation shifts the estimand (Dahabreh et al., Stat Med 2020, p. 16), so the truncated methods' small bias is partly a change of target.
+- The reported tables use one truncation level, 0.05; a range was run later as exploratory (Run A). Truncation shifts the estimand (Dahabreh et al., Stat Med 2020, p. 16), so the truncated methods' small bias is partly a change of target. In Run A, bias is still measured against the original target.
 - Time to benefit is read on a half-year grid.
 - 200 hospitals per setting: bootstrap Monte Carlo error on integrated bias at 5 years is 0.003 to 0.005 for most methods, but 0.007 to 0.010 for the truncated methods in C2 and C4, and 0.049 to 0.079 for untruncated IPCW and AIPCW there (`reports/tables/13_phase2_precision.csv`). Rankings between these are marked unresolved where intervals cross zero: IPCW against AIPCW in C2, C3 and C4; truncated AIPCW against AIPCW in C2; AIPCW against BJ in C2 and C4.
 
