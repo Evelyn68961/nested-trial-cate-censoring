@@ -1,0 +1,7 @@
+"setting","status","estimator","n_hospitals","integrated_coverage_exact_target_percent","integrated_coverage_exact_target_mcse_bootstrap","integrated_coverage_smoothed_target_percent","integrated_coverage_smoothed_target_mcse_bootstrap","integrated_coverage_mean_estimate_target_percent","integrated_coverage_mean_estimate_target_mcse_bootstrap"
+"sl_trial20","final","P",500,91.897297,0.590019,94.032432,0.530746,93.675676,0.537199
+"sl_trial20","final","L",500,80.989189,0.7612,NA,NA,95.010811,0.667382
+"sl_trial20","final","T",500,85.043243,0.847085,75.12973,1.133267,93.356757,0.546783
+"sl_trial05","preliminary","P",50,91.72973,1.950649,92.378378,1.87744,92.378378,1.791859
+"sl_trial05","preliminary","L",50,89.567568,2.603714,NA,NA,93.621622,2.308018
+"sl_trial05","preliminary","T",50,89.027027,2.084465,87.891892,2.42241,89.891892,2.289545

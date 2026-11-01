@@ -10,7 +10,7 @@ What was decided, changed and checked, in order, with the reason for each. Newes
 
 - **Language: R only.** The paper's software (Super Learner) is in R and the reference code is in R.
 - **Repository private** until Gate 2 passes (Phase 2 checks). Nothing goes public before the results have been checked.
-- **Raw results are not committed** (`results/` is in `.gitignore`). Summary tables and figures in `reports/` are committed.
+- **Raw results were at first not committed.** This changed later: `results/` is no longer in `.gitignore`, only `results/reference/` is, and the run files in `results/` are in the repository. Summary tables and figures in `reports/` are committed.
 
 ### Step 1: simulated hospitals (commit 3532169)
 
@@ -376,3 +376,13 @@ Commits after 2b38cab during the runs change only docs/ (checked with `git diff 
 **Time to benefit under C4.** BJ puts it too early: for v = 1, median 2.0 years against a true 3.5; for v = 3, 2.0 against 2.5.
 
 Report: the new last section of `reports/phase2_results.md`. Lesson 11. Summary output: `results/summary_phase2_20261023.txt`; tables in `reports/tables/10_*.csv` and `11_weight_checks.csv`.
+
+## 31 October 2026: review corrections and exploratory runs
+
+The review of Phase 2 (Steps 2a and 2b, issue #1) found claims the numbers did not support. Reported numbers stand. Entries above stay as written, as history, and some of their wording is superseded by:
+
+- `reports/phase2_results.md`: corrected claims, and the section "Corrections, disclosures and checks after review". This includes the condition for AIPCW's consistency, and that the source of the large errors is not established.
+- `docs/lessons/10_phase2_results.md` and `11_which_model_to_trust.md`: the same corrections.
+- `docs/exploratory_prespecification.md`: Runs A, B and C, exploratory, with expected directions and a decision rule fixed before any full run.
+
+Full runs at commit `da5c483`, 3 workers, 200 hospitals, finished at 22:55. All 30 controls were exactly 0 and no hospital failed. Predictions: AIPCW and BJ in C5a held; BJ in C5b held; AIPCW and IPCW in C5b not determined; IPCW in C5a reported without a decision, as fixed in advance. No floor was chosen. The floor of 0.05 never applied in Run B. Results are in the section "Exploratory runs" of `reports/phase2_results.md`, tables in `reports/tables/15_*`, chunks in `results/exploratory/`, and the final smoke test in `results/exploratory_smoke_final/`. These results await review.

@@ -1,0 +1,7 @@
+"run","n_hospitals","median_seconds","total_warnings","failed_fits","commit"
+"compensator C2 n_steps 300",200,77.159963965416,250,0,"c867a03"
+"compensator C2 n_steps 3000",200,74.2101655006409,250,0,"c867a03"
+"compensator C4 n_steps 300",200,72.1003370285034,250,0,"c867a03"
+"compensator C4 n_steps 3000",200,72.8130475282669,250,0,"c867a03"
+"cc_fullp C1",200,8.06370496749878,72,0,"c867a03"
+"cc_fullp C2",200,8.13862252235413,123,0,"c867a03"

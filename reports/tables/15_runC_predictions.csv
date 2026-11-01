@@ -1,0 +1,6 @@
+"setting","estimator","expected","value_a","value_b","difference_a_minus_b","difference_ci95_lower","difference_ci95_upper","result"
+"C5a","AIPCW","consistent",0.022743,0.019454,0.00329,-0.004052,0.008455,"held"
+"C5a","BJ","consistent",0.025363,0.026327,-0.000964,-0.004245,0.003163,"held"
+"C5b","AIPCW","biased",0.040345,0.019454,0.020891,-0.001944,0.036357,"not determined"
+"C5b","BJ","biased",0.073358,0.026327,0.047031,0.034062,0.059835,"held"
+"C5b","IPCW","biased",0.039764,0.034841,0.004923,-0.017976,0.024124,"not determined"

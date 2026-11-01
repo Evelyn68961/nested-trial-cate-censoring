@@ -1,6 +1,10 @@
 # Handoff: where the project stands, and what is next
 
-Updated 23 October 2026, 09:00.
+Updated 31 October 2026, 23:30.
+
+## 31 October 2026: exploratory runs done
+
+Runs A, B and C finished at 200 hospitals on branch `step4-exploratory`, and await review. Results: the section "Exploratory runs" of `reports/phase2_results.md`. No floor was chosen.
 
 ## 23 October 2026: steps 12 to 15 done
 
@@ -10,7 +14,7 @@ Next, optional: step 16 (Brier score and calibration of each arm's risk model am
 
 New open questions from the additions:
 - BJ's intervals undercover even with the right outcome model (72% in C2). A bootstrap would test the likely reason.
-- AIPCW is right in the typical hospital under either wrong model, but its breaks remain. Truncating the combined weight (open question 1 below) is still untried.
+- AIPCW has small median-based bias under either wrong model taken alone, but its large errors remain. Truncating the combined weight (open question 1 below) was Run A in `docs/exploratory_prespecification.md`.
 
 ## State
 
@@ -19,7 +23,7 @@ New open questions from the additions:
 | Phase 1 (binary outcome, no dropout) | **Done.** 500 hospitals, Gate 1 passed. `reports/phase1_results.md` |
 | Phase 1, trial of about 125 | 50 of 500 hospitals (preliminary) |
 | Phase 2 (dropout, effect over time) | **Done.** 200 hospitals per setting, with truncated weights. Gate 2 passed for bias, not for stability or intervals. `reports/phase2_results.md` |
-| Lessons | 1 to 10 written, in `docs/lessons/` |
+| Lessons | 1 to 11 written, in `docs/lessons/` (lessons 5 and 6 share one file) |
 | Process log | `docs/LOG.md`: every setting, change and check, with reasons |
 | Slide deck | Not started |
 
@@ -27,7 +31,7 @@ All code, documents and results are on GitHub (private repository).
 
 ## Open questions from Phase 2, in order of value
 
-1. **Combined weights.** Truncating only the dropout weight left 27 to 83 hospitals broken under strong dependent dropout. Try truncating the combined weight (joining × arm × staying), or a higher floor. One extra estimator; rerun C2 (about 25 minutes).
+1. **Combined weights.** With only the dropout weight truncated, 27 to 83 hospitals still had an absolute error above 0.5 under strong dependent dropout. Truncating the product of the joining and staying chances, and other floors, was Run A in `docs/exploratory_prespecification.md`, exploratory, with no floor chosen. Large errors fell furthest under the bound on the product, while coverage fell and, in C4, bias rose (`reports/phase2_results.md`).
 2. **AIPCW intervals with a wrong dropout model** covered 80%. A bootstrap over the whole procedure would show whether the undercoverage is the variance formula. Expensive: about 200 refits per hospital. Try on 50 hospitals first.
 3. **Phase 1, trial of about 125:** extend from 50 to 500 hospitals (`Rscript scripts/07_run_phase1.R sl 0.05 500 3`, about 1.5 hours).
 

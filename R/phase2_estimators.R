@@ -8,7 +8,8 @@
 #          logistic regression of status at t
 #   AIPCW  augmented IPCW: as IPCW, plus a term for what dropouts would likely have done after
 #          leaving, taken from a Weibull outcome model; the outcome model is that Weibull model.
-#          Correct if either the dropout model or the Weibull outcome model is right.
+#          Consistent if the Weibull outcome model is right, or if the participation and dropout
+#          models are both right.
 #   IPCW_t, AIPCW_t  the same with truncated weights: the estimated chance of still being
 #          followed is never allowed below g_floor (0.05), so no patient's weight exceeds 20.
 #          Added after the 200-hospital runs, where strong dependent dropout gave some
@@ -16,8 +17,8 @@
 #   BJ     Buckley-James: no dropout weight at all. Each dropout's status at t is filled
 #          in with the Weibull outcome model's chance of an event between leaving and t. It is
 #          AIPCW with the chance of staying set to 1 for everyone (Steingrimsson & Morrison,
-#          Stat Med 2020). Correct only if the outcome model is right. Added 2026-10-23 to see
-#          whether the C2 blow-ups come from the dropout weight or the trial-joining weight.
+#          Stat Med 2020). Consistent only if the outcome model is right. Added 2026-10-23 to see
+#          whether the large errors in C2 remain without the dropout weight.
 #
 # Needs R/generate.R, R/nuisance.R, R/pseudo.R, R/smooth.R, R/phase2_generate.R.
 
@@ -30,7 +31,8 @@ weibull_surv <- function(u, lp, scale) exp(-weibull_cumhaz(u, lp, scale))
 # out_formula is the analyst's outcome model, used for the Weibull models and the IPCW logistic
 # models; setting C4 leaves frailty out of it.
 fit_phase2_helpers <- function(d, times, censor_formula, follow_up_end, n_folds = 5, seed = 1,
-                               g_floor = 0.05, out_formula = ~ frailty + v + I(v^2) + male) {
+                               g_floor = 0.05, out_formula = ~ frailty + v + I(v^2) + male,
+                               join_formula = s ~ frailty + v + male) {
   folds <- make_folds(d$s, n_folds, seed)
   n <- nrow(d)
   empty <- function() matrix(NA_real_, n, length(times))
@@ -48,7 +50,7 @@ fit_phase2_helpers <- function(d, times, censor_formula, follow_up_end, n_folds 
     tr <- d[train & d$s == 1, ]
     newd <- d[test, ]
 
-    out$p_join[test] <- predict(glm(s ~ frailty + v + male, binomial(), data = d[train, ]),
+    out$p_join[test] <- predict(glm(join_formula, binomial(), data = d[train, ]),
                                 newd, type = "response")
     out$p_treat[test] <- predict(glm(a ~ frailty + v + male, binomial(), data = tr),
                                  newd, type = "response")
@@ -144,10 +146,11 @@ pseudo_from_status <- function(d, ystar, p_join, p_treat, g1, g0) {
 
 run_phase2_estimators <- function(d, cfg, censor_formula, seed, v_grid,
                                   bandwidths = c(0.4, 0.6, 0.8, 1.0, 1.3, 1.6, 2.0),
-                                  g_floor = 0.05, out_formula = ~ frailty + v + I(v^2) + male) {
+                                  g_floor = 0.05, out_formula = ~ frailty + v + I(v^2) + male,
+                                  join_formula = s ~ frailty + v + male, nuisance_formulas = right_formulas) {
   times <- unlist(cfg$times)
   h <- fit_phase2_helpers(d, times, censor_formula, cfg$follow_up_end, seed = seed, g_floor = g_floor,
-                          out_formula = out_formula)
+                          out_formula = out_formula, join_formula = join_formula)
 
   xi <- list(CC = list(), NE = list(), IPCW = list(), AIPCW = list(), IPCW_t = list(), AIPCW_t = list(),
              BJ = list())
@@ -160,13 +163,13 @@ run_phase2_estimators <- function(d, cfg, censor_formula, seed, v_grid,
     keep <- d$s == 0 | st$known
     dcc <- d[keep, ]
     dcc$y <- st$y[keep]
-    xi$CC[[j]] <- pseudo_outcome(dcc, fit_nuisance(dcc, "glm", seed = seed))
+    xi$CC[[j]] <- pseudo_outcome(dcc, fit_nuisance(dcc, "glm", seed = seed, formulas = nuisance_formulas))
     keep_cc[[j]] <- keep
 
     # NE: unknown status counted as no event
     dne <- d
     dne$y <- ifelse(d$s == 1, st$y, NA)
-    xi$NE[[j]] <- pseudo_outcome(dne, fit_nuisance(dne, "glm", seed = seed))
+    xi$NE[[j]] <- pseudo_outcome(dne, fit_nuisance(dne, "glm", seed = seed, formulas = nuisance_formulas))
 
     # IPCW
     g_end <- weibull_surv(pmin(d$time, t), h$cens_lp, h$cens_scale)

@@ -13,8 +13,8 @@ Full rationale: `nested_trial_CATE_censoring_plan.md` (kept outside this reposit
 | 3 | The pseudo-outcome (paper's equation 1) | 03 The pseudo-outcome | Done 2026-10-22 |
 | 4 | Smoothing: local linear regression, bandwidth, intervals | 04 Drawing the curve | Done 2026-10-22 |
 | 5 | Cross-check against Robertson et al. 2023 code on one dataset | — | Done 2026-10-22: match to 2e-14 |
-| 6 | The three comparison estimators (straight line, trial only, outcome model only) | 05 Why the shortcuts fail | Code done; lesson to write |
-| 7 | Run many hospitals (50 pilot, then 500); score bias, RMSE, coverage | 06 Judging a method | 500 hospitals done (trial 500); trial 125 at 50 of 500. Gate 1 passed. See reports/phase1_results.md |
+| 6 | The three comparison estimators (straight line, trial only, outcome model only) | 05 and 06, one file: 05_06_results_phase1 | Done |
+| 7 | Run many hospitals (50 pilot, then 500); score bias, RMSE, coverage | 05 and 06, one file: 05_06_results_phase1 | 500 hospitals done (trial 500); trial 125 at 50 of 500, preliminary. Gate 1 passed. See reports/phase1_results.md |
 
 **Gate 1:** pseudo-outcomes match the reference code; the paper's estimator has small bias; the trial-only estimator is biased; coverage near 90–95%.
 

@@ -1,0 +1,106 @@
+"run","setting","fit_type","estimators","t","arm","message","n_warnings","n_hospitals"
+"control","C2","logistic outcome","CC",0.5,1,"glm.fit: algorithm did not converge",3,3
+"B","C2m","logistic outcome","CC",0.5,1,"glm.fit: algorithm did not converge",1,1
+"B","C3m","logistic outcome","CC",0.5,1,"glm.fit: algorithm did not converge",1,1
+"control","C4","logistic outcome","CC",0.5,1,"glm.fit: algorithm did not converge",3,3
+"C","C5a","logistic outcome","CC",0.5,1,"glm.fit: algorithm did not converge",3,3
+"A","C2","logistic IPCW outcome","IPCW",0.5,1,"glm.fit: algorithm did not converge",5,5
+"control","C2","logistic IPCW outcome","IPCW",0.5,1,"glm.fit: algorithm did not converge",5,5
+"B","C2m","logistic IPCW outcome","IPCW",0.5,1,"glm.fit: algorithm did not converge",2,2
+"B","C3m","logistic IPCW outcome","IPCW",0.5,1,"glm.fit: algorithm did not converge",2,2
+"C","C5a","logistic IPCW outcome","IPCW",0.5,1,"glm.fit: algorithm did not converge",5,5
+"A","C2","logistic IPCW outcome","IPCW_G_0.01",0.5,1,"glm.fit: algorithm did not converge",5,5
+"A","C2","logistic IPCW outcome","IPCW_G_0.02",0.5,1,"glm.fit: algorithm did not converge",5,5
+"A","C2","logistic IPCW outcome","IPCW_G_0.05",0.5,1,"glm.fit: algorithm did not converge",5,5
+"A","C2","logistic IPCW outcome","IPCW_G_0.1",0.5,1,"glm.fit: algorithm did not converge",5,5
+"A","C2","logistic IPCW outcome","IPCW_pG_0.01",0.5,1,"glm.fit: algorithm did not converge",5,5
+"A","C2","logistic IPCW outcome","IPCW_pG_0.02",0.5,1,"glm.fit: algorithm did not converge",5,5
+"A","C2","logistic IPCW outcome","IPCW_pG_0.05",0.5,1,"glm.fit: algorithm did not converge",5,5
+"A","C2","logistic IPCW outcome","IPCW_pG_0.1",0.5,1,"glm.fit: algorithm did not converge",5,5
+"A","C2","logistic IPCW outcome","IPCW_t",0.5,1,"glm.fit: algorithm did not converge",5,5
+"control","C2","logistic IPCW outcome","IPCW_t",0.5,1,"glm.fit: algorithm did not converge",5,5
+"B","C2m","logistic IPCW outcome","IPCW_t",0.5,1,"glm.fit: algorithm did not converge",2,2
+"B","C3m","logistic IPCW outcome","IPCW_t",0.5,1,"glm.fit: algorithm did not converge",2,2
+"C","C5a","logistic IPCW outcome","IPCW_t",0.5,1,"glm.fit: algorithm did not converge",5,5
+"control","C2","logistic outcome","NE",0.5,1,"glm.fit: algorithm did not converge",1,1
+"B","C2m","logistic outcome","NE",0.5,1,"glm.fit: algorithm did not converge",1,1
+"B","C3m","logistic outcome","NE",0.5,1,"glm.fit: algorithm did not converge",1,1
+"control","C4","logistic outcome","NE",0.5,1,"glm.fit: algorithm did not converge",1,1
+"C","C5a","logistic outcome","NE",0.5,1,"glm.fit: algorithm did not converge",1,1
+"A","C2","logistic IPCW outcome","IPCW",1,1,"glm.fit: algorithm did not converge",2,2
+"control","C2","logistic IPCW outcome","IPCW",1,1,"glm.fit: algorithm did not converge",2,2
+"C","C5a","logistic IPCW outcome","IPCW",1,1,"glm.fit: algorithm did not converge",2,2
+"A","C2","logistic IPCW outcome","IPCW_G_0.01",1,1,"glm.fit: algorithm did not converge",2,2
+"A","C2","logistic IPCW outcome","IPCW_G_0.02",1,1,"glm.fit: algorithm did not converge",2,2
+"A","C2","logistic IPCW outcome","IPCW_G_0.05",1,1,"glm.fit: algorithm did not converge",2,2
+"A","C2","logistic IPCW outcome","IPCW_G_0.1",1,1,"glm.fit: algorithm did not converge",2,2
+"A","C2","logistic IPCW outcome","IPCW_pG_0.01",1,1,"glm.fit: algorithm did not converge",2,2
+"A","C2","logistic IPCW outcome","IPCW_pG_0.02",1,1,"glm.fit: algorithm did not converge",2,2
+"A","C2","logistic IPCW outcome","IPCW_pG_0.05",1,1,"glm.fit: algorithm did not converge",2,2
+"A","C2","logistic IPCW outcome","IPCW_pG_0.1",1,1,"glm.fit: algorithm did not converge",2,2
+"A","C2","logistic IPCW outcome","IPCW_t",1,1,"glm.fit: algorithm did not converge",2,2
+"control","C2","logistic IPCW outcome","IPCW_t",1,1,"glm.fit: algorithm did not converge",2,2
+"C","C5a","logistic IPCW outcome","IPCW_t",1,1,"glm.fit: algorithm did not converge",2,2
+"control","C2","logistic outcome","CC",0.5,0,"glm.fit: fitted probabilities numerically # or # occurred",39,24
+"B","C2m","logistic outcome","CC",0.5,0,"glm.fit: fitted probabilities numerically # or # occurred",43,30
+"B","C3m","logistic outcome","CC",0.5,0,"glm.fit: fitted probabilities numerically # or # occurred",43,30
+"control","C4","logistic outcome","CC",0.5,0,"glm.fit: fitted probabilities numerically # or # occurred",39,24
+"C","C5a","logistic outcome","CC",0.5,0,"glm.fit: fitted probabilities numerically # or # occurred",39,24
+"C","C5b","logistic outcome","CC",0.5,0,"glm.fit: fitted probabilities numerically # or # occurred",34,23
+"control","C2","logistic outcome","NE",0.5,0,"glm.fit: fitted probabilities numerically # or # occurred",46,29
+"B","C2m","logistic outcome","NE",0.5,0,"glm.fit: fitted probabilities numerically # or # occurred",43,29
+"B","C3m","logistic outcome","NE",0.5,0,"glm.fit: fitted probabilities numerically # or # occurred",43,29
+"control","C4","logistic outcome","NE",0.5,0,"glm.fit: fitted probabilities numerically # or # occurred",46,29
+"C","C5a","logistic outcome","NE",0.5,0,"glm.fit: fitted probabilities numerically # or # occurred",46,29
+"C","C5b","logistic outcome","NE",0.5,0,"glm.fit: fitted probabilities numerically # or # occurred",35,21
+"B","C2m","logistic outcome","CC",1,0,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"B","C3m","logistic outcome","CC",1,0,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"control","C2","logistic outcome","NE",1,0,"glm.fit: fitted probabilities numerically # or # occurred",2,2
+"B","C2m","logistic outcome","NE",1,0,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"B","C3m","logistic outcome","NE",1,0,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"control","C4","logistic outcome","NE",1,0,"glm.fit: fitted probabilities numerically # or # occurred",2,2
+"C","C5a","logistic outcome","NE",1,0,"glm.fit: fitted probabilities numerically # or # occurred",2,2
+"C","C5b","logistic outcome","NE",1,0,"glm.fit: fitted probabilities numerically # or # occurred",2,2
+"control","C2","logistic outcome","CC",0.5,1,"glm.fit: fitted probabilities numerically # or # occurred",66,37
+"B","C2m","logistic outcome","CC",0.5,1,"glm.fit: fitted probabilities numerically # or # occurred",35,21
+"B","C3m","logistic outcome","CC",0.5,1,"glm.fit: fitted probabilities numerically # or # occurred",35,21
+"control","C4","logistic outcome","CC",0.5,1,"glm.fit: fitted probabilities numerically # or # occurred",66,37
+"C","C5a","logistic outcome","CC",0.5,1,"glm.fit: fitted probabilities numerically # or # occurred",66,37
+"C","C5b","logistic outcome","CC",0.5,1,"glm.fit: fitted probabilities numerically # or # occurred",50,28
+"control","C2","logistic outcome","NE",0.5,1,"glm.fit: fitted probabilities numerically # or # occurred",60,38
+"B","C2m","logistic outcome","NE",0.5,1,"glm.fit: fitted probabilities numerically # or # occurred",30,18
+"B","C3m","logistic outcome","NE",0.5,1,"glm.fit: fitted probabilities numerically # or # occurred",30,18
+"control","C4","logistic outcome","NE",0.5,1,"glm.fit: fitted probabilities numerically # or # occurred",60,38
+"C","C5a","logistic outcome","NE",0.5,1,"glm.fit: fitted probabilities numerically # or # occurred",60,38
+"C","C5b","logistic outcome","NE",0.5,1,"glm.fit: fitted probabilities numerically # or # occurred",54,33
+"control","C2","logistic outcome","CC",1,1,"glm.fit: fitted probabilities numerically # or # occurred",9,5
+"B","C2m","logistic outcome","CC",1,1,"glm.fit: fitted probabilities numerically # or # occurred",2,1
+"B","C3m","logistic outcome","CC",1,1,"glm.fit: fitted probabilities numerically # or # occurred",2,1
+"control","C4","logistic outcome","CC",1,1,"glm.fit: fitted probabilities numerically # or # occurred",9,5
+"C","C5a","logistic outcome","CC",1,1,"glm.fit: fitted probabilities numerically # or # occurred",9,5
+"C","C5b","logistic outcome","CC",1,1,"glm.fit: fitted probabilities numerically # or # occurred",6,4
+"control","C2","logistic outcome","NE",1,1,"glm.fit: fitted probabilities numerically # or # occurred",11,10
+"B","C2m","logistic outcome","NE",1,1,"glm.fit: fitted probabilities numerically # or # occurred",4,3
+"B","C3m","logistic outcome","NE",1,1,"glm.fit: fitted probabilities numerically # or # occurred",4,3
+"control","C4","logistic outcome","NE",1,1,"glm.fit: fitted probabilities numerically # or # occurred",11,10
+"C","C5a","logistic outcome","NE",1,1,"glm.fit: fitted probabilities numerically # or # occurred",11,10
+"C","C5b","logistic outcome","NE",1,1,"glm.fit: fitted probabilities numerically # or # occurred",5,4
+"control","C2","logistic outcome","CC",1.5,1,"glm.fit: fitted probabilities numerically # or # occurred",4,4
+"B","C2m","logistic outcome","CC",1.5,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"B","C3m","logistic outcome","CC",1.5,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"control","C4","logistic outcome","CC",1.5,1,"glm.fit: fitted probabilities numerically # or # occurred",4,4
+"C","C5a","logistic outcome","CC",1.5,1,"glm.fit: fitted probabilities numerically # or # occurred",4,4
+"C","C5b","logistic outcome","CC",1.5,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"control","C2","logistic outcome","NE",1.5,1,"glm.fit: fitted probabilities numerically # or # occurred",6,6
+"B","C2m","logistic outcome","NE",1.5,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"B","C3m","logistic outcome","NE",1.5,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"control","C4","logistic outcome","NE",1.5,1,"glm.fit: fitted probabilities numerically # or # occurred",6,6
+"C","C5a","logistic outcome","NE",1.5,1,"glm.fit: fitted probabilities numerically # or # occurred",6,6
+"C","C5b","logistic outcome","NE",1.5,1,"glm.fit: fitted probabilities numerically # or # occurred",3,3
+"control","C2","logistic outcome","CC",2,1,"glm.fit: fitted probabilities numerically # or # occurred",2,2
+"control","C4","logistic outcome","CC",2,1,"glm.fit: fitted probabilities numerically # or # occurred",2,2
+"C","C5a","logistic outcome","CC",2,1,"glm.fit: fitted probabilities numerically # or # occurred",2,2
+"control","C2","logistic outcome","NE",2,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"control","C4","logistic outcome","NE",2,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"C","C5a","logistic outcome","NE",2,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
+"C","C5b","logistic outcome","NE",2,1,"glm.fit: fitted probabilities numerically # or # occurred",1,1
