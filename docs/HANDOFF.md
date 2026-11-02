@@ -5,8 +5,10 @@ Updated 1 November 2026.
 ## Next
 
 1. Read the lessons, 1 to 12, until you can answer each "check yourself" list.
-2. Write the README section "How this was built": your own account of your role.
-3. Then the slide deck.
+2. The assistants are building the slide deck, from saved rows only (`scripts/16_deck_tables.R`).
+3. The README section "How this was built" is drafted by the assistants and is not yet in the README, because some of its sentences do not match the repository.
+
+The repository stays private.
 
 ## 31 October 2026: review and exploratory runs done
 
@@ -32,7 +34,7 @@ New open questions from the additions:
 | Review and exploratory runs A to C | **Done.** Exploratory, no floor chosen. `reports/phase2_results.md` |
 | Lessons | 1 to 12 written, in `docs/lessons/` (lessons 5 and 6 share one file) |
 | Process log | `docs/LOG.md`: every setting, change and check, with reasons |
-| Slide deck | Not started |
+| Slide deck | Being built by the assistants |
 
 All code, documents and results are on GitHub (private repository).
 
@@ -44,8 +46,8 @@ All code, documents and results are on GitHub (private repository).
 
 ## Still to do
 
-- The README section "How this was built": your own account of your role.
-- An 8–10 slide deck from the two reports. Only after you have read the lessons and the reports, and can explain each slide yourself.
+- The README section "How this was built", once its sentences are corrected.
+- An 8–10 slide deck from the two reports. You should be able to explain each slide yourself before it is sent.
 - Make the repository public only when you decide to share it.
 
 ## If a chunk file is damaged
