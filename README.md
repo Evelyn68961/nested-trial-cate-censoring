@@ -43,6 +43,10 @@ Robertson, Steingrimsson and Dahabreh (Eur J Epidemiol 2023) published R code fo
 
 ## How this was built
 
-The code was written with an AI coding assistant (Claude Code).
+The code, reports and lessons were written with an AI coding assistant (Claude Code), as the commit history shows. The author chose the question, decided each step in discussion with the assistant, and approved the corrections and further runs.
 
-*[Your own account of your role goes here.]*
+- **Checks that changed the work.** A blind code review found no sign, target or leakage errors. Its other findings are disclosed in `reports/phase2_results.md`. Four were tested: the compensator step size, the coverage target, complete case's trial-joining model, and the logistic outcome model. None changed a conclusion. Claims the numbers did not support were corrected, and every reported number was kept.
+- **Second methods.** The pseudo-outcomes match the code of Robertson et al. 2023 to 1.4e-14 over 7 runs on 5 generated datasets (`reports/tables/05_reference_check.csv`). An independent script, written without reading the estimators, reproduces the true values to 4e-16 and the pattern of large errors (`independent_check/`).
+- **Two computers.** The first Phase 1 and Phase 2 runs were made on an earlier computer. One assistant session then ran the review and the later runs. A second session, on another computer, checked each result before it counted.
+- **Fixed in advance.** The later runs are exploratory. Their expected directions and the rule for scoring them were committed before the full runs (`docs/exploratory_prespecification.md`).
+- **What is reproducible.** The hospital-level rows of the later runs and `reports/tables/15_runs.csv` record the commit of the code that produced them.
