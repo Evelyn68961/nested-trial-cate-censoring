@@ -5,7 +5,7 @@ Goes with `reports/phase2_results.md`.
 ## The short version
 
 - **No dropout:** CC, NE and IPCW agree exactly, and the Weibull-based methods almost exactly. Good.
-- **Each simple fix fails somewhere.** Counting dropouts as event-free fails when dropout is random. Dropping them fails when frail and treated patients leave sooner. Counting them as event-free looked fine under dependent dropout because its errors in the two arms cancelled there. Dropping them looked fine under random dropout because nothing links random leaving to the outcome. So passing one test proves little.
+- **Each simple fix fails somewhere.** Counting dropouts as event-free fails when dropout is random. Dropping them fails when frail and treated patients leave sooner. Counting them as event-free looked fine under dependent dropout because its errors in the two arms cancelled there. Dropping them looked fine under random dropout, although each arm's risk is then biased upward (lesson 8); the small bias comes from the two arms offsetting, which was not examined. So passing one test proves little.
 - **Weighting lowers the median-based bias, but large errors remain.** When frail treated patients almost all leave, the few who stay get enormous weights (one stood in for thousands). 92 (IPCW) and 50 (AIPCW) of 200 hospitals had an absolute error above 0.5.
 - **AIPCW had fewer hospitals above 0.5 than IPCW under dependent dropout,** though not in every setting, and its bias stayed low with a wrong dropout model. Several of these rankings are not resolved at 200 hospitals.
 - **Its 95% intervals were too narrow with a wrong dropout model** (80% coverage). Removing the bias does not close most of that gap, and why the intervals are too narrow is not established.
@@ -22,7 +22,7 @@ This has a name: a **practical positivity** problem. Some kinds of patients are 
 
 ## Time to benefit, by profile
 
-With a trial of 500, even with no dropout, a single trial put a profile's time to benefit within half a year of the truth only a third to a half of the time. The answer from one trial is rough, not a point. Dropping the dropouts made it worse: it delayed the estimated time to benefit by one to one and a half years under dependent dropout. Truncated AIPCW's median was on target at v = 2 and 3, and half a year early at v = 1.
+With a trial of 500, even with no dropout, a single trial put a profile's time to benefit within half a year of the truth only a third to a half of the time. The answer from one trial is rough, not a point. Dropping the dropouts made it worse. Under dependent dropout, CC's median time to benefit was 0.5 to 1.0 years later than with no dropout, and 1.0 to 1.5 years later than the truth. Truncated AIPCW's median was on target at v = 2 and 3, and half a year early at v = 1.
 
 For a prescriber this matters. A profile-specific time to benefit from one trial should come with its uncertainty, and the way dropout is handled can shift it by a year.
 

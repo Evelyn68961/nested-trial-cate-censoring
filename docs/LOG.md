@@ -181,7 +181,7 @@ C2 and C3 use the same seeds, so the only difference between them is the dropout
 - **CC (complete case):** trial patients whose status at t is unknown are removed.
 - **NE (no event):** unknown status is counted as no event by t.
 - **IPCW:** status known at t, divided by the estimated chance of still being followed at min(time, t). The outcome model is a logistic regression of status at t, weighted the same way.
-- **AIPCW (augmented IPCW):** IPCW plus a correction for each dropout, using a Weibull outcome model fitted in each arm to predict what would likely have happened after they left. The outcome model is that Weibull model. It is correct if either the dropout model or the outcome model is right.
+- **AIPCW (augmented IPCW):** IPCW plus a correction for each dropout, using a Weibull outcome model fitted in each arm to predict what would likely have happened after they left. The outcome model is that Weibull model. As coded, AIPCW is consistent if the outcome model is right, or if the participation and dropout models are both right.
 
 **Helper models.** All parametric, not Super Learner:
 - the dropout model is a Weibull regression on treatment, frailty, v and sex;

@@ -27,7 +27,7 @@ What a control shows is narrow. It shows the new path did not change the old ans
 
 ## The second method, and replicate 161
 
-A separate script was written without reading the estimators, and run on the same design. Its true values at t = 5 agreed with the repository's to 4e-16, through a different calculation. So both agree on what the right answer is.
+A separate script was written without reading the estimators, and run on the same design. Its true values at t = 5 for v = 1, 2 and 3 agreed with the repository's to 4e-16, through a different integration routine. So both agree on what the right answer is.
 
 At v = 1 in C2, the median bias was close: -0.010 for the repository and -0.012 for the script. The SD was not: 1.20 against 14.34.
 
@@ -116,6 +116,7 @@ You cannot say a run confirms something, that a method or floor is best, or that
 - **The source of the large errors.** The two weights multiply, and these runs involve both without separating them.
 - **CC in C5b.** Its median-based bias fell to 0.021 from 0.091. The reason was not examined, so this does not show that CC improved.
 - **Median bias at v = 2.** The repository and the script differ by 0.05, not explained.
+- **Seed 145.** The same patient (1/G = 16,469.6) has a 30-step compensator error of 14.08 in C2 and 1.21 in C4. The difference was not examined.
 
 ## Check yourself
 

@@ -22,9 +22,9 @@ IPCW is right only if the dropout model is right. In C3 the dropout model leaves
 
 AIPCW (augmented IPCW) adds one more piece. For each patient who left, an **outcome model** predicts how likely they were to have the event by t, given that they were event-free when they left. The outcome model is a Weibull regression in each arm.
 
-The result has the same property as lesson 3: it is right if **either** the dropout model **or** the outcome model is right.
+As coded, AIPCW is consistent if the outcome model is right, or if the participation and dropout models are both right.
 
-- If the dropout model is right, the weights do the work and the extra piece averages out.
+- If the participation and dropout models are both right, the weights do the work and the extra piece averages out.
 - If the outcome model is right, the extra piece does the work and the errors in the weights average out.
 
 So the method now has two double-robust layers:
@@ -42,6 +42,8 @@ With both wrong, it missed.
 
 ## What to expect from the runs
 
+Expected before the runs:
+
 | Setting | CC | NE | IPCW | AIPCW |
 |---|---|---|---|---|
 | C0 no dropout | right | right | right | right |
@@ -54,5 +56,5 @@ The runs test whether this holds with fitted models, not just in theory. The res
 ## Check yourself
 
 1. What do the weights in lesson 3 and the weights in IPCW have in common?
-2. In C3, why does IPCW fail but AIPCW survive?
+2. In C3, why might IPCW be biased while AIPCW is not?
 3. What would make AIPCW fail?

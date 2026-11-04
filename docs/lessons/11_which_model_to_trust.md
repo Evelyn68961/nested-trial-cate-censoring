@@ -32,7 +32,7 @@ A filled-in 0.3 is less variable than the real 0 or 1 it replaces. The interval 
 
 Each kind of weight should average about 1 over all eligible patients.
 
-- **When the dropout model was wrong (C3),** the combined weights averaged about 0.75 to 0.85 in almost every hospital. So the check works as a test of the dropout model.
+- **When the dropout model was wrong (C3),** the combined weights averaged about 0.75 to 0.85 in almost every hospital. In C3 the rule flagged 187 of 200 hospitals, against 73 with the right dropout model (C2). One kind of wrong dropout model was tested, so this shows the check can flag that kind, not every kind.
 - **When a hospital's error was above 0.5,** no rule picked out those hospitals. The effective-sample-size rule caught most of them, but also flagged most of the others. It tells you the design is fragile, not which result is wrong.
 
 ## Check yourself
