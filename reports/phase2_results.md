@@ -1,8 +1,8 @@
 # Phase 2 results: dropout, and the effect traced over follow-up
 
-22 October 2026, 20:40; additions (Buckley-James, setting C4, weight checks) on 23 October, at the end. 200 simulated hospitals per setting (2,500 eligible patients, about 500 in the trial). Event times from Weibull models in which the benefit grows over time; follow-up 5 years; effect estimated at ten times from 0.5 to 5 years. Settings: `config/phase2.yaml`. Every decision and change: `docs/LOG.md`. Supersedes `reports/phase2_preliminary.md`.
+22 October 2026, 20:40; additions (Buckley-James, setting C4, weight checks) on 23 October, at the end. 200 simulated hospitals per setting (2,500 eligible patients, about 500 in the trial). Event times from Weibull models in which the benefit grows over time; follow-up 5 years; effect estimated at ten times from 0.5 to 5 years. Settings: `config/phase2.yaml`. Every decision and change: `docs/LOG.md`. Supersedes `reports/archive/phase2_preliminary.md`.
 
-**Draft corrected after review, 31 October 2026.** Every reported number stands; claims the numbers did not support have been corrected, and disclosures added at the end. Exploratory results were added the same day, at commit `da5c483`.
+**Corrected after review, 31 October 2026.** Every reported number stands; claims the numbers did not support have been corrected, and disclosures added at the end. Exploratory results were added the same day, at commit `da5c483`.
 
 ## The settings
 
@@ -12,6 +12,7 @@
 | C1 | random, hazard 0.08 a year (about 7.7% leave each year) | 26% |
 | C2 | dependent: frail and treated patients leave sooner | 30% |
 | C3 | the same hospitals as C2, with a dropout model that leaves out frailty | 30% |
+| C4 | the same hospitals as C2, with the right dropout model and outcome models that leave out frailty | 30% |
 
 ## Error at 5 years
 
@@ -64,7 +65,7 @@ The first time at which the drug lowers the risk by at least 5 points (δ = 0.05
 
 | Condition | Result |
 |---|---|
-| C0 reproduces Phase 1 at every time | **Yes.** CC, NE, IPCW and truncated IPCW identical; the Weibull-based methods nearly so; bias 0.022 averaged over time, coverage 90% |
+| With no dropout, all methods agree | **Yes.** CC, NE, IPCW and truncated IPCW identical; the Weibull-based methods nearly so; bias 0.022 averaged over time, coverage 90% |
 | Weighted methods have small bias in C1 and C2 | **C1 yes.** C2 yes for the median; the mean is imprecise, and **27 to 92 hospitals have an absolute error above 0.5** |
 | AIPCW holds in C3 while IPCW does not | **Partly.** AIPCW 0.027, IPCW 0.037, the 95% Monte Carlo interval of the difference includes zero; AIPCW intervals undercover (80%) |
 

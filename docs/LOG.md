@@ -181,7 +181,7 @@ C2 and C3 use the same seeds, so the only difference between them is the dropout
 - **CC (complete case):** trial patients whose status at t is unknown are removed.
 - **NE (no event):** unknown status is counted as no event by t.
 - **IPCW:** status known at t, divided by the estimated chance of still being followed at min(time, t). The outcome model is a logistic regression of status at t, weighted the same way.
-- **AIPCW (augmented IPCW):** IPCW plus a correction for each dropout, using a Weibull outcome model fitted in each arm to predict what would likely have happened after they left. The outcome model is that Weibull model. As coded, AIPCW is consistent if the outcome model is right, or if the participation and dropout models are both right.
+- **AIPCW (augmented IPCW):** IPCW plus a correction for each dropout, using a Weibull outcome model fitted in each arm to predict what would likely have happened after they left. The outcome model is that Weibull model. As coded, AIPCW is consistent if the outcome model is right, or if the participation and dropout models are both right. [Superseded 31 Oct: see reports/phase2_results.md]
 
 **Helper models.** All parametric, not Super Learner:
 - the dropout model is a Weibull regression on treatment, frailty, v and sex;
@@ -239,7 +239,7 @@ Ran 16:41 to 17:00: C2, C3, C1, C0, 50 hospitals each, about 15 seconds per hosp
 
 **Also found:** the Phase 1 run I thought I had stopped at about 15:00 had kept running and finished all 500 hospitals, and started the 5% trial-share setting (50 hospitals done). Duplicate work would have been harmless, because every hospital has a fixed seed. I had also not checked the clock between 14:53 and 16:40 and assumed much less time had passed.
 
-**Results** (preliminary; `reports/phase2_preliminary.md`). No dropout: all four methods agree. Random dropout: counting dropouts as event-free fails (bias 0.061 at year 5, coverage 79%). Dependent dropout: AIPCW has the smallest error at year 5 (0.025 against 0.033 to 0.038), but within about one Monte Carlo error. Wrong dropout model (C3): IPCW did not fail (0.023).
+**Results** (preliminary; `reports/archive/phase2_preliminary.md`). No dropout: all four methods agree. Random dropout: counting dropouts as event-free fails (bias 0.061 at year 5, coverage 79%). Dependent dropout: AIPCW has the smallest error at year 5 (0.025 against 0.033 to 0.038), but within about one Monte Carlo error. Wrong dropout model (C3): IPCW did not fail (0.023).
 
 **Diagnosis:** the dependent-dropout setting is too mild to expose a wrong dropout model. The same problem as the first Phase 1 pilot. Next: a stronger setting chosen by comparing candidates first, then 200 hospitals per setting.
 
@@ -294,9 +294,9 @@ All four settings, 200 hospitals each, with IPCW_t and AIPCW_t added. The untrun
 - Dependent dropout: CC fails (0.093, coverage 68%). Untruncated IPCW and AIPCW have an absolute error above 0.5 in 92 and 50 of 200 hospitals; truncated in 83 and 27, against 0 or 1 with no dropout.
 - Wrong dropout model: AIPCW 0.027, IPCW 0.037; AIPCW coverage 80%.
 
-**Why truncation did not cure it:** the dropout weight multiplies the trial-joining weight (which can exceed 100), so the combined weight stays in the thousands even with the dropout part capped at 20. Not yet tried: truncating the combined weight, or a higher floor.
+**Why truncation did not cure it:** the dropout weight multiplies the trial-joining weight (which can exceed 100), so the combined weight stays in the thousands even with the dropout part capped at 20. Not yet tried: truncating the combined weight, or a higher floor. [Superseded 31 Oct: see reports/phase2_results.md]
 
-**AIPCW undercoverage in C3:** the sandwich treats helper models as known. With one helper model wrong, the estimate stays consistent but that variance formula is no longer valid.
+**AIPCW undercoverage in C3:** the sandwich treats helper models as known. With one helper model wrong, the estimate stays consistent but that variance formula is no longer valid. [Superseded 31 Oct: see reports/phase2_results.md]
 
 **Time to benefit:** even with no dropout, only 32% to 54% of hospitals put a profile's time to benefit within half a year of the truth. Medians run about half a year late, from smoothing. CC delays it by 1 to 1.5 years under dependent dropout; truncated AIPCW keeps the median on target.
 
@@ -318,7 +318,7 @@ Planned and timed against the 17:30 shutdown: code by 08:30, runs by 12:30, writ
 
 ### Step 12: a Buckley-James estimator (BJ)
 
-**What it is.** No dropout weight at all. A trial patient whose status at t is known keeps it. A patient who dropped out before t gets the outcome model's chance of an event between leaving and t. In code it is `augmented_status()` with the chance of staying set to 1 for everyone (`use_dropout_model = FALSE`). With G ≡ 1 the compensator is zero, so only the observed status and the filled-in chance are left. Steingrimsson & Morrison (Stat Med 2020, p. 7) show this is the doubly robust loss with G ≡ 1.
+**What it is.** [Superseded 31 Oct: see reports/phase2_results.md] No dropout weight at all. A trial patient whose status at t is known keeps it. A patient who dropped out before t gets the outcome model's chance of an event between leaving and t. In code it is `augmented_status()` with the chance of staying set to 1 for everyone (`use_dropout_model = FALSE`). With G ≡ 1 the compensator is zero, so only the observed status and the filled-in chance are left. Steingrimsson & Morrison (Stat Med 2020, p. 7) show this is the doubly robust loss with G ≡ 1.
 
 **Why.** In C2, 92 (IPCW) and 50 (AIPCW) of 200 hospitals had an absolute error above 0.5. BJ keeps the trial-joining weight but drops the dropout weight. If it rarely has such errors, the dropout weight is needed for them.
 
@@ -362,7 +362,7 @@ Commits after 2b38cab during the runs change only docs/ (checked with `git diff 
 
 **Reproduction.** The six existing estimators reproduced the archived 22 October results exactly in C0 to C3 (444,000 rows each; largest difference in estimate, standard error and bandwidth: 0). Script: `scripts/12_check_reproduction.R`.
 
-**Gate 3:**
+**Gate 3:** [Superseded 31 Oct: see reports/phase2_results.md]
 
 | Condition | Result |
 |---|---|
@@ -371,7 +371,7 @@ Commits after 2b38cab during the runs change only docs/ (checked with `git diff 
 | BJ biased in C4; IPCW and AIPCW not | **Yes for BJ** (0.064, coverage 76%). **IPCW and AIPCW: yes by medians** (0.030, 0.027), but averages are dragged by hospitals with an absolute error above 0.5 (90 and 73). |
 | A weight check flags the hospitals with an absolute error above 0.5 | **No.** Effective sample size below 50 catches 47 of 50 such AIPCW hospitals in C2 but flags 171 of 200. The combined-weight mean instead flags a wrong dropout model (187 of 200 in C3). |
 
-**Unplanned finding.** BJ's intervals undercover even with the right outcome model: 72% in C2, 86% in C1. The likely reason is that filled-in values are less variable than real outcomes and the sandwich treats them as observed. Not tested; a bootstrap would.
+**Unplanned finding.** [Superseded 31 Oct: see reports/phase2_results.md] BJ's intervals undercover even with the right outcome model: 72% in C2, 86% in C1. The likely reason is that filled-in values are less variable than real outcomes and the sandwich treats them as observed. Not tested; a bootstrap would.
 
 **Time to benefit under C4.** BJ puts it too early: for v = 1, median 2.0 years against a true 3.5; for v = 3, 2.0 against 2.5.
 
@@ -388,3 +388,9 @@ The review of Phase 2 (Steps 2a and 2b, issue #1) found claims the numbers did n
 Full runs at commit `da5c483`, 3 workers, 200 hospitals, finished at 22:55. All 30 controls were exactly 0 and no hospital failed. Predictions: AIPCW and BJ in C5a held; BJ in C5b held; AIPCW and IPCW in C5b not determined; IPCW in C5a reported without a decision, as fixed in advance. No floor was chosen. The floor of 0.05 never applied in Run B. Results are in the section "Exploratory runs" of `reports/phase2_results.md`, tables in `reports/tables/15_*`, chunks in `results/exploratory/`, and the final smoke test in `results/exploratory_smoke_final/`.
 
 Checked and accepted at commit `cfd8b88`, then merged into `main` without squashing on 1 November 2026. Lesson 12 added.
+
+## 5 November 2026: checks before the repository is made public
+
+- **δ = 0.05 departs from the plan.** The plan set δ = 0.01 and 0.02 for time to benefit; the reports use δ = 0.05. This is disclosed in `reports/phase2_results.md` and now also stated in lesson 7 and the README.
+- **Files moved to archives, unchanged:** `results/summary_phase2.txt`, `summary_phase2_partial.txt`, the run logs `run_C0.log` to `run_C3.log`, `run_log_20261023.txt`, `run_sl05.log` and `run_sl20.log`, and `results/exploratory_smoke/`, into `results/archive/`; `reports/phase2_preliminary.md` into `reports/archive/`. `results/README.md` labels the folders that remain.
+- **Wording corrected** in the reports, lessons and this log: neutral wording, claims and numbers checked against the tables, and consistent terms (median bias, bias-eliminated coverage, nuisance models). No reported table or saved result changed. Entries above that the review superseded are marked inline.

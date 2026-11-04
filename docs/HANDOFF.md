@@ -1,59 +1,34 @@
-# Handoff: where the project stands, and what is next
+# Status
 
-Updated 1 November 2026.
+Updated 5 November 2026.
 
-## Next
-
-1. Read the lessons, 1 to 12, until you can answer each "check yourself" list.
-2. The assistants are building the slide deck, from saved rows only (`scripts/16_deck_tables.R`).
-3. The README section "How this was built" is drafted by the assistants and is not yet in the README, because some of its sentences do not match the repository.
-
-The repository stays private.
-
-## 31 October 2026: review and exploratory runs done
-
-The review of Phase 2 and Runs A, B and C at 200 hospitals are finished, checked and merged into `main`. Results: the sections "Corrections, disclosures and checks after review" and "Exploratory runs" of `reports/phase2_results.md`; lesson 12. No floor was chosen.
-
-## 23 October 2026: steps 12 to 15 done
-
-Buckley-James estimator, setting C4 (wrong outcome model), weight checks, and a rerun of all five settings at 200 hospitals. Gate 3 passed, except that no weight check identifies the hospitals with large errors, which is itself a finding. Results: the last section of `reports/phase2_results.md`; lesson 11; `docs/LOG.md`.
-
-Next, optional: step 16 (Brier score and calibration of each arm's risk model among all eligible patients, with dropout), about 1 to 2 days. Plan in `docs/WORKPLAN.md`.
-
-New open questions from the additions:
-- BJ's intervals undercover even with the right outcome model (72% in C2). A bootstrap would test the likely reason.
-- AIPCW has small median bias under either wrong model taken alone, but its large errors remain. Truncating the combined weight (open question 1 below) was Run A in `docs/exploratory_prespecification.md`.
-
-## State
+## Done
 
 | Part | State |
 |---|---|
-| Phase 1 (binary outcome, no dropout) | **Done.** 500 hospitals, Gate 1 passed. `reports/phase1_results.md` |
-| Phase 1, trial of about 125 | 50 of 500 hospitals (preliminary) |
-| Phase 2 (dropout, effect over time) | **Done.** 200 hospitals per setting, with truncated weights. Gate 2 passed for bias, not for stability or intervals. `reports/phase2_results.md` |
-| Review and exploratory runs A to C | **Done.** Exploratory, no floor chosen. `reports/phase2_results.md` |
-| Lessons | 1 to 12 written, in `docs/lessons/` (lessons 5 and 6 share one file) |
-| Process log | `docs/LOG.md`: every setting, change and check, with reasons |
-| Slide deck | Being built by the assistants |
+| Phase 1 (binary outcome, no dropout) | 500 hospitals, Gate 1 passed. `reports/phase1_results.md` |
+| Phase 1, trial of about 125 | 50 of 500 hospitals, preliminary |
+| Phase 2 (dropout, effect over time) | 200 hospitals per setting, C0 to C4. Gate 2 passed for median bias, not for stability or intervals. `reports/phase2_results.md` |
+| Review of Phase 2 | Claims corrected, disclosures added, no reported number changed. `reports/phase2_results.md`, section "Corrections, disclosures and checks after review" |
+| Exploratory Runs A, B and C | 200 hospitals each, pre-specified in `docs/exploratory_prespecification.md`. No floor chosen. `reports/phase2_results.md`, section "Exploratory runs" |
+| Lessons | 1 to 12 in `docs/lessons/` (lessons 5 and 6 share one file) |
+| Process log | `docs/LOG.md` |
 
-All code, documents and results are on GitHub (private repository).
+## Open questions
 
-## Open questions from Phase 2, in order of value
+1. **Median bias at v = 2.** At t = 5 in C2, the repository's AIPCW has median bias -0.021 and the independent script's 0.031 (`independent_check/comparison_C2_t5.csv`). The difference of 0.05 is not explained.
+2. **Seed 145.** The same patient (1/G = 16,469.6) has a 30-step compensator error of 14.08 in C2 and 1.21 in C4 (`reports/tables/14_compensator_patients_C2.csv`, `_C4.csv`). The difference was not examined.
+3. **CC in C5b.** CC's median bias was 0.021 in C5b against 0.091 in C2. Its participation and outcome models were wrong together, and the reason was not examined, so this does not show that CC improved.
 
-1. **Combined weights.** With only the dropout weight truncated, 27 to 83 hospitals still had an absolute error above 0.5 under strong dependent dropout. Truncating the product of the joining and staying chances, and other floors, was Run A in `docs/exploratory_prespecification.md`, exploratory, with no floor chosen. Large errors fell furthest under the bound on the product, while coverage fell and, in C4, bias rose (`reports/phase2_results.md`).
-2. **AIPCW intervals with a wrong dropout model** covered 80%. A bootstrap over the whole procedure would show whether the undercoverage is the variance formula. Expensive: about 200 refits per hospital. Try on 50 hospitals first.
-3. **Phase 1, trial of about 125:** extend from 50 to 500 hospitals (`Rscript scripts/07_run_phase1.R sl 0.05 500 3`, about 1.5 hours).
+Other limits, such as the intervals that undercover and the source of the large errors, are listed in `reports/phase2_results.md` and lesson 12.
 
-## Still to do
+## How to continue
 
-- The README section "How this was built", once its sentences are corrected.
-- An 8–10 slide deck from the two reports. You should be able to explain each slide yourself before it is sent.
-- Make the repository public only when you decide to share it.
+- The run order, with what each script needs, is in `README.md`. Runners refuse to start when `R/`, `config/` or `scripts/` have uncommitted changes, and record the commit in every result row.
+- The Phase 1 trial of about 125 can be extended from 50 to 500 hospitals with `Rscript scripts/07_run_phase1.R sl 0.05 500 3`. Finished chunks are skipped.
+- Step 16 (Brier score and calibration of each arm's risk model among all eligible patients, with dropout) is not started. `docs/WORKPLAN.md`.
+- Read, in this order: this file, `docs/LOG.md`, `docs/WORKPLAN.md`, `reports/phase1_results.md` and `reports/phase2_results.md`.
 
 ## If a chunk file is damaged
 
-If a summary script stops with an error reading a `.rds` file, that chunk was being written at a shutdown. Delete that one file and rerun its run command; it will be recomputed with the same seeds.
-
-## For a new Claude Code session
-
-Read, in this order: this file, `docs/LOG.md`, `docs/WORKPLAN.md`, `reports/phase1_results.md` and `reports/phase2_results.md`.
+If a summary script stops with an error reading a `.rds` file, that chunk was being written when a run stopped. Delete that one file and rerun its run command; it is recomputed with the same seeds.

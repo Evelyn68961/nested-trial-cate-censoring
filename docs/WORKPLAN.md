@@ -56,4 +56,4 @@ Pre-specification: `docs/exploratory_prespecification.md`. Results: `reports/pha
 
 ## Output
 
-Reports in `reports/`, a slide deck, and this repository made public once the results have been checked.
+Reports in `reports/` and lessons in `docs/lessons/`. The repository is made public once the pre-public checks are done.
