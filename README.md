@@ -51,7 +51,7 @@ The independent second method is in `independent_check/`; see its scripts' heade
 
 `docs/sessionInfo_reproduction.txt` records the R session of the machine that reproduced the tables on 5 November 2026. The original runs were made on another computer.
 
-Figures are drawn with the Cairo PNG device. Figures redrawn on another machine can differ in anti-aliasing, but not in content.
+The figure scripts use the Cairo PNG device. The saved figures were drawn on the original computer; figures redrawn on another machine can differ in anti-aliasing, but not in content.
 
 ## Layout
 

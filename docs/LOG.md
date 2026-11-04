@@ -318,7 +318,7 @@ Planned and timed against the 17:30 shutdown: code by 08:30, runs by 12:30, writ
 
 ### Step 12: a Buckley-James estimator (BJ)
 
-**What it is.** [Superseded 31 Oct: see reports/phase2_results.md] No dropout weight at all. A trial patient whose status at t is known keeps it. A patient who dropped out before t gets the outcome model's chance of an event between leaving and t. In code it is `augmented_status()` with the chance of staying set to 1 for everyone (`use_dropout_model = FALSE`). With G ≡ 1 the compensator is zero, so only the observed status and the filled-in chance are left. Steingrimsson & Morrison (Stat Med 2020, p. 7) show this is the doubly robust loss with G ≡ 1.
+**What it is.** [Superseded 31 Oct: see reports/phase2_results.md] No dropout weight at all. A trial patient whose status at t is known keeps it. A patient who dropped out before t gets the outcome model's chance of an event between leaving and t. In code it is `augmented_status()` with the chance of staying set to 1 for everyone (`use_dropout_model = FALSE`). With G ≡ 1 the compensator is zero, so only the observed status and the filled-in chance are left. Steingrimsson & Morrison (Stat Med 2020; arXiv:1904.10345v1, p. 7) show this is the doubly robust loss with G ≡ 1.
 
 **Why.** In C2, 92 (IPCW) and 50 (AIPCW) of 200 hospitals had an absolute error above 0.5. BJ keeps the trial-joining weight but drops the dropout weight. If it rarely has such errors, the dropout weight is needed for them.
 
