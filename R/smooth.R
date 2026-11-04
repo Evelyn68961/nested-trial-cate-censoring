@@ -48,6 +48,8 @@ cv_scores <- function(v, xi, bandwidths) {
   })
 }
 
+# which.min skips a bandwidth whose score is NaN (for example a window too narrow to fit a line,
+# where den is 0), so such a bandwidth is never chosen.
 choose_bandwidth <- function(v, xi, bandwidths = seq(0.3, 2.0, by = 0.1)) {
   bandwidths[which.min(cv_scores(v, xi, bandwidths))]
 }

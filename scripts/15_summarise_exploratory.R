@@ -95,9 +95,18 @@ dirs <- function(run) {
   found <- list.dirs(file.path(folder, run), recursive = FALSE, full.names = FALSE)
   found[vapply(file.path(folder, run, found), function(p) length(list.files(p, pattern = "^chunk_")) > 0, logical(1))]
 }
+# Hospitals expected per run in results/exploratory: 3 for the floor-0 controls, 200 otherwise.
+# Other folders hold smoke tests of any size, and are not checked.
+expected_hospitals <- function(run) {
+  if (run == "zero") 3 else if (identical(folder, file.path("results", "exploratory"))) 200 else NA
+}
 read_run <- function(run, setting) {
   dir <- file.path(folder, run, setting)
   info <- read_part(dir, "info")
+  expected <- expected_hospitals(run)
+  if (!is.na(expected) && (nrow(info) != expected || length(unique(info$seed)) != expected)) {
+    stop(sprintf("%s: %d hospitals found, %d expected", dir, nrow(info), expected))
+  }
   if (any(info$failed != "")) {
     print(info[info$failed != "", ])
     stop("Failed hospitals in ", dir)

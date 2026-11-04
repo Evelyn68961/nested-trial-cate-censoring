@@ -11,7 +11,8 @@
 #          Consistent if the Weibull outcome model is right, or if the participation and dropout
 #          models are both right.
 #   IPCW_t, AIPCW_t  the same with truncated weights: the estimated chance of still being
-#          followed is never allowed below g_floor (0.05), so no patient's weight exceeds 20.
+#          followed is never allowed below g_floor (0.05), so the dropout factor of the weight
+#          is capped at 20.
 #          Added after the 200-hospital runs, where strong dependent dropout gave some
 #          patients chances of staying near 0.0001 and weights above 10,000 (docs/LOG.md).
 #   BJ     Buckley-James: no dropout weight at all. Each dropout's status at t is filled

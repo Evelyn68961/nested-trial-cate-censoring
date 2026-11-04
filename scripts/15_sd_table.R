@@ -6,6 +6,7 @@ source("scripts/14_common.R")
 rows <- list()
 for (setting in paste0("C", 0:4)) {
   x <- read_chunks(file.path("results", "phase2", setting))
+  if (length(unique(x$seed)) != 200) stop(sprintf("%s: %d hospitals found, 200 expected", setting, length(unique(x$seed))))
   x <- x[x$t == 5, ]
   for (est in unique(x$estimator)) {
     y <- x[x$estimator == est, ]

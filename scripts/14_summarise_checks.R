@@ -20,6 +20,7 @@ prepare <- function(curves) {
 }
 run_info <- function(dir, label) {
   i <- read_chunks(dir, "info")
+  if (nrow(i) != 200 || length(unique(i$seed)) != 200) stop(sprintf("%s: %d hospitals found, 200 expected", dir, nrow(i)))
   if (any(i$failed != "")) {
     print(i[i$failed != "", ])
     stop("Failed hospitals in ", dir)

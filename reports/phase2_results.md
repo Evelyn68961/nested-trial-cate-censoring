@@ -86,6 +86,7 @@ Both are open questions: how to stabilise the combined weights, and how to build
 - The nuisance models are parametric Weibull and logistic regressions; the Super Learner was not used in Phase 2.
 - The reported tables use one truncation level, 0.05; a range was run later as exploratory (Run A). Truncation shifts the estimand (Dahabreh et al., Stat Med 2020, p. 16), so the truncated methods' small bias is partly a change of target. In Run A, bias is still measured against the original target.
 - Time to benefit is read on a half-year grid.
+- One bandwidth per estimator per hospital, chosen by cross-validation at 5 years from a grid of 7 values (0.4, 0.6, 0.8, 1.0, 1.3, 1.6, 2.0) and used at every time (`docs/LOG.md`).
 - 200 hospitals per setting: bootstrap Monte Carlo error on integrated bias at 5 years is 0.003 to 0.005 for most methods, but 0.007 to 0.010 for the truncated methods in C2 and C4, and 0.049 to 0.079 for untruncated IPCW and AIPCW there (`reports/tables/13_phase2_precision.csv`). The 95% Monte Carlo interval of the difference includes zero for: IPCW against AIPCW in C2, C3 and C4; truncated AIPCW against AIPCW in C2; AIPCW against BJ in C2 and C4.
 
 ## Additions of 23 October: where the instability comes from, and a wrong outcome model

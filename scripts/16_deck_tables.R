@@ -106,7 +106,13 @@ write.csv(round_numeric(ttb), "reports/tables/16_time_to_benefit_interval.csv", 
 
 # ---- Checks against tables already reported ----
 
-check <- function(label, new, old, tol) cat(sprintf("%-46s largest difference %.6f %s\n", label, max(abs(new - old)), if (max(abs(new - old)) <= tol) "OK" else "DIFFERS"))
+# Each check prints its result and stops the script if the difference exceeds tol. The tables
+# above are already written by then, so a stop leaves them changed in the working tree.
+check <- function(label, new, old, tol) {
+  d <- max(abs(new - old))
+  cat(sprintf("%-46s largest difference %.6f %s\n", label, d, if (d <= tol) "OK" else "DIFFERS"))
+  if (!(d <= tol)) stop(sprintf("%s: largest difference %g is above %g", label, d, tol))
+}
 old <- read.csv("reports/tables/13_time_to_benefit.csv")
 old <- old[old$setting %in% c("C0", "C2") & old$delta == delta, ]
 m <- merge(ttb, old, by = c("setting", "estimator", "v"))

@@ -25,6 +25,11 @@ bandwidths <- seq(0.3, 2.0, by = 0.1)
 smoothed_P <- sapply(bandwidths, function(h) smoothed_curve(u, target_u, rep(1, length(u)), v_grid, h))
 
 settings <- list.dirs(file.path("results", "phase1"), recursive = FALSE, full.names = FALSE)
+# Hospitals expected in each saved setting; the summary stops if a setting has a different number
+expected_hospitals <- c(glm_trial20 = 100, sl_trial05 = 50, sl_trial20 = 500)
+# Share of hospitals whose interval covers, ignoring missing estimates as bias does; NA when no
+# hospital has an interval (G, or a target that does not apply to the estimator)
+share <- function(z) if (all(is.na(z))) NA else mean(z, na.rm = TRUE)
 tables <- list()
 for (setting in settings) {
   files <- list.files(file.path("results", "phase1", setting), pattern = "^chunk_.*rds$", full.names = TRUE)
@@ -32,6 +37,11 @@ for (setting in settings) {
   parts <- lapply(files, readRDS)
   curves <- do.call(rbind, lapply(parts, `[[`, "curves"))
   info <- do.call(rbind, lapply(parts, `[[`, "info"))
+  n_found <- length(unique(curves$seed))
+  if (!setting %in% names(expected_hospitals) || n_found != expected_hospitals[[setting]] || nrow(info) != n_found) {
+    stop(sprintf("%s: %d hospitals found, %s expected", setting, n_found,
+                 if (setting %in% names(expected_hospitals)) expected_hospitals[[setting]] else "none"))
+  }
 
   cfg <- cfg0
   cfg$trial_fraction <- as.numeric(sub(".*_trial", "", setting)) / 100
@@ -51,9 +61,9 @@ for (setting in settings) {
                bias = mean(x$estimate - x$truth, na.rm = TRUE),
                bias_mcse = sd(x$estimate, na.rm = TRUE) / sqrt(sum(!is.na(x$estimate))),
                rmse = sqrt(mean((x$estimate - x$truth)^2, na.rm = TRUE)),
-               coverage = mean(x$lower <= x$truth & x$truth <= x$upper),
-               coverage_smoothed = mean(x$lower <= x$smoothed_truth & x$smoothed_truth <= x$upper),
-               coverage_trial_curve = mean(x$lower <= x$trial_truth & x$trial_truth <= x$upper),
+               coverage = share(x$lower <= x$truth & x$truth <= x$upper),
+               coverage_smoothed = share(x$lower <= x$smoothed_truth & x$smoothed_truth <= x$upper),
+               coverage_trial_curve = share(x$lower <= x$trial_truth & x$trial_truth <= x$upper),
                missing = sum(is.na(x$estimate)))
   }))
   write.csv(per_v, file.path("reports", "tables", sprintf("07_%s_by_v.csv", setting)), row.names = FALSE)

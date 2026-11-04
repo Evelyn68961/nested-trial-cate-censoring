@@ -32,6 +32,9 @@ for (setting in settings) {
   parts <- lapply(files, readRDS)
   curves <- do.call(rbind, lapply(parts, `[[`, "curves"))
   info <- do.call(rbind, lapply(parts, `[[`, "info"))
+  if (length(unique(curves$seed)) != 200 || nrow(info) != 200) {
+    stop(sprintf("%s: %d hospitals found, 200 expected", setting, length(unique(curves$seed))))
+  }
   vi <- match(round(curves$v, 8), round(v_grid, 8))
   ti <- match(curves$t, times)
   curves$truth <- truth[cbind(vi, ti)]

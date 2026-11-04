@@ -10,8 +10,8 @@
 
 for (f in c("generate", "truth", "smooth", "phase2_generate", "phase2_truth")) source(sprintf("R/%s.R", f))
 
-if (length(system("git status --porcelain -- R config results", intern = TRUE)) > 0) {
-  stop("Uncommitted changes in R/, config/ or results/. Commit first so results can be traced.")
+if (length(system("git status --porcelain -- R config scripts results", intern = TRUE)) > 0) {
+  stop("Uncommitted changes in R/, config/, scripts/ or results/. Commit first so results can be traced.")
 }
 commit <- system("git rev-parse --short HEAD", intern = TRUE)
 
@@ -73,6 +73,9 @@ score_estimator <- function(x, n, scopes, counts) {
 
     if (has_interval) {
       coverage_v <- colMeans(covered[, j, drop = FALSE])
+      # integrated_coverage_mcse_binomial: the binomial MCSE of coverage at each v, in percent,
+      # averaged over v. It treats each v on its own, so it is not the MCSE of the coverage
+      # averaged over v; integrated_coverage_mcse_bootstrap is.
       binomial_se_v <- sqrt(coverage_v * (100 - coverage_v) / n)
       boot_cover <- rowMeans(boot_coverage[, j, drop = FALSE])
       boot_width <- as.vector(counts %*% rowMeans(width[, j, drop = FALSE])) / n
@@ -195,6 +198,8 @@ for (setting in c("sl_trial20", "sl_trial05")) {
   curves$truth <- truth1[match(round(curves$v, 8), round(v_grid1, 8))]
   curves <- curves[order(curves$seed, curves$v), ]
   n <- length(unique(curves$seed))
+  expected <- c(sl_trial20 = 500, sl_trial05 = 50)[[setting]]
+  if (n != expected) stop(sprintf("%s: %d hospitals found, %d expected", setting, n, expected))
   counts <- resample_counts(n)
   for (est in estimators1) {
     x <- curves[curves$estimator == est, ]

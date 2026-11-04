@@ -38,6 +38,7 @@ for (setting in c("C0", "C2", "C3", "C4")) {
   for (est in c("CC", "NE", "IPCW", "AIPCW", "IPCW_t", "AIPCW_t", "BJ")) {
     x <- curves[curves$estimator == est, ]
     n <- length(unique(x$seed))
+    if (n != 200) stop(sprintf("%s %s: %d hospitals found, 200 expected", setting, est, n))
     estimate <- as_hospital_matrix(x, "estimate", n)
     lower <- as_hospital_matrix(x, "lower", n)
     upper <- as_hospital_matrix(x, "upper", n)
@@ -76,6 +77,7 @@ for (setting in c("C2", "C4")) {
   by_v <- aggregate(cbind(estimate, truth, smoothed, half_width = (upper - lower) / 2) ~ v, x, mean)
   medians <- aggregate(estimate ~ v, x, median)$estimate
   hospital_h <- x$h[!duplicated(x$seed)]
+  if (length(hospital_h) != 200) stop(sprintf("%s BJ: %d hospitals found, 200 expected", setting, length(hospital_h)))
   bj[[setting]] <- data.frame(
     setting = setting, estimator = "BJ", t = 5, n_hospitals = length(hospital_h),
     median_bandwidth = median(hospital_h),
