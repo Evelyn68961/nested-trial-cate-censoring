@@ -116,7 +116,7 @@ You cannot say a run confirms something, that a method or floor is best, or that
 - **The source of the large errors.** The two weights multiply, and these runs involve both without separating them.
 - **CC in C5b.** Its median bias fell to 0.021 from 0.091. The reason was not examined, so this does not show that CC improved.
 - **Median bias at v = 2.** The repository and the script differ by 0.05, not explained.
-- **Seed 145.** The same patient (1/G = 16,469.6) has a 30-step compensator error of 14.08 in C2 and 1.21 in C4. The difference was not examined.
+- **Seed 145.** The same patient (1/G = 16,469.6) has a 30-step compensator error (against 3,000 steps) of 14.08 in C2 and 1.21 in C4. G is the same in both, so the difference comes from the outcome-model term; how was not examined.
 
 ## Check yourself
 

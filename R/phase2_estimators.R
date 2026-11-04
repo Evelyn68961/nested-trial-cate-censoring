@@ -209,12 +209,12 @@ run_phase2_estimators <- function(d, cfg, censor_formula, seed, v_grid,
   dropped <- with(d[d$s == 1, ], mean(event == 0 & time < cfg$follow_up_end))
   list(curves = curves,
        info = cbind(data.frame(n_trial = sum(d$s), share_dropped = dropped,
-                               min_p_join = min(h$p_join), min_g = min(weibull_surv(pmin(d$time[d$s == 1], 5),
+                               min_p_join = min(h$p_join), min_g = min(weibull_surv(pmin(d$time[d$s == 1], cfg$follow_up_end),
                                                                                     h$cens_lp[d$s == 1], h$cens_scale[d$s == 1]))),
                     weight_checks(d, h, times[last])))
 }
 
-# Weight checks recommended by Dahabreh et al. (Stat Med 2020, p. 16), at time t, computed
+# Weight checks recommended by Dahabreh et al. (Stat Med 2020; arXiv v3, p. 16), at time t, computed
 # over all eligible patients. Each mean should be close to 1:
 #   mean_w_join        S / P(trial)
 #   mean_w_arm1, _arm0 S * [A = a] / (P(trial) * P(arm a))

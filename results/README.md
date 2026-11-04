@@ -15,4 +15,6 @@ Hospital-level rows saved by the run scripts, in chunks of 25 hospitals (`chunk_
 | `summary_phase2_20261023.txt` | Printed summary of the 23 October Phase 2 runs; `scripts/13_precision_tables.R` checks against it |
 | `archive/` | Superseded runs, run logs, summaries and earlier smoke tests, kept for the record |
 
+One saved table needs a warning: the T rows of `reports/tables/14_smoothed_coverage_phase1.csv` use the wrong target and are not interpreted; see `reports/tables/14_smoothed_coverage_phase1_NOTES.md`.
+
 `reference/` is not committed: `scripts/05_reference_check.R` downloads Robertson et al.'s code into it at run time, because that code has no licence.

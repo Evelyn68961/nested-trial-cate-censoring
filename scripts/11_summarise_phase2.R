@@ -15,7 +15,7 @@ estimators <- c("CC", "NE", "IPCW", "AIPCW", "IPCW_t", "AIPCW_t", "BJ")
 labels <- c(C0 = "C0 no dropout", C1 = "C1 random dropout", C2 = "C2 dependent dropout",
             C3 = "C3 dependent dropout, dropout model wrong",
             C4 = "C4 dependent dropout, outcome model wrong")
-# Weight-check rules (Dahabreh et al., Stat Med 2020, p. 16); each flags a hospital
+# Weight-check rules (Dahabreh et al., Stat Med 2020; arXiv v3, p. 16); each flags a hospital
 rules <- list(
   "a combined-weight mean off 1 by > 0.2" = function(i) pmax(abs(i$mean_wc_arm1 - 1), abs(i$mean_wc_arm0 - 1)) > 0.2,
   "one patient carries > 10% of an arm's weight" = function(i) pmax(i$top_share_wc_arm1, i$top_share_wc_arm0) > 0.10,
@@ -51,7 +51,7 @@ for (setting in settings) {
                median_bias = median(x$estimate - x$truth))
   }))
   # Hospitals whose curve misses the truth by more than 0.5 somewhere at 5 years
-  at5 <- curves[curves$t == 5, ]
+  at5 <- curves[curves$t == cfg$follow_up_end, ]
   worst <- aggregate(cbind(err = abs(at5$estimate - at5$truth)) ~ seed + estimator, at5, max)
   n_above_0.5 <- tapply(worst$err > 0.5, worst$estimator, sum)
   summ <- do.call(rbind, lapply(split(per, list(per$estimator, per$t), drop = TRUE), function(x) {
@@ -128,7 +128,7 @@ for (setting in settings) {
                          labels[setting], nrow(info))) +
     theme_minimal(base_size = 10) + theme(legend.position = "bottom")
   ggsave(file.path("reports", "figures", sprintf("10_%s_effect_over_time.png", setting)), p,
-         width = 10, height = 3.8, dpi = 150)
+         width = 10, height = 3.8, dpi = 150, type = "cairo")
 }
 if (length(by_time)) {
   out <- do.call(rbind, by_time)

@@ -100,6 +100,6 @@ for (setting in settings) {
          title = sprintf("Average estimated curve over %d hospitals (blue) against the true target curve (dashed)", nrow(info)),
          subtitle = setting) +
     theme_minimal(base_size = 10)
-  ggsave(file.path("reports", "figures", sprintf("07_%s_mean_curves.png", setting)), p, width = 10, height = 3.4, dpi = 150)
+  ggsave(file.path("reports", "figures", sprintf("07_%s_mean_curves.png", setting)), p, width = 10, height = 3.4, dpi = 150, type = "cairo")
 }
 if (length(tables)) write.csv(do.call(rbind, tables), "reports/tables/07_phase1_summary.csv", row.names = FALSE)

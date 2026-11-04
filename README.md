@@ -26,25 +26,32 @@ Rscript scripts/04_check_curve.R
 
 The saved results (about 320 MB, in `results/`) are included, so the summary scripts can be rerun without the long runs. The run scripts skip chunks that already exist. They refuse to start when `R/`, `config/` or `scripts/` have uncommitted changes, and record the commit in every result row; `scripts/13_precision_tables.R` also refuses uncommitted changes in `results/`.
 
-Full order, with what each step needs. Times are rough, for 3 workers on a 4-core laptop.
+Full order, with what each step needs. Times are measured with 3 workers on a 4-core laptop, from the reproduction runs of 5 November 2026 or from `docs/LOG.md`; a per-hospital median comes from the run tables. A blank time was not measured.
 
 | Step | Command | Needs | Time |
 |---|---|---|---|
 | Reference check | `Rscript scripts/05_reference_check.R` | Internet, to download Robertson et al.'s code | under 1 minute |
-| Phase 1 runs | `Rscript scripts/07_run_phase1.R sl 0.20 500 3`, then `sl 0.05 500 3`; pilot `glm 0.20 100 3` | — | about 2 hours per 500 hospitals with `sl`; minutes for the pilot |
-| Phase 1 summary | `Rscript scripts/08_summarise_phase1.R` | `results/phase1/` | seconds |
-| Phase 2 check | `Rscript scripts/09_check_phase2.R` | — | about 1 minute |
-| Phase 2 runs | `Rscript scripts/10_run_phase2.R C0 200 3`, and likewise C1 to C4 | — | about 25 minutes per setting |
+| Phase 1 runs | `Rscript scripts/07_run_phase1.R sl 0.20 500 3`, then `sl 0.05 50 3` (the saved preliminary run, 50 of 500); pilot `glm 0.20 100 3` | — | about 5.5 minutes per 25 hospitals with `sl`; about 5 minutes per 50 hospitals with `glm` (`docs/LOG.md`) |
+| Phase 1 summary | `Rscript scripts/08_summarise_phase1.R` | `results/phase1/` | under 1 minute |
+| Phase 2 check | `Rscript scripts/09_check_phase2.R` | — | 16 to 20 seconds per setting (`docs/LOG.md`) |
+| Phase 2 runs | `Rscript scripts/10_run_phase2.R C0 200 3`, and likewise C1 to C4 | — | about 25 minutes per setting (`docs/LOG.md`) |
 | Phase 2 summary | `Rscript scripts/11_summarise_phase2.R` | `results/phase2/` | under 1 minute |
-| Reproduction check | `Rscript scripts/12_check_reproduction.R` | `results/phase2/`, `results/archive/phase2_200_before_bj/` | seconds |
+| Reproduction check | `Rscript scripts/12_check_reproduction.R` | `results/phase2/`, `results/archive/phase2_200_before_bj/` | under 1 minute |
 | Precision tables | `Rscript scripts/13_precision_tables.R` | steps 8 and 11, `results/summary_phase2_20261023.txt` | under 1 minute |
-| Review checks | `scripts/14_check_compensator.R` (`integrate`; `run <setting> <steps> 200 3`; `patients <setting> 200 3`), `14_check_cc_propensity.R <setting> 200 3`, `14_check_helpers.R 25 3`, `14_followups.R` | `results/phase2/` | from seconds (`integrate`) to about 1.5 hours per compensator run |
-| Review summaries | `14_check_center_coverage.R`, `14_check_smoothed_coverage.R`, `14_summarise_checks.R` | steps 10, 13 and the review checks | 13 minutes, under 1 minute, under 1 minute |
-| Exploratory runs | `Rscript scripts/15_run_exploratory.R <run> <setting> 200 3` | — | about 1 hour per setting for Run A, 20 minutes for the others |
-| Exploratory summaries | `15_summarise_exploratory.R`, `15_sd_table.R` | exploratory runs, `results/phase2/` | about 40 minutes; seconds |
-| Deck tables | `Rscript scripts/16_deck_tables.R 3` | steps 13 and 15 | about 15 minutes |
+| Compensator checks | `Rscript scripts/14_check_compensator.R integrate`; `run <setting> <steps> 200 3`; `patients <setting> 200 3` | `results/phase2/` | under 1 minute; median 72 to 77 seconds per hospital (`reports/tables/14_checks_runs.csv`); 4 minutes per setting |
+| CC propensity check | `Rscript scripts/14_check_cc_propensity.R <setting> 200 3` | — | median 8 seconds per hospital (`reports/tables/14_checks_runs.csv`) |
+| Nuisance-model check | `Rscript scripts/14_check_helpers.R 25 3` | — | under 1 minute |
+| Follow-ups | `Rscript scripts/14_followups.R warnings <setting> 3`; `warnings_cc <setting> 3`; `slope` | `results/phase2/`, `results/check_step2/` | 8.5 to 8.8 minutes per setting; under 1 minute; under 1 minute |
+| Review summaries | `14_check_center_coverage.R`, `14_check_smoothed_coverage.R`, `14_summarise_checks.R` | `results/phase2/`; the smoothed check also reads `results/phase1/`; the summary reads `results/check_step2/` | 13 minutes; under 1 minute; under 1 minute |
+| Exploratory runs | `Rscript scripts/15_run_exploratory.R <run> <setting> 200 3`; zero control `15_run_exploratory.R zero C2 3 3` and `zero C4 3 3` | — | median 59 seconds per hospital for Run A, 17 to 18 seconds for the others (`reports/tables/15_runs.csv`) |
+| Exploratory summaries | `15_summarise_exploratory.R`, `15_sd_table.R` | exploratory runs, `results/phase2/` | 41 minutes; under 1 minute |
+| Deck tables | `Rscript scripts/16_deck_tables.R 3` | steps 13 and 15 | 14.5 minutes |
 
 The independent second method is in `independent_check/`; see its scripts' headers.
+
+`docs/sessionInfo_reproduction.txt` records the R session of the machine that reproduced the tables on 5 November 2026. The original runs were made on another computer.
+
+Figures are drawn with the Cairo PNG device. Figures redrawn on another machine can differ in anti-aliasing, but not in content.
 
 ## Layout
 
@@ -91,11 +98,11 @@ The code, reports and lessons were written with an AI coding assistant (Claude C
 
 - Wen, Dahabreh and Chiu. Generalizing conditional average treatment effects from nested randomized trials to all trial-eligible individuals. Statistics in Medicine 2026. doi:10.1002/sim.70767.
 - Robertson, Steingrimsson and Dahabreh. European Journal of Epidemiology 2023. Code: https://github.com/serobertson/GeneralizabilityCATE.
-- Steingrimsson and Morrison. Statistics in Medicine 2020.
-- Dahabreh, Robertson, Steingrimsson, Stuart and Hernán. Statistics in Medicine 2020.
+- Steingrimsson JA, Morrison S. Deep learning for survival outcomes. Statistics in Medicine 2020;39:2339–2349.
+- Dahabreh IJ, Robertson SE, Steingrimsson JA, Stuart EA, Hernán MA. Extending inferences from a randomized trial to a new target population. Statistics in Medicine 2020;39:1999–2014.
 - Morris TP, White IR, Crowther MJ. Using simulation studies to evaluate statistical methods. Statistics in Medicine 2019;38:2074–2102. doi:10.1002/sim.8086.
 - Pawel S, Kook L, Reeve K. Pitfalls and potentials in simulation studies: questionable research practices in comparative simulation studies allow for spurious claims of superiority of any method. Biometrical Journal 2023;e2200091. doi:10.1002/bimj.202200091.
 
 ## Licence
 
-Code: MIT (`LICENSE`). Documents and reports in `docs/` and `reports/`: CC BY 4.0 (`LICENSE-docs`).
+Code: MIT (`LICENSE`). Documents, reports, the READMEs and the saved results (`docs/`, `reports/`, `README.md`, `results/README.md`, `results/`): CC BY 4.0 (`LICENSE-docs`).

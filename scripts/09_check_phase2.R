@@ -16,7 +16,8 @@ settings <- list(
   C0 = list(censoring = "none", formula = right_censor),
   C1 = list(censoring = "random", formula = right_censor),
   C2 = list(censoring = "dependent", formula = right_censor),
-  C3 = list(censoring = "dependent", formula = wrong_censor)
+  C3 = list(censoring = "dependent", formula = wrong_censor),
+  C4 = list(censoring = "dependent", formula = right_censor, out_formula = ~ v + I(v^2) + male)
 )
 
 truth_v2 <- sapply(times, function(t) target_effect_t(2, t, cfg))
@@ -24,7 +25,11 @@ for (name in names(settings)) {
   st <- settings[[name]]
   d <- simulate_cohort_surv(cfg, st$censoring, seed = 1, b0 = b0)$observed
   t0 <- Sys.time()
-  res <- run_phase2_estimators(d, cfg, st$formula, seed = 1, v_grid = v_grid)
+  res <- if (is.null(st$out_formula)) {
+    run_phase2_estimators(d, cfg, st$formula, seed = 1, v_grid = v_grid)
+  } else {
+    run_phase2_estimators(d, cfg, st$formula, seed = 1, v_grid = v_grid, out_formula = st$out_formula)
+  }
   secs <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
   at2 <- res$curves[abs(res$curves$v - 2) < 1e-9, ]
   tab <- reshape(at2[, c("estimator", "t", "estimate")], idvar = "t", timevar = "estimator", direction = "wide")

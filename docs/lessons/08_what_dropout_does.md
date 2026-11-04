@@ -10,7 +10,7 @@ The paper assumes nobody leaves. CASS happened to have complete follow-up to 10 
 
 ## Three kinds of dropout in the simulation
 
-- **C1, random:** everyone has the same chance of leaving, about 8% per year. About a quarter of trial patients leave before 5 years.
+- **C1, random:** everyone has the same chance of leaving: a hazard of 0.08 a year (about 7.7% leave each year). About a quarter of trial patients leave before 5 years.
 - **C2, dependent:** frail patients leave sooner, and so do treated patients (think side effects). Frail patients also have more events and benefit less from the drug. So the patients who leave are not like those who stay.
 - **C3:** the same patients as C2, but the analysis uses a dropout model that leaves out frailty. It tests what happens when you model dropout wrongly.
 

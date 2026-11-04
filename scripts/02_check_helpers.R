@@ -71,5 +71,5 @@ p <- ggplot(plot_data, aes(truth, predicted, colour = factor(s, labels = c("Not 
        subtitle = "Grey line = exact prediction. The model learns from trial patients and is applied to everyone.") +
   theme_minimal(base_size = 10) + theme(legend.position = "bottom") +
   guides(colour = guide_legend(override.aes = list(alpha = 1, size = 2)))
-ggsave("reports/figures/02_outcome_model_vs_truth.png", p, width = 8.5, height = 4.8, dpi = 150)
+ggsave("reports/figures/02_outcome_model_vs_truth.png", p, width = 8.5, height = 4.8, dpi = 150, type = "cairo")
 cat("\nFigure written to reports/figures/02_outcome_model_vs_truth.png\n")

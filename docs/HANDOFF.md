@@ -17,7 +17,7 @@ Updated 5 November 2026.
 ## Open questions
 
 1. **Median bias at v = 2.** At t = 5 in C2, the repository's AIPCW has median bias -0.021 and the independent script's 0.031 (`independent_check/comparison_C2_t5.csv`). The difference of 0.05 is not explained.
-2. **Seed 145.** The same patient (1/G = 16,469.6) has a 30-step compensator error of 14.08 in C2 and 1.21 in C4 (`reports/tables/14_compensator_patients_C2.csv`, `_C4.csv`). The difference was not examined.
+2. **Seed 145.** The same patient (1/G = 16,469.6) has a 30-step compensator error (against 3,000 steps) of 14.08 in C2 and 1.21 in C4. G is the same in both, so the difference comes from the outcome-model term; how was not examined. (`reports/tables/14_compensator_patients_C2.csv`, `_C4.csv`, `14_compensator_slope.csv`)
 3. **CC in C5b.** CC's median bias was 0.021 in C5b against 0.091 in C2. Its participation and outcome models were wrong together, and the reason was not examined, so this does not show that CC improved.
 
 Other limits, such as the intervals that undercover and the source of the large errors, are listed in `reports/phase2_results.md` and lesson 12.
@@ -25,7 +25,7 @@ Other limits, such as the intervals that undercover and the source of the large 
 ## How to continue
 
 - The run order, with what each script needs, is in `README.md`. Runners refuse to start when `R/`, `config/` or `scripts/` have uncommitted changes, and record the commit in every result row.
-- The Phase 1 trial of about 125 can be extended from 50 to 500 hospitals with `Rscript scripts/07_run_phase1.R sl 0.05 500 3`. Finished chunks are skipped.
+- The Phase 1 trial of about 125 can be extended from 50 to 500 hospitals with `Rscript scripts/07_run_phase1.R sl 0.05 500 3`. Finished chunks are skipped. Then change `sl_trial05 = 50` to 500 in `scripts/08_summarise_phase1.R` and `scripts/13_precision_tables.R`.
 - Step 16 (Brier score and calibration of each arm's risk model among all eligible patients, with dropout) is not started. `docs/WORKPLAN.md`.
 - Read, in this order: this file, `docs/LOG.md`, `docs/WORKPLAN.md`, `reports/phase1_results.md` and `reports/phase2_results.md`.
 

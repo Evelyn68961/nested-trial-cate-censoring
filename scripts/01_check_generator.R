@@ -38,13 +38,13 @@ p1 <- ggplot(curves, aes(v, effect, linetype = who)) +
        title = "The true effect curve differs between the trial and all eligible patients",
        subtitle = "Below zero = treatment lowers the risk. Trial patients are less frail, so they benefit more.") +
   theme_minimal(base_size = 11) + theme(legend.position = "bottom")
-ggsave("reports/figures/01_true_curves.png", p1, width = 7, height = 4.5, dpi = 150)
+ggsave("reports/figures/01_true_curves.png", p1, width = 7, height = 4.5, dpi = 150, type = "cairo")
 
 p2 <- ggplot(d, aes(frailty, fill = factor(s, labels = c("Not in trial", "In trial")))) +
   geom_density(alpha = 0.5) +
   labs(x = "Frailty", y = "Density", fill = NULL,
        title = "Trial patients are less frail than those who did not join") +
   theme_minimal(base_size = 11) + theme(legend.position = "bottom")
-ggsave("reports/figures/01_frailty_by_trial.png", p2, width = 7, height = 4, dpi = 150)
+ggsave("reports/figures/01_frailty_by_trial.png", p2, width = 7, height = 4, dpi = 150, type = "cairo")
 
 cat("Figures written to reports/figures/\n")

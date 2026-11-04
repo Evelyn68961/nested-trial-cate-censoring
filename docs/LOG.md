@@ -181,7 +181,7 @@ C2 and C3 use the same seeds, so the only difference between them is the dropout
 - **CC (complete case):** trial patients whose status at t is unknown are removed.
 - **NE (no event):** unknown status is counted as no event by t.
 - **IPCW:** status known at t, divided by the estimated chance of still being followed at min(time, t). The outcome model is a logistic regression of status at t, weighted the same way.
-- **AIPCW (augmented IPCW):** IPCW plus a correction for each dropout, using a Weibull outcome model fitted in each arm to predict what would likely have happened after they left. The outcome model is that Weibull model. As coded, AIPCW is consistent if the outcome model is right, or if the participation and dropout models are both right. [Superseded 31 Oct: see reports/phase2_results.md]
+- **AIPCW (augmented IPCW):** IPCW plus a correction for each dropout, using a Weibull outcome model fitted in each arm to predict what would likely have happened after they left. The outcome model is that Weibull model. As coded, AIPCW is consistent if the outcome model is right, or if the participation and dropout models are both right.
 
 **Helper models.** All parametric, not Super Learner:
 - the dropout model is a Weibull regression on treatment, frailty, v and sex;
@@ -298,7 +298,7 @@ All four settings, 200 hospitals each, with IPCW_t and AIPCW_t added. The untrun
 
 **AIPCW undercoverage in C3:** the sandwich treats helper models as known. With one helper model wrong, the estimate stays consistent but that variance formula is no longer valid. [Superseded 31 Oct: see reports/phase2_results.md]
 
-**Time to benefit:** even with no dropout, only 32% to 54% of hospitals put a profile's time to benefit within half a year of the truth. Medians run about half a year late, from smoothing. CC delays it by 1 to 1.5 years under dependent dropout; truncated AIPCW keeps the median on target.
+**Time to benefit:** even with no dropout, only 32% to 54% of hospitals put a profile's time to benefit within half a year of the truth. Medians run about half a year late, from smoothing. CC delays it by 1 to 1.5 years under dependent dropout; truncated AIPCW keeps the median on target. [Superseded 31 Oct: see reports/phase2_results.md]
 
 **Gate 2:** passed for bias; not for stability under strong dependent dropout, and not for AIPCW intervals with a wrong dropout model. Both are known limits of weighting methods, reported as findings. Report: `reports/phase2_results.md`; lesson 10.
 
@@ -306,7 +306,7 @@ All four settings, 200 hospitals each, with IPCW_t and AIPCW_t added. The untrun
 
 - **Truncation changes the target.** Dahabreh, Robertson, Steingrimsson, Stuart and Hernán's tutorial warns that truncating extreme weights "may also help, but these strategies shift the causal estimand, which is often undesirable" (Stat Med 2020; arXiv v3, p. 16). So the small bias of IPCW_t and AIPCW_t in C2 is partly a change of target, not only a cure.
 - **Phase 2 is the combination that tutorial left as future work.** It says methods for right censoring can be combined with its methods "in a modular fashion", and that "Future work should assess the properties of such combined procedures" (p. 17).
-- **Candidate additions** from his papers were ranked in notes kept outside this repository:
+- **Candidate additions** from these papers were ranked in notes kept outside this repository:
   - a Buckley–James version with no dropout weight;
   - a wrong-outcome-model setting C4;
   - weight diagnostics;
@@ -340,7 +340,7 @@ Planned and timed against the 17:30 shutdown: code by 08:30, runs by 12:30, writ
 ### Step 14: weight checks
 
 Recorded per hospital at 5 years, over all eligible patients (`weight_checks()` in `R/phase2_estimators.R`):
-- the mean of the trial-joining weight S / P(trial), which should be close to 1 (Dahabreh et al., Stat Med 2020, p. 16);
+- the mean of the trial-joining weight S / P(trial), which should be close to 1 (Dahabreh et al., Stat Med 2020; arXiv v3, p. 16);
 - in each arm, the mean of the trial and arm weight, and of the combined weight (also divided by the chance of still being followed, untruncated), each close to 1;
 - in each arm, the largest combined weight, the share of the arm's total weight that it carries, and the effective sample size (sum of weights squared over sum of squared weights).
 
@@ -394,3 +394,6 @@ Checked and accepted at commit `cfd8b88`, then merged into `main` without squash
 - **δ = 0.05 departs from the plan.** The plan set δ = 0.01 and 0.02 for time to benefit; the reports use δ = 0.05. This is disclosed in `reports/phase2_results.md` and now also stated in lesson 7 and the README.
 - **Files moved to archives, unchanged:** `results/summary_phase2.txt`, `summary_phase2_partial.txt`, the run logs `run_C0.log` to `run_C3.log`, `run_log_20261023.txt`, `run_sl05.log` and `run_sl20.log`, and `results/exploratory_smoke/`, into `results/archive/`; `reports/phase2_preliminary.md` into `reports/archive/`. `results/README.md` labels the folders that remain.
 - **Wording corrected** in the reports, lessons and this log: neutral wording, claims and numbers checked against the tables, and consistent terms (median bias, bias-eliminated coverage, nuisance models). No reported table or saved result changed. Entries above that the review superseded are marked inline.
+- **Printed slips corrected** against the saved tables: C1 IPCW coverage 92%, BJ in C1 85%, C2 AIPCW bias-eliminated coverage 93.1, SDs 0.149 and 0.173, lesson 7's −0.19, the reference-check figure (1.4 × 10⁻¹⁴ over 7 runs on 5 datasets), and the Phase 1 small-trial MCSE (0.017). A sentence that traced to no table (truncated AIPCW moved by at most 0.0011) was replaced by the traced value.
+- **Citations:** the arXiv version is now given with page citations of Dahabreh et al.; full references are in the README and the report. In `docs/exploratory_prespecification.md` only the citation changed (Pawel et al. 2023, with a reference added). The pre-specification keeps its original terms (for example "median-based bias" and "coverage of the median estimate") as a dated record of what was fixed before the runs.
+- **Safeguards in the summary scripts:** they stop if the number of hospitals is not as expected; the compensator integration check uses a relative error; figures use the Cairo PNG device. No output changed.

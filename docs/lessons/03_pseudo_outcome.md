@@ -62,7 +62,7 @@ Read the second row: the outcome model alone is off by 0.069 (it leans toward th
 
 ## The price
 
-The correction adds noise. With both nuisance models right, the estimate varied across hospitals with a standard deviation of 0.058 with the correction (`reports/tables/03_double_robustness.csv`), more than for the outcome model alone. The method trades some precision for protection against a wrong model. Trial patients with tiny participation probabilities make it worse, because their weights are huge.
+The correction adds noise. With both nuisance models right, the estimate varied across hospitals with a standard deviation of 0.058 with the correction (`reports/tables/03_double_robustness.csv`). That table does not give the outcome model's SD; in the earlier design it was 0.052 against 0.060 with the correction (`docs/LOG.md`). The method trades some precision for protection against a wrong model. Trial patients with tiny participation probabilities make it worse, because their weights are huge.
 
 ## What this lesson does not cover yet
 

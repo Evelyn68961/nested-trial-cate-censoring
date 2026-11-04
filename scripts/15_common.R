@@ -41,12 +41,12 @@ hospital_info <- function(d, h, cfg, censoring) {
   trial <- d$s == 1
   cen <- cfg$censoring[[censoring]]
   rate <- cen$base_rate * exp(cen$frailty * d$frailty[trial] + cen$treated * d$a[trial])
-  g5 <- weibull_surv(5, h$cens_lp[trial], h$cens_scale[trial])
+  g5 <- weibull_surv(cfg$follow_up_end, h$cens_lp[trial], h$cens_scale[trial])
   data.frame(n_trial = sum(trial), share_dropped = mean(d$event[trial] == 0 & d$time[trial] < cfg$follow_up_end),
              min_p_join = min(h$p_join),
-             min_g = min(weibull_surv(pmin(d$time[trial], 5), h$cens_lp[trial], h$cens_scale[trial])),
+             min_g = min(weibull_surv(pmin(d$time[trial], cfg$follow_up_end), h$cens_lp[trial], h$cens_scale[trial])),
              share_g5_below_0.05_estimated = mean(g5 < 0.05),
-             share_g5_below_0.05_true = mean(exp(-rate * 5) < 0.05))
+             share_g5_below_0.05_true = mean(exp(-rate * cfg$follow_up_end) < 0.05))
 }
 
 # ---- Warnings ----

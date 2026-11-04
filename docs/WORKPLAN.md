@@ -27,7 +27,7 @@ Full rationale: `nested_trial_CATE_censoring_plan.md` (kept outside this reposit
 | 10 | Four ways of handling dropout, plus truncated versions of the two weighted ones | 09 Weighting for dropout | Done 2026-10-22 |
 | 11 | Runs, time to benefit by profile, tables and figures | 10 Phase 2 results | Done 2026-10-22: 200 hospitals per setting. Gate 2 passed for bias, not for stability or intervals. See reports/phase2_results.md |
 
-**Gate 2:** C0 reproduces Phase 1 at every year; the weighted estimator has small bias in C1 and C2.
+**Gate 2:** with no dropout, all methods agree; the weighted estimator has small bias in C1 and C2.
 
 ## Phase 2 additions from Steingrimsson and Morrison (Stat Med 2020) and Dahabreh et al. (Stat Med 2020)
 

@@ -8,7 +8,7 @@ Goes with the last section of `reports/phase2_results.md`.
 - **Filling in had far fewer large errors than reweighting.** Under dependent dropout, 1 hospital of 200 had an absolute error above 0.5 for BJ; 92 for IPCW and 50 for AIPCW. So most of the large errors in lesson 10 need the dropout weight. The two weights multiply, though, so this does not clear the trial-joining weight, and the source of the large errors is not established.
 - **But filling in trusts the outcome model completely.** With an outcome model that leaves out frailty, BJ was biased, and it put time to benefit 1.5 years too early for one profile.
 - **AIPCW's median bias stayed small under each wrong model taken alone.** That is the direction the theory predicts: it is consistent if the outcome model is right, or if the participation and dropout models are both right. Large errors remained.
-- **A simple check of the weights catches a wrong dropout model, but not a hospital with large errors.**
+- **A simple check of the weights flagged the one wrong dropout model tested, but also many hospitals with the right one, and no hospital with large errors.**
 
 ## Filling in, in one example
 
