@@ -31,7 +31,7 @@ Full rationale: `nested_trial_CATE_censoring_plan.md` (kept outside this reposit
 
 ## Phase 2 additions from Steingrimsson's work
 
-Ranked in a notes file kept outside this repository.
+Ranked in notes kept outside this repository.
 
 | Step | Code | Lesson | State |
 |---|---|---|---|

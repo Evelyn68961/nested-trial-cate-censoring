@@ -33,9 +33,9 @@ One hospital tells you almost nothing (lesson 4). So we ran 500 simulated hospit
 
 In real data you never know whether you have the right terms. The paper's method gives up some precision to be protected against that.
 
-## What is left in the paper's method's error
+## What is left in the error of the paper's method
 
-The paper's method's bias (0.020) is not zero. It comes from smoothing: the curve is drawn with wide windows, which flattens the dip and the rises (lesson 4). The paper reports the same size of bias and coverage just under 95%, and names bias correction as future work. Our numbers match the paper's (0.020 and 92%) closely, which is the best evidence that the rebuild is right.
+The bias of the paper's method (0.020) is not zero. It comes from smoothing: the curve is drawn with wide windows, which flattens the dip and the rises (lesson 4). The paper reports the same size of bias and coverage just under 95%, and names bias correction as future work. Our numbers match the paper's (0.020 and 92%) closely, which is the best evidence that the rebuild is right.
 
 ## Check yourself
 

@@ -56,4 +56,4 @@ If a summary script stops with an error reading a `.rds` file, that chunk was be
 
 ## For a new Claude Code session
 
-Read, in this order: this file, `docs/LOG.md`, `docs/WORKPLAN.md`, `reports/phase1_results.md`, `reports/phase2_results.md`, and the project plan (kept outside this repository).
+Read, in this order: this file, `docs/LOG.md`, `docs/WORKPLAN.md`, `reports/phase1_results.md` and `reports/phase2_results.md`.

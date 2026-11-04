@@ -37,7 +37,7 @@ Among all eligible patients (risk difference; negative means fewer events with t
 
 ## Time to benefit, for each profile
 
-The first time at which the drug lowers the risk by at least some amount δ. The true times, on the half-year grid:
+Time to benefit is the first time at which the drug lowers the risk by at least some amount δ. The true times, on the half-year grid:
 
 | Profile | δ = 0.05 (5 points) | δ = 0.10 (10 points) |
 |---|---|---|
@@ -47,7 +47,7 @@ The first time at which the drug lowers the risk by at least some amount δ. The
 | v = 3 | 2.5 years | 3.5 years |
 | v = 3.8 | not within 5 years | not within 5 years |
 
-A nested trial carries patient characteristics, so time to benefit can be given by profile.
+Trial data reconstructed from published Kaplan–Meier curves carry no patient characteristics, so they can give time to benefit only by baseline risk. A nested trial carries the characteristics, so time to benefit can be given by profile.
 
 ## Check yourself
 

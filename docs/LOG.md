@@ -8,8 +8,8 @@ What was decided, changed and checked, in order, with the reason for each. Newes
 
 ### Setup
 
-- **Language: R only.** The paper's software (Super Learner) is in R and the reference code is in R.
-- **Repository private** until Gate 2 passes (Phase 2 checks). Nothing goes public before the results have been checked.
+- **Language: R only.** The paper's software (Super Learner) is in R, and so is the reference code.
+- **Repository private** until Gate 2 passes (Phase 2 checks): nothing goes public before the results have been checked.
 - **Raw results were at first not committed.** This changed later: `results/` is no longer in `.gitignore`, only `results/reference/` is, and the run files in `results/` are in the repository. Summary tables and figures in `reports/` are committed.
 
 ### Step 1: simulated hospitals (commit 3532169)
@@ -306,7 +306,7 @@ All four settings, 200 hospitals each, with IPCW_t and AIPCW_t added. The untrun
 
 - **Truncation changes the target.** Dahabreh, Robertson, Steingrimsson, Stuart and Hernán's tutorial warns that truncating extreme weights "may also help, but these strategies shift the causal estimand, which is often undesirable" (Stat Med 2020; arXiv v3, p. 16). So the small bias of IPCW_t and AIPCW_t in C2 is partly a change of target, not only a cure.
 - **Phase 2 is the combination that tutorial left as future work.** It says methods for right censoring can be combined with its methods "in a modular fashion", and that "Future work should assess the properties of such combined procedures" (p. 17).
-- **Candidate additions** from his papers are ranked in a notes file kept outside this repository:
+- **Candidate additions** from his papers were ranked in notes kept outside this repository:
   - a Buckley–James version with no dropout weight;
   - a wrong-outcome-model setting C4;
   - weight diagnostics;
