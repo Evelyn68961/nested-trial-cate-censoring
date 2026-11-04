@@ -12,7 +12,7 @@ Full rationale: `nested_trial_CATE_censoring_plan.md` (kept outside this reposit
 | 2 | The three helper models, fitted with cross-fitting | 02 Helper models | Done 2026-10-22 |
 | 3 | The pseudo-outcome (paper's equation 1) | 03 The pseudo-outcome | Done 2026-10-22 |
 | 4 | Smoothing: local linear regression, bandwidth, intervals | 04 Drawing the curve | Done 2026-10-22 |
-| 5 | Cross-check against Robertson et al. 2023 code on one dataset | — | Done 2026-10-22: match to 2e-14 |
+| 5 | Cross-check against Robertson et al. 2023 code | — | Done 2026-10-22: match to 1.4 × 10⁻¹⁴ over 7 runs on 5 datasets |
 | 6 | The three comparison estimators (straight line, trial only, outcome model only) | 05 and 06, one file: 05_06_results_phase1 | Done |
 | 7 | Run many hospitals (50 pilot, then 500); score bias, RMSE, coverage | 05 and 06, one file: 05_06_results_phase1 | 500 hospitals done (trial 500); trial 125 at 50 of 500, preliminary. Gate 1 passed. See reports/phase1_results.md |
 

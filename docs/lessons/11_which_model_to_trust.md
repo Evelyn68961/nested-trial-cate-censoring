@@ -26,13 +26,13 @@ A possible reason, not tested here: the patients who leave are mostly frail and 
 
 ## Why BJ's intervals are too narrow
 
-A filled-in 0.3 is less variable than the real 0 or 1 it replaces. The interval formula treats the filled-in values as if they had been observed, so it thinks the data are more certain than they are. Coverage was 72% with the right model, and removing the bias only brings it to about 76%. This is one candidate reason; it has not been shown here.
+A filled-in 0.3 is less variable than the real 0 or 1 it replaces. The interval formula treats the filled-in values as if they had been observed, so it thinks the data are more certain than they are. Coverage was 72% with the right model, and removing the bias only brings it to about 76% (75.6%, coverage of the median estimate; `reports/tables/14_center_coverage_phase2.csv`). This is one candidate reason; it has not been shown here.
 
 ## What the weight checks can and cannot do
 
 Each kind of weight should average about 1 over all eligible patients.
 
-- **When the dropout model was wrong (C3),** the combined weights averaged about 0.75 to 0.85 in almost every hospital. In C3 the rule flagged 187 of 200 hospitals, against 73 with the right dropout model (C2). One kind of wrong dropout model was tested, so this shows the check can flag that kind, not every kind.
+- **When the dropout model was wrong (C3),** the middle 80% of hospitals had combined-weight means of 0.71 to 0.79 in the treated arm and 0.80 to 0.88 in the untreated arm (from the saved rows). In C3 the rule flagged 187 of 200 hospitals, against 73 with the right dropout model (C2). One kind of wrong dropout model was tested, so this shows the check can flag that kind, not every kind.
 - **When a hospital's error was above 0.5,** no rule picked out those hospitals. The effective-sample-size rule caught most of them, but also flagged most of the others. It tells you the design is fragile, not which result is wrong.
 
 ## Check yourself

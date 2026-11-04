@@ -32,7 +32,7 @@ Among all eligible patients (risk difference; negative means fewer events with t
 | v = 0.2 | +0.11 (harm) | +0.11 | +0.05 |
 | v = 1 | +0.03 | −0.04 | −0.13 |
 | v = 2 | 0.00 | −0.13 | −0.24 |
-| v = 3 | +0.03 | −0.10 | −0.20 |
+| v = 3 | +0.03 | −0.10 | −0.19 |
 | v = 3.8 | +0.17 (harm) | +0.05 | −0.05 |
 
 ## Time to benefit, for each profile

@@ -25,13 +25,13 @@ For comparison, the paper's Table 1 (binary outcome, cohort 2,500, trial 500): i
 2. **The trial alone is biased for the target.** T describes the healthier trial population; its intervals cover the target curve only 85% of the time.
 3. **A straight line is biased** where the curve bends (81% coverage).
 4. **The outcome model alone is more precise but less safe.** With the right terms (logistic pilot), G had bias 0.007; with Super Learner, which is not told the right terms, its bias rose to 0.028. P's protection matters when the outcome model is wrong, which in real data you cannot check.
-5. **P's remaining bias comes from smoothing.** It is too high where the curve dips and too low where it rises. Cross-validation often picks a wide bandwidth (median 1.9 of a maximum 2.0) because the noisy pseudo-outcomes make all bandwidths score almost equally (LOG, "Second pilot"). Coverage of the smoothed curve (94.0%) is closer to nominal than coverage of the exact curve (91.9%), which is the distinction the paper draws in section 5.1.
+5. **P's remaining bias comes from smoothing.** It is too high where the curve dips and too low where it rises. Cross-validation often picks a wide bandwidth (median 1.9 of a maximum 2.0, from the saved rows in `results/phase1/sl_trial20`) because the noisy pseudo-outcomes make all bandwidths score almost equally (LOG, "Second pilot"). Coverage of the smoothed curve (94.0%) is closer to nominal than coverage of the exact curve (91.9%), which is the distinction the paper draws in section 5.1.
 
 ## Checks behind it
 
-- Our pseudo-outcomes equal those from Robertson, Steingrimsson and Dahabreh's published code to 2 × 10⁻¹⁴ (step 5).
-- Double robustness of the pseudo-outcome confirmed with true helper values (tests) and with fitted models over 200 hospitals (step 3).
-- 22 automatic tests for Phase 1, all passing.
+- Our pseudo-outcomes equal those from Robertson, Steingrimsson and Dahabreh's published code to 1.4 × 10⁻¹⁴ over 7 runs on 5 generated datasets (step 5; `reports/tables/05_reference_check.csv`).
+- Double robustness of the pseudo-outcome confirmed with true helper values (tests) and with fitted models over 200 hospitals (step 3; `reports/tables/03_double_robustness.csv`).
+- 22 automatic tests for Phase 1, all passing at the time (`docs/LOG.md`).
 
 ## Preliminary: smaller trial
 
@@ -44,13 +44,13 @@ For comparison, the paper's Table 1 (binary outcome, cohort 2,500, trial 500): i
 | T | 0.059 | 0.174 | 89.0% |
 | G | 0.044 | 0.144 | — |
 
-With 50 hospitals and RMSE near 0.28, the bias figures carry Monte Carlo error of about 0.04, so they cannot yet be ranked. The paper trimmed the most extreme 5% of estimates in this setting; we have not. To be completed to 500 hospitals.
+With 50 hospitals and RMSE near 0.28, the bias figures carry bootstrap Monte Carlo error of up to 0.017 (P; `reports/tables/13_phase1_precision.csv`), so they cannot yet be ranked. The paper trimmed the most extreme 5% of estimates in this setting; we have not. To be completed to 500 hospitals.
 
 ## Gate 1
 
 | Condition | Result |
 |---|---|
-| Pseudo-outcomes match the reference code | Yes, to 2 × 10⁻¹⁴ |
+| Pseudo-outcomes match the reference code | Yes, to 1.4 × 10⁻¹⁴ over 7 runs on 5 datasets |
 | The paper's estimator has small bias | Yes, 0.020 |
 | The trial-only estimator is biased for the target | Yes, 0.056; coverage 85% |
 | Coverage near 90–95% | Yes, 91.9% (94.0% of the smoothed curve) |

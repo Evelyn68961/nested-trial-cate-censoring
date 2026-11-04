@@ -33,7 +33,7 @@ So the method now has two double-robust layers:
 
 ## What the tests showed
 
-In a simulated hospital of 600,000 patients with the true helper values, among treated trial patients at year 3, the average augmented status matched the true risk within 0.01:
+In a simulated hospital of 600,000 patients with the true helper values, among treated trial patients at year 3, the average augmented status matched the true risk within the test's limit of 3 Monte Carlo standard errors plus 0.002 (a fixed 0.01 until dropout was strengthened; `docs/LOG.md`):
 - with both helpers right;
 - with the outcome model replaced by one that ignores every patient characteristic;
 - with the dropout model replaced by one that gives everyone the same dropout rate.

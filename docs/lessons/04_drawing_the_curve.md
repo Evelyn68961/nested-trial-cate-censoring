@@ -33,7 +33,7 @@ The bandwidth is chosen by **leave-one-out cross-validation**. For each candidat
 
 Each estimate gets a 95% interval from the paper's "sandwich" formula. It measures how much the pseudo-outcomes scatter around the line inside the window. More scatter, or fewer patients in the window, gives a wider interval.
 
-One subtlety the paper points out: the interval is centred on a smoothed version of the true curve, not the exact curve. Smoothing always flattens peaks and valleys. With a small bandwidth the difference is tiny; with a large one it is not. In our hospital the bandwidth was 2.0, half the whole range of v. At v = 2 the true curve is −0.085, but its smoothed version is only −0.032.
+One subtlety the paper points out: the interval is centred on a smoothed version of the true curve, not the exact curve. Smoothing always flattens peaks and valleys. With a small bandwidth the difference is tiny; with a large one it is not. In one hospital (`scripts/04_check_curve.R`) the bandwidth was 2.0, half the whole range of v. At v = 2 the true curve is −0.085, but its smoothed version is only −0.032.
 
 ## What one hospital looks like
 
@@ -43,11 +43,11 @@ This is not a fault in the code. With 500 trial patients, some carrying weights 
 
 ## Why the bandwidth is often large
 
-The pilot runs found that cross-validation often picks the widest window allowed. The reason: the pseudo-outcomes are so noisy (some above 50) that every bandwidth predicts the hidden patient about equally badly. The cross-validation scores of the best and worst bandwidths differed by less than 0.1%. When the scores are that flat, the choice is close to arbitrary and leans wide, and wide windows flatten the curve. This shows up later as a small but systematic error: too high where the curve dips, too low where it rises. The paper names this as a limitation and future work.
+The pilot runs found that cross-validation often picks the widest window allowed. The reason: the pseudo-outcomes are so noisy (some above 50) that every bandwidth predicts the hidden patient about equally badly. In the pilot, the cross-validation scores of the best and worst bandwidths differed by less than 0.1% (`docs/LOG.md`). When the scores are that flat, the choice is close to arbitrary and leans wide, and wide windows flatten the curve. This shows up later as a small but systematic error: too high where the curve dips, too low where it rises. The paper names this as a limitation and future work.
 
 ## Step 5: checking against someone else's code
 
-Sarah Robertson, Jon Steingrimsson and Issa Dahabreh published R code for an earlier version of this method (2023). We ran their pseudo-outcome function on our hospitals, giving it our helper predictions. Their numbers and ours agree to 14 decimal places. So our step 3 is not just our own reading of the equation: it matches an independent implementation by the method's authors.
+Sarah Robertson, Jon Steingrimsson and Issa Dahabreh published R code for an earlier version of this method (2023). We ran their pseudo-outcome function on our hospitals, giving it our helper predictions. Their numbers and ours agree to 13 decimal places. So our step 3 is not just our own reading of the equation: it matches an independent implementation by the method's authors.
 
 ## Check yourself
 

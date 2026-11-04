@@ -13,7 +13,7 @@ The paper's method starts by fitting three helper models. The paper calls them "
 **1. Who joins the trial?**
 Fitted on all 2,500 patients, because we know who joined and who did not. It gives each patient a chance of joining, based on frailty, v and sex.
 
-In our hospital the smallest chance was 0.007. That patient resembles almost nobody in the trial. Remember this patient: in lesson 3, patients like this get very large weights.
+In one hospital the smallest chance was 0.007 (`reports/tables/02_helper_errors.csv`). That patient resembles almost nobody in the trial. Remember this patient: in lesson 3, patients like this get very large weights.
 
 **2. Who got the drug inside the trial?**
 A coin decided, so the answer is 0.5 for everyone. The paper still fits a simple model for it, and so do we.
@@ -23,7 +23,7 @@ Fitted on trial patients only, separately in the treated and the untreated arm. 
 
 ## What the numbers show
 
-The outcome model alone already gives an estimate: average `g1 − g0` over the patients with a given v. We tried this for v near 2, in 200 simulated hospitals:
+The outcome model alone already gives an estimate: average `g1 − g0` over the patients with a given v. We tried this for v near 2, in 200 simulated hospitals (printed by `scripts/02_check_helpers.R`; not saved in a table):
 
 | Averaged over | Mean of 200 hospitals | Truth |
 |---|---|---|
