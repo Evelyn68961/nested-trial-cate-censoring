@@ -299,7 +299,7 @@ quoted <- list(c("C2", "IPCW", 0.116, 92), c("C2", "AIPCW", 0.048, 50), c("C2", 
 for (q in quoted) {
   a <- phase2[phase2$setting == q[1] & phase2$estimator == q[2] & phase2$time_scope == "t = 5", ]
   add_check("phase2_results.md", paste(q[1], q[2], "bias"), as.numeric(q[3]), a$integrated_absolute_bias, 3)
-  add_check("phase2_results.md", paste(q[1], q[2], "broken"), as.numeric(q[4]), a$n_hospitals_max_abs_error_gt_0.5, 0)
+  add_check("phase2_results.md", paste(q[1], q[2], "above 0.5"), as.numeric(q[4]), a$n_hospitals_max_abs_error_gt_0.5, 0)
 }
 a <- phase1[phase1$setting == "sl_trial20" & phase1$estimator == "P", ]
 add_check("phase1_results.md", "P bias", 0.020, a$integrated_absolute_bias, 3)

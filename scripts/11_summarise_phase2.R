@@ -47,10 +47,10 @@ for (setting in settings) {
                coverage = mean(x$lower <= x$truth & x$truth <= x$upper),
                median_bias = median(x$estimate - x$truth))
   }))
-  # Hospitals whose curve misses the truth by more than 0.5 somewhere at 5 years (exploding weights)
+  # Hospitals whose curve misses the truth by more than 0.5 somewhere at 5 years
   at5 <- curves[curves$t == 5, ]
   worst <- aggregate(cbind(err = abs(at5$estimate - at5$truth)) ~ seed + estimator, at5, max)
-  blowups <- tapply(worst$err > 0.5, worst$estimator, sum)
+  n_above_0.5 <- tapply(worst$err > 0.5, worst$estimator, sum)
   summ <- do.call(rbind, lapply(split(per, list(per$estimator, per$t), drop = TRUE), function(x) {
     data.frame(setting = setting, estimator = x$estimator[1], t = x$t[1],
                integrated_abs_bias = mean(abs(x$bias)), integrated_rmse = mean(x$rmse),
@@ -67,18 +67,19 @@ for (setting in settings) {
                abs_bias_at_5y = round(x$integrated_abs_bias[x$t == 5], 3),
                coverage_at_5y = round(x$integrated_coverage[x$t == 5], 1),
                median_bias_at_5y = round(x$integrated_abs_median_bias[x$t == 5], 3),
-               hospitals_off_by_0.5 = as.integer(blowups[x$estimator[1]]))
+               hospitals_off_by_0.5 = as.integer(n_above_0.5[x$estimator[1]]))
   }))
   print(overall[match(estimators, overall$estimator), ], row.names = FALSE)
 
-  # Do the weight checks flag the hospitals whose curve breaks?
+  # Do the weight checks flag the hospitals with an absolute error above 0.5? The column names
+  # broken, broken_flagged and unbroken_flagged are kept, so the saved table does not change.
   if ("mean_wc_arm1" %in% names(info)) {
-    broken <- tapply(worst$err > 0.5, list(worst$seed, worst$estimator), any)
-    broken <- broken[as.character(info$seed), , drop = FALSE]
+    above <- tapply(worst$err > 0.5, list(worst$seed, worst$estimator), any)
+    above <- above[as.character(info$seed), , drop = FALSE]
     for (r in names(rules)) {
       flag <- rules[[r]](info)
       for (est in c("IPCW", "AIPCW", "IPCW_t", "AIPCW_t", "BJ")) {
-        b <- broken[, est]
+        b <- above[, est]
         check_rows[[length(check_rows) + 1]] <- data.frame(
           setting = setting, rule = r, estimator = est, flagged = sum(flag), broken = sum(b),
           broken_flagged = sum(b & flag), unbroken_flagged = sum(!b & flag))
@@ -134,7 +135,7 @@ if (length(by_time)) {
 if (length(check_rows)) {
   checks <- do.call(rbind, check_rows)
   write.csv(checks, "reports/tables/11_weight_checks.csv", row.names = FALSE)
-  cat("\nWeight checks: hospitals flagged, and how many of the broken ones they catch:\n")
+  cat("\nWeight checks: hospitals flagged, and how many of those with an absolute error above 0.5 they catch:\n")
   print(checks, row.names = FALSE)
 }
 if (length(ttb_rows)) {

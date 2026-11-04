@@ -7,7 +7,7 @@ Goes with the last section of `reports/phase2_results.md`.
 - **There are two ways to deal with a patient who dropped out.** Reweight the patients who stayed (IPCW), or fill in the dropout's likely outcome from a model (Buckley-James, BJ). AIPCW does both.
 - **Filling in had far fewer large errors than reweighting.** Under dependent dropout, 1 hospital of 200 had an absolute error above 0.5 for BJ; 92 for IPCW and 50 for AIPCW. So most of the large errors in lesson 10 need the dropout weight. The two weights multiply, though, so this does not clear the trial-joining weight, and the source of the large errors is not established.
 - **But filling in trusts the outcome model completely.** With an outcome model that leaves out frailty, BJ was biased, and it put time to benefit 1.5 years too early for one profile.
-- **AIPCW's median-based bias stayed small under each wrong model taken alone.** That is the direction the theory predicts: it is consistent if the outcome model is right, or if the participation and dropout models are both right. Large errors remained.
+- **AIPCW's median bias stayed small under each wrong model taken alone.** That is the direction the theory predicts: it is consistent if the outcome model is right, or if the participation and dropout models are both right. Large errors remained.
 - **A simple check of the weights catches a wrong dropout model, but not a hospital with large errors.**
 
 ## Filling in, in one example
@@ -15,10 +15,10 @@ Goes with the last section of `reports/phase2_results.md`.
 A treated patient leaves the study at year 2, event-free. We want their status at year 5.
 
 - **IPCW** drops them and gives extra weight to similar patients who stayed. If almost nobody like them stayed, the few who did carry huge weights.
-- **BJ** keeps them and writes in a number instead of a 0 or 1: the outcome model's chance that someone like them, event-free at year 2, has the event by year 5. Say 0.3. No dropout weight is needed.
+- **BJ** keeps them and writes in a number instead of a 0 or 1: the outcome model's probability that someone like them, event-free at year 2, has the event by year 5. Say 0.3. No dropout weight is needed.
 - **AIPCW** reweights, then corrects with the filled-in value. It is consistent if the filled-in value's model is right, or if the participation and dropout weights are both right.
 
-BJ is AIPCW with the chance of staying set to 1 for everyone. That is how it is coded (`use_dropout_model = FALSE` in `augmented_status()`).
+BJ is AIPCW with G set to 1 for everyone. That is how it is coded (`use_dropout_model = FALSE` in `augmented_status()`).
 
 ## Why BJ goes wrong with a wrong outcome model
 
@@ -26,7 +26,7 @@ A possible reason, not tested here: the patients who leave are mostly frail and 
 
 ## Why BJ's intervals are too narrow
 
-A filled-in 0.3 is less variable than the real 0 or 1 it replaces. The interval formula treats the filled-in values as if they had been observed, so it thinks the data are more certain than they are. Coverage was 72% with the right model, and removing the bias only brings it to about 76% (75.6%, coverage of the median estimate; `reports/tables/14_center_coverage_phase2.csv`). This is one candidate reason; it has not been shown here.
+A filled-in 0.3 is less variable than the real 0 or 1 it replaces. The interval formula treats the filled-in values as if they had been observed, so it thinks the data are more certain than they are. Coverage was 72% with the right model, and removing the bias only brings it to about 76% (75.6%, bias-eliminated coverage; `reports/tables/14_center_coverage_phase2.csv`). This is one candidate reason; it has not been shown here.
 
 ## What the weight checks can and cannot do
 

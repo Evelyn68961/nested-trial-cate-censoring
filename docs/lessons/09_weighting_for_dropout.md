@@ -4,15 +4,15 @@ Goes with Phase 2: estimators IPCW and AIPCW in `R/phase2_estimators.R`.
 
 ## The idea you already know
 
-In lesson 3, trial patients were weighted by 1 ÷ (chance of joining the trial), so they stood in for the eligible patients who did not join.
+In lesson 3, trial patients were weighted by 1 ÷ (participation probability), so they stood in for the eligible patients who did not join.
 
 Dropout uses the same idea. Weight each patient whose status at t is known by:
 
-1 ÷ (chance of still being followed at that time)
+1 ÷ (probability of remaining uncensored at that time, G)
 
 A frail treated patient who stayed, when similar patients often leave, gets a large weight. They stand in for the similar patients who left. This is **IPCW**: inverse probability of censoring weighting. "Censoring" is the statistical word for losing track of a patient.
 
-The chance of still being followed comes from a **dropout model**: a Weibull regression of dropout time on treatment and patient characteristics, fitted in the trial.
+G comes from a **dropout model**: a Weibull regression of dropout time on treatment and patient characteristics, fitted in the trial.
 
 ## The weakness of IPCW
 
@@ -33,8 +33,8 @@ So the method now has two double-robust layers:
 
 ## What the tests showed
 
-In a simulated hospital of 600,000 patients with the true helper values, among treated trial patients at year 3, the average augmented status matched the true risk within the test's limit of 3 Monte Carlo standard errors plus 0.002 (a fixed 0.01 until dropout was strengthened; `docs/LOG.md`):
-- with both helpers right;
+In a simulated hospital of 600,000 patients with the true nuisance-model values, among treated trial patients at year 3, the average augmented status matched the true risk within the test's limit of 3 Monte Carlo standard errors plus 0.002 (a fixed 0.01 until dropout was strengthened; `docs/LOG.md`):
+- with both nuisance models right;
 - with the outcome model replaced by one that ignores every patient characteristic;
 - with the dropout model replaced by one that gives everyone the same dropout rate.
 

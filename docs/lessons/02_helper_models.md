@@ -1,4 +1,4 @@
-# Lesson 2: the three helper models
+# Lesson 2: the three nuisance models
 
 Goes with step 2: `R/nuisance.R`, `scripts/02_check_helpers.R`.
 
@@ -6,14 +6,14 @@ Goes with step 2: `R/nuisance.R`, `scripts/02_check_helpers.R`.
 
 We want the drug's effect for each value of v, among all 2,500 patients. Lesson 1 showed that the trial alone overstates the benefit, because the trial is short of frail patients.
 
-The paper's method starts by fitting three helper models. The paper calls them "nuisance functions". "Nuisance" only means that we need them on the way but do not report them.
+The paper's method starts by fitting three nuisance models. The paper calls them "nuisance functions". "Nuisance" only means that we need them on the way but do not report them.
 
 ## The three helpers, as three questions
 
 **1. Who joins the trial?**
-Fitted on all 2,500 patients, because we know who joined and who did not. It gives each patient a chance of joining, based on frailty, v and sex.
+Fitted on all 2,500 patients, because we know who joined and who did not. It gives each patient a participation probability, based on frailty, v and sex.
 
-In one hospital the smallest chance was 0.007 (`reports/tables/02_helper_errors.csv`). That patient resembles almost nobody in the trial. Remember this patient: in lesson 3, patients like this get very large weights.
+In one hospital the smallest participation probability was 0.007 (`reports/tables/02_helper_errors.csv`). That patient resembles almost nobody in the trial. Remember this patient: in lesson 3, patients like this get very large weights.
 
 **2. Who got the drug inside the trial?**
 A coin decided, so the answer is 0.5 for everyone. The paper still fits a simple model for it, and so do we.
@@ -41,7 +41,7 @@ The right panel shows the same with Super Learner, which was not told the right 
 
 ## So why not stop at the outcome model?
 
-The outcome model gets the right answer only if the model itself is right. In real data you never know whether it is. Lesson 3 adds a correction that uses helpers 1 and 2 to repair the outcome model's errors. That correction is the heart of the paper's method.
+The outcome model gets the right answer only if the model itself is right. In real data you never know whether it is. Lesson 3 adds a correction that uses nuisance models 1 and 2 to repair the outcome model's errors. That correction is the heart of the paper's method.
 
 ## Two techniques used in this step
 
@@ -53,6 +53,6 @@ Why it matters: a flexible model can memorise noise in the patients it was train
 
 ## Check yourself
 
-1. Which helper is fitted on all 2,500 patients, and why can it be?
+1. Which nuisance model is fitted on all 2,500 patients, and why can it be?
 2. Why are the outcome model's predictions worse for the patients who did not join the trial?
 3. In one sentence: what does cross-fitting protect against?

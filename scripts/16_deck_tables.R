@@ -1,5 +1,5 @@
 # Tables for the deck, from saved rows only: no refitting.
-#   16_median_bias_precision.csv: integrated absolute median-based bias with a 95% bootstrap interval
+#   16_median_bias_precision.csv: integrated absolute median bias with a 95% bootstrap interval
 #   16_true_effect_by_time.csv: true effect at v = 1, 2, 3 at every t, and true time to benefit
 #   16_time_to_benefit_interval.csv: median time to benefit with a 95% bootstrap interval
 # Bootstrap over hospitals, 2,000 resamples, percentile, medians recomputed in each resample.
@@ -37,7 +37,7 @@ read_curves <- function(dir) {
   curves[order(curves$seed, curves$t, curves$v), ]
 }
 
-# ---- Median-based bias ----
+# ---- Median bias ----
 
 run_a <- grep("^A?IPCW_(G|p|pG)_", readRDS("results/exploratory/A/C2/chunk_001.rds")$curves$estimator, value = TRUE)
 run_a <- unique(run_a)

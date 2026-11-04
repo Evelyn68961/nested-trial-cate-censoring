@@ -2,7 +2,7 @@
 
 A simulation study in R. It rebuilds the estimator of Wen, Dahabreh and Chiu, *Generalizing conditional average treatment effects from nested randomized trials to all trial-eligible individuals* (Statistics in Medicine 2026; arXiv:2605.14952). It then asks what happens when trial patients drop out before the end of follow-up, a case the paper sets aside ("no dropout in the trial").
 
-**Status:** Phase 1 complete (Gate 1 passed; `reports/phase1_results.md`). Phase 2 complete at 200 hospitals per setting (Gate 2 passed for median-based bias, not for stability or intervals; `reports/phase2_results.md`). The results have been reviewed and rechecked, and exploratory follow-up runs, pre-specified in `docs/exploratory_prespecification.md`, are done (`reports/phase2_results.md`). Process log: `docs/LOG.md`.
+**Status:** Phase 1 complete (Gate 1 passed; `reports/phase1_results.md`). Phase 2 complete at 200 hospitals per setting (Gate 2 passed for median bias, not for stability or intervals; `reports/phase2_results.md`). The results have been reviewed and rechecked, and exploratory follow-up runs, pre-specified in `docs/exploratory_prespecification.md`, are done (`reports/phase2_results.md`). Process log: `docs/LOG.md`.
 
 ## The question
 

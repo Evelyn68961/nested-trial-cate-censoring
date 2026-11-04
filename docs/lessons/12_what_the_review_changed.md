@@ -41,9 +41,9 @@ The two did not agree everywhere. Median bias at v = 2 was -0.021 for the reposi
 
 An interval can miss for two reasons: it sits in the wrong place (bias), or it is too narrow (width). Coverage of the exact target mixes the two.
 
-Coverage of the median estimate asks how often the interval contains the method's own median estimate. Bias is removed by construction, so what is left is about width.
+Bias-eliminated coverage (Morris et al. 2019), centred on the median, asks how often the interval contains the method's own median estimate. Bias is removed by construction, so what is left is about width.
 
-| Setting, method | Exact | Median estimate |
+| Setting, method | Exact | Bias-eliminated |
 |---|---|---|
 | C0 AIPCW, BJ | 89.2 | 92.5 |
 | C2 CC | 68.1 | 92.5 |
@@ -67,17 +67,17 @@ These came after the first results were seen, so they are exploratory. Each cell
 | p alone | 58 | 29 | 59 | 51 |
 | Product p G | 2 | 2 | 3 | 3 |
 
-The bound on the product cut large errors the most, and it had a cost. AIPCW's coverage fell to 76.7% in C2 and 79.4% in C4. In C4, its median-based bias reached 0.063. Why was not tested.
+The bound on the product cut large errors the most, and it had a cost. AIPCW's coverage fell to 76.7% in C2 and 79.4% in C4. In C4, its median bias reached 0.063. Why was not tested.
 
 **Run B: mild dropout.** 19.9% of trial patients dropped out, against 30% in C2. The floor of 0.05 never applied, so the truncated methods equal the plain ones exactly. Large errors fell but stayed: in C2m, 25 for IPCW and 14 for AIPCW. So an error above 0.5 does not need a dropout weight near the floor. This run does not separate the two weights.
 
-**Run C: wrong participation model.** In C5a only the participation model is wrong. In C5b the outcome model is wrong too. AIPCW's median-based bias stayed small in C5a (0.023), yet 23 hospitals remained above 0.5. A small median does not make an estimate stable.
+**Run C: wrong participation model.** In C5a only the participation model is wrong. In C5b the outcome model is wrong too. AIPCW's median bias stayed small in C5a (0.023), yet 23 hospitals remained above 0.5. A small median does not make an estimate stable.
 
 ## Pre-specified predictions
 
 A pre-specified prediction is written down and committed before the runs, along with the rule for scoring it. Without that, it is easy to read a result as what you expected all along. That is also why the merge kept the history: it shows the rule came first.
 
-The rule uses the change in median-based bias against C2 on the same seeds, its 95% interval, and a margin of 0.01.
+The rule uses the change in median bias against C2 on the same seeds, its 95% interval, and a margin of 0.01.
 
 | Prediction | Held if | Failed if | Otherwise |
 |---|---|---|---|
@@ -100,7 +100,7 @@ The rule uses the change in median-based bias against C2 on the same seeds, its 
 ## Why no floor is chosen
 
 - **The floors were compared on the data they would be judged on.** Picking the best one afterwards would look like a finding, when it was a choice made after seeing the answer.
-- **The answer depends on a setting you would not know in practice.** IPCW's median-based bias under the 0.10 bound on the product was 0.017 in C2 and 0.038 in C4. The outcome model is the difference, and in real data you cannot see whether it is right.
+- **The answer depends on a setting you would not know in practice.** IPCW's median bias under the 0.10 bound on the product was 0.017 in C2 and 0.038 in C4. The outcome model is the difference, and in real data you cannot see whether it is right.
 - **Truncation shifts the estimand.** Part of a truncated method's small bias is a change of target.
 - **The rule was fixed in advance:** no floor is selected or called best anywhere.
 
@@ -112,9 +112,9 @@ You cannot say a run confirms something, that a method or floor is best, or that
 
 ## Still open
 
-- **Why the intervals undercover.** The sandwich formula treats helper models as known, and for BJ treats filled-in values as observed. Both are candidates, not shown.
+- **Why the intervals undercover.** The sandwich formula treats nuisance models as known, and for BJ treats filled-in values as observed. Both are candidates, not shown.
 - **The source of the large errors.** The two weights multiply, and these runs involve both without separating them.
-- **CC in C5b.** Its median-based bias fell to 0.021 from 0.091. The reason was not examined, so this does not show that CC improved.
+- **CC in C5b.** Its median bias fell to 0.021 from 0.091. The reason was not examined, so this does not show that CC improved.
 - **Median bias at v = 2.** The repository and the script differ by 0.05, not explained.
 - **Seed 145.** The same patient (1/G = 16,469.6) has a 30-step compensator error of 14.08 in C2 and 1.21 in C4. The difference was not examined.
 
@@ -122,7 +122,7 @@ You cannot say a run confirms something, that a method or floor is best, or that
 
 1. A control shows "largest difference 0". What does that show, and what does it not show?
 2. One replicate of 200 moved the script's SD from 1.70 to 14.34 at v = 1. Why can one value do that to SD and not to the median?
-3. CC in C2 has exact coverage of 68.1% and median-estimate coverage of 92.5%. BJ has 72.4% and 75.6%. What does each pair suggest, and why does neither validate the intervals?
+3. CC in C2 has exact coverage of 68.1% and bias-eliminated coverage of 92.5%. BJ has 72.4% and 75.6%. What does each pair suggest, and why does neither validate the intervals?
 4. A floor cuts hospitals above 0.5 from 50 to 2 but coverage falls to 76.7%. Why is that a trade-off to describe and not a floor to choose?
 5. A "biased" prediction gives a difference of 0.02 with an interval of -0.01 to 0.03. Is it held, failed or not determined under a margin of 0.01?
 6. Why does it matter that the rule was committed before the runs?

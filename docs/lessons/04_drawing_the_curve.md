@@ -47,7 +47,7 @@ The pilot runs found that cross-validation often picks the widest window allowed
 
 ## Step 5: checking against someone else's code
 
-Sarah Robertson, Jon Steingrimsson and Issa Dahabreh published R code for an earlier version of this method (2023). We ran their pseudo-outcome function on our hospitals, giving it our helper predictions. Their numbers and ours agree to 13 decimal places. So our step 3 is not just our own reading of the equation: it matches an independent implementation by the method's authors.
+Sarah Robertson, Jon Steingrimsson and Issa Dahabreh published R code for an earlier version of this method (2023). We ran their pseudo-outcome function on our hospitals, giving it our nuisance-model predictions. Their numbers and ours agree to 13 decimal places. So our step 3 is not just our own reading of the equation: it matches an independent implementation by the method's authors.
 
 ## Check yourself
 

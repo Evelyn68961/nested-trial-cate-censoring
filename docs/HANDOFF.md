@@ -22,7 +22,7 @@ Next, optional: step 16 (Brier score and calibration of each arm's risk model am
 
 New open questions from the additions:
 - BJ's intervals undercover even with the right outcome model (72% in C2). A bootstrap would test the likely reason.
-- AIPCW has small median-based bias under either wrong model taken alone, but its large errors remain. Truncating the combined weight (open question 1 below) was Run A in `docs/exploratory_prespecification.md`.
+- AIPCW has small median bias under either wrong model taken alone, but its large errors remain. Truncating the combined weight (open question 1 below) was Run A in `docs/exploratory_prespecification.md`.
 
 ## State
 

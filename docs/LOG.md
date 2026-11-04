@@ -276,7 +276,7 @@ With the old setting, a wrong dropout model cost only 0.015, less than the smoot
 
 (Integrated absolute bias; RMSE given only where it is abnormal.)
 
-**Diagnosis of the C2 blow-up.** With the right dropout model, the estimated chance of staying to 5 years reached 0.00006 in the worst hospital, and was below 0.034 in half of them. The weights (1 ÷ chance) then reach tens of thousands. At year 5, the curve missed the truth by more than 0.5 somewhere in 92 of 200 hospitals for IPCW and 50 of 200 for AIPCW, against 6 to 8 for CC and NE. Bias based on medians, which such outliers cannot drag, puts AIPCW best (0.019), then NE (0.029), IPCW (0.035) and CC (0.091). In C3 the wrong dropout model cannot produce small chances (lowest 0.30), so nothing blows up. This is the classic practical-positivity problem of weighting, and it is worse for the right dropout model than for the wrong one.
+**Diagnosis of the large errors in C2.** With the right dropout model, the estimated chance of staying to 5 years reached 0.00006 in the worst hospital, and was below 0.034 in half of them. The weights (1 ÷ chance) then reach tens of thousands. At year 5, the curve missed the truth by more than 0.5 somewhere in 92 of 200 hospitals for IPCW and 50 of 200 for AIPCW, against 6 to 8 for CC and NE. Bias based on medians, which such outliers cannot drag, puts AIPCW best (0.019), then NE (0.029), IPCW (0.035) and CC (0.091). In C3 the wrong dropout model cannot produce small chances (lowest 0.30), so the weights stay moderate. This is the classic practical-positivity problem of weighting, and it is worse for the right dropout model than for the wrong one.
 
 **Two further points.**
 - NE does well in C2 and C3 (0.029), unlike in C1. Its errors in the two arms happen to cancel in this setting. This is a property of the setting, not a merit of the method; C1 shows it failing.
@@ -291,7 +291,7 @@ All four settings, 200 hospitals each, with IPCW_t and AIPCW_t added. The untrun
 **Key results at 5 years** (full tables in `reports/phase2_results.md`):
 - No dropout: all methods identical (bias 0.024).
 - Random dropout: NE fails (0.064, coverage 79%).
-- Dependent dropout: CC fails (0.093, coverage 68%). Untruncated IPCW and AIPCW break in 92 and 50 of 200 hospitals; truncated in 83 and 27, against 0 or 1 with no dropout.
+- Dependent dropout: CC fails (0.093, coverage 68%). Untruncated IPCW and AIPCW have an absolute error above 0.5 in 92 and 50 of 200 hospitals; truncated in 83 and 27, against 0 or 1 with no dropout.
 - Wrong dropout model: AIPCW 0.027, IPCW 0.037; AIPCW coverage 80%.
 
 **Why truncation did not cure it:** the dropout weight multiplies the trial-joining weight (which can exceed 100), so the combined weight stays in the thousands even with the dropout part capped at 20. Not yet tried: truncating the combined weight, or a higher floor.
@@ -320,7 +320,7 @@ Planned and timed against the 17:30 shutdown: code by 08:30, runs by 12:30, writ
 
 **What it is.** No dropout weight at all. A trial patient whose status at t is known keeps it. A patient who dropped out before t gets the outcome model's chance of an event between leaving and t. In code it is `augmented_status()` with the chance of staying set to 1 for everyone (`use_dropout_model = FALSE`). With G ≡ 1 the compensator is zero, so only the observed status and the filled-in chance are left. Steingrimsson & Morrison (Stat Med 2020, p. 7) show this is the doubly robust loss with G ≡ 1.
 
-**Why.** In C2, 92 (IPCW) and 50 (AIPCW) of 200 hospitals broke. BJ keeps the trial-joining weight but drops the dropout weight. If it rarely breaks, the dropout weight caused the breaks.
+**Why.** In C2, 92 (IPCW) and 50 (AIPCW) of 200 hospitals had an absolute error above 0.5. BJ keeps the trial-joining weight but drops the dropout weight. If it rarely has such errors, the dropout weight is needed for them.
 
 **Price.** BJ is right only if the outcome model is right.
 
@@ -335,7 +335,7 @@ Planned and timed against the 17:30 shutdown: code by 08:30, runs by 12:30, writ
 
 **Why.** C3 tested a wrong dropout model with a right outcome model. C4 is the other half of the double-robustness test. Expected: BJ biased, IPCW and AIPCW not.
 
-**Pilot (25 hospitals, 06:03 to 06:07).** The risk was that leaving out frailty biases BJ too little to see; the threshold set in advance was 0.02. At 5 years, BJ's bias was 0.066 with 72% coverage, and only 1 of 25 hospitals broke. So C4 was kept as designed, with no stronger misspecification. The pilot's 25 hospitals are the first chunk of the full C4 run (same code and seeds).
+**Pilot (25 hospitals, 06:03 to 06:07).** The risk was that leaving out frailty biases BJ too little to see; the threshold set in advance was 0.02. At 5 years, BJ's bias was 0.066 with 72% coverage, and only 1 of 25 hospitals had an absolute error above 0.5. So C4 was kept as designed, with no stronger misspecification. The pilot's 25 hospitals are the first chunk of the full C4 run (same code and seeds).
 
 ### Step 14: weight checks
 
@@ -350,7 +350,7 @@ The summary script tests four rules, fixed before seeing the full results:
 - an effective sample size below 50 in an arm;
 - a trial-joining weight mean off 1 by more than 0.2.
 
-For each rule, it counts how many broken hospitals (curve off by more than 0.5 somewhere at 5 years) it flags, and how many unbroken ones.
+For each rule, it counts how many hospitals with an absolute error above 0.5 (somewhere at 5 years) it flags, and how many others.
 
 ### Runs
 
@@ -367,9 +367,9 @@ Commits after 2b38cab during the runs change only docs/ (checked with `git diff 
 | Condition | Result |
 |---|---|
 | Existing estimators reproduce exactly | **Yes** |
-| BJ stable in C2 | **Yes.** 1 of 200 hospitals broken, against 92 (IPCW) and 50 (AIPCW); bias 0.025 at 5 years. The dropout weight caused the breaks. |
-| BJ biased in C4; IPCW and AIPCW not | **Yes for BJ** (0.064, coverage 76%). **IPCW and AIPCW: yes by medians** (0.030, 0.027), but averages are dragged by broken hospitals (90 and 73). |
-| A weight check flags the broken hospitals | **No.** Effective sample size below 50 catches 47 of 50 broken AIPCW hospitals in C2 but flags 171 of 200. The combined-weight mean instead flags a wrong dropout model (187 of 200 in C3). |
+| BJ stable in C2 | **Yes.** 1 of 200 hospitals with an absolute error above 0.5, against 92 (IPCW) and 50 (AIPCW); bias 0.025 at 5 years. The dropout weight is needed for most of these errors. |
+| BJ biased in C4; IPCW and AIPCW not | **Yes for BJ** (0.064, coverage 76%). **IPCW and AIPCW: yes by medians** (0.030, 0.027), but averages are dragged by hospitals with an absolute error above 0.5 (90 and 73). |
+| A weight check flags the hospitals with an absolute error above 0.5 | **No.** Effective sample size below 50 catches 47 of 50 such AIPCW hospitals in C2 but flags 171 of 200. The combined-weight mean instead flags a wrong dropout model (187 of 200 in C3). |
 
 **Unplanned finding.** BJ's intervals undercover even with the right outcome model: 72% in C2, 86% in C1. The likely reason is that filled-in values are less variable than real outcomes and the sandwich treats them as observed. Not tested; a bootstrap would.
 

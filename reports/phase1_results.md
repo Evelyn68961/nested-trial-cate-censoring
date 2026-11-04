@@ -4,7 +4,7 @@
 
 ## Main result
 
-500 simulated hospitals, each with 2,500 eligible patients, of whom about 500 joined the trial. Helper models fitted with Super Learner (logistic regression, generalized additive model, random forest), five-fold cross-fitting. Commit a9a8cd8.
+500 simulated hospitals, each with 2,500 eligible patients, of whom about 500 joined the trial. Nuisance models fitted with Super Learner (logistic regression, generalized additive model, random forest), five-fold cross-fitting. Commit a9a8cd8.
 
 Each estimator's curve is scored against the true target curve (all eligible patients) at 37 values of v, then averaged over v ("integrated"), as in the paper's Table 1.
 
@@ -30,7 +30,7 @@ For comparison, the paper's Table 1 (binary outcome, cohort 2,500, trial 500): i
 ## Checks behind it
 
 - Our pseudo-outcomes equal those from Robertson, Steingrimsson and Dahabreh's published code to 1.4 × 10⁻¹⁴ over 7 runs on 5 generated datasets (step 5; `reports/tables/05_reference_check.csv`).
-- Double robustness of the pseudo-outcome confirmed with true helper values (tests) and with fitted models over 200 hospitals (step 3; `reports/tables/03_double_robustness.csv`).
+- Double robustness of the pseudo-outcome confirmed with true nuisance-model values (tests) and with fitted models over 200 hospitals (step 3; `reports/tables/03_double_robustness.csv`).
 - 22 automatic tests for Phase 1, all passing at the time (`docs/LOG.md`).
 
 ## Preliminary: smaller trial

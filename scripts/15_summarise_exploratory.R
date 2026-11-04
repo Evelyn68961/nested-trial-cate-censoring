@@ -35,7 +35,8 @@ read_part <- function(dir, part) {
 covers <- function(lower, upper, centre, w = rep(1 / nrow(lower), nrow(lower))) {
   colSums(w * (sweep(lower, 2, centre, "<=") * sweep(upper, 2, centre, ">=")))
 }
-# Coverage of the median estimate: the median is recomputed in each resample
+# Bias-eliminated coverage (Morris et al. 2019), centred on the median estimate: the median is
+# recomputed in each resample
 median_target <- function(x, n, counts) {
   estimate <- as_hospital_matrix(x, "estimate", n)
   lower <- as_hospital_matrix(x, "lower", n)
@@ -50,7 +51,7 @@ median_target <- function(x, n, counts) {
              integrated_coverage_median_estimate_mcse_bootstrap = 100 * apply(boots, 1, sd), row.names = NULL)
 }
 
-# Paired difference in integrated absolute median-based bias, the metric of the decision rule.
+# Paired difference in integrated absolute median bias, the metric of the decision rule.
 # Both medians are recomputed in each resample, on the same hospitals. Columns as paired_rows.
 paired_median_bias <- function(setting, estimator, label_b, x, y, n, counts) {
   err_a <- as_hospital_matrix(x, "estimate", n) - as_hospital_matrix(x, "truth", n)
