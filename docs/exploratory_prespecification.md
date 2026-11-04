@@ -2,7 +2,7 @@
 
 Committed before any full run of A, B or C. Only a 3-hospital smoke test has been run through this code. It was read for controls, timing, and a check that each new setting changes the estimates, and not for performance.
 
-**These runs follow first results and are exploratory (Pawel et al.).** They were chosen after the reported Phase 2 results and the review of them had been seen. They do not confirm anything, and their results are labelled exploratory throughout. A prediction that fails is reported as failed, not revised.
+**These runs follow first results and are exploratory (Pawel et al. 2023).** They were chosen after the reported Phase 2 results and the review of them had been seen. They do not confirm anything, and their results are labelled exploratory throughout. A prediction that fails is reported as failed, not revised.
 
 ## Settings for all new runs
 
@@ -72,3 +72,7 @@ Fixed before the runs, because "held" is otherwise undefined at one cohort size.
 ## How results will be reported
 
 Each prediction is reported as held, failed or not determined by this rule. A failed prediction is reported as failed and is not revised. Nothing beyond the runs above starts without a separate decision.
+
+## Reference
+
+- Pawel S, Kook L, Reeve K. Pitfalls and potentials in simulation studies: questionable research practices in comparative simulation studies allow for spurious claims of superiority of any method. Biometrical Journal 2023;e2200091. doi:10.1002/bimj.202200091.

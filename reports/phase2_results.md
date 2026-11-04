@@ -90,7 +90,7 @@ Both are open questions: how to stabilise the combined weights, and how to build
 
 ## Additions of 23 October: where the instability comes from, and a wrong outcome model
 
-Three additions taken from Steingrimsson's work, rerun on the same 200 hospitals per setting. The six methods above reproduced the 22 October numbers exactly (largest difference 0, `scripts/12_check_reproduction.R`), so the tables above stand. Full output: `results/summary_phase2_20261023.txt`.
+Three additions taken from Steingrimsson and Morrison (Stat Med 2020) and Dahabreh et al. (Stat Med 2020), rerun on the same 200 hospitals per setting. The six methods above reproduced the 22 October numbers exactly (largest difference 0, `scripts/12_check_reproduction.R`), so the tables above stand. Full output: `results/summary_phase2_20261023.txt`.
 
 - **BJ (Buckley-James):** no dropout weight. Each dropout's status is filled in with the outcome model's probability of an event after leaving. Right only if the outcome model is right.
 - **C4:** the C2 hospitals, with the right dropout model and outcome models that leave out frailty.
@@ -219,7 +219,7 @@ Compared at t = 5 in C2, on the survival difference with repository signs flippe
 
 ## Exploratory runs
 
-**These runs follow first results and are exploratory (Pawel et al.).** Pre-specification, with expected directions fixed before any run: `docs/exploratory_prespecification.md`. All use the reported seeds, parametric models and 30 compensator steps, so they compare directly with the rows above; the effect of 30 steps is the Check 1 result under Disclosures. A prediction that fails is reported as failed.
+**These runs follow first results and are exploratory (Pawel et al. 2023).** Pre-specification, with expected directions fixed before any run: `docs/exploratory_prespecification.md`. All use the reported seeds, parametric models and 30 compensator steps, so they compare directly with the rows above; the effect of 30 steps is the Check 1 result under Disclosures. A prediction that fails is reported as failed.
 
 ### Run A: truncation range
 
@@ -342,3 +342,11 @@ These totals are not directly comparable with the 250 above, because warnings th
 - **CC and NE reproduce the 250 exactly** in both control runs, as 246 "fitted probabilities 0 or 1" and 4 "did not converge".
 - **All IPCW warnings are "did not converge".** Each variant has its own fits: 7 warnings for each of IPCW and IPCW_t in the control, and 7 for each of 10 variants in Run A. The floor on p shares IPCW's fits.
 - **No other fit gave a warning:** none from the Weibull, participation or treatment models. All warnings fall at t = 2 or earlier.
+
+## References
+
+- Wen, Dahabreh and Chiu. Generalizing conditional average treatment effects from nested randomized trials to all trial-eligible individuals. Statistics in Medicine 2026. doi:10.1002/sim.70767.
+- Steingrimsson and Morrison. Statistics in Medicine 2020.
+- Dahabreh, Robertson, Steingrimsson, Stuart and Hernán. Statistics in Medicine 2020.
+- Morris TP, White IR, Crowther MJ. Using simulation studies to evaluate statistical methods. Statistics in Medicine 2019;38:2074–2102. doi:10.1002/sim.8086.
+- Pawel S, Kook L, Reeve K. Pitfalls and potentials in simulation studies: questionable research practices in comparative simulation studies allow for spurious claims of superiority of any method. Biometrical Journal 2023;e2200091. doi:10.1002/bimj.202200091.

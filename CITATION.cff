@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "Profile-specific treatment effects from a nested trial, with and without dropout"
+type: software
+authors:
+  - family-names: Chang
+    given-names: Evelyn
+license: MIT
+abstract: >-
+  A simulation study in R that rebuilds the estimator of Wen, Dahabreh and Chiu
+  (Statistics in Medicine 2026) for conditional average treatment effects from a
+  nested randomized trial, and extends it to time-to-event outcomes with dropout.
+  The code, reports and lessons were written with an AI coding assistant (Claude Code).
+keywords:
+  - nested trial
+  - conditional average treatment effect
+  - dropout
+  - inverse probability of censoring weighting
+  - simulation study
+references:
+  - type: article
+    title: "Generalizing conditional average treatment effects from nested randomized trials to all trial-eligible individuals"
+    authors:
+      - family-names: Wen
+      - family-names: Dahabreh
+      - family-names: Chiu
+    journal: "Statistics in Medicine"
+    year: 2026
+    doi: 10.1002/sim.70767

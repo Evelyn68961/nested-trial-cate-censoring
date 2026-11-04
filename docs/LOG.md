@@ -302,7 +302,7 @@ All four settings, 200 hospitals each, with IPCW_t and AIPCW_t added. The untrun
 
 **Gate 2:** passed for bias; not for stability under strong dependent dropout, and not for AIPCW intervals with a wrong dropout model. Both are known limits of weighting methods, reported as findings. Report: `reports/phase2_results.md`; lesson 10.
 
-### Note from reading Steingrimsson's work (22 October, evening)
+### Note from reading Steingrimsson and Morrison (Stat Med 2020) and Dahabreh et al. (Stat Med 2020) (22 October, evening)
 
 - **Truncation changes the target.** Dahabreh, Robertson, Steingrimsson, Stuart and Hernán's tutorial warns that truncating extreme weights "may also help, but these strategies shift the causal estimand, which is often undesirable" (Stat Med 2020; arXiv v3, p. 16). So the small bias of IPCW_t and AIPCW_t in C2 is partly a change of target, not only a cure.
 - **Phase 2 is the combination that tutorial left as future work.** It says methods for right censoring can be combined with its methods "in a modular fashion", and that "Future work should assess the properties of such combined procedures" (p. 17).
@@ -312,7 +312,7 @@ All four settings, 200 hospitals each, with IPCW_t and AIPCW_t added. The untrun
   - weight diagnostics;
   - counterfactual Brier scores with dropout.
 
-## 23 October 2026: three additions from Steingrimsson's work (steps 12 to 14)
+## 23 October 2026: three additions from Steingrimsson and Morrison (Stat Med 2020) and Dahabreh et al. (Stat Med 2020) (steps 12 to 14)
 
 Planned and timed against the 17:30 shutdown: code by 08:30, runs by 12:30, write-up by 15:30. Started 05:58.
 

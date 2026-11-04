@@ -29,7 +29,7 @@ Full rationale: `nested_trial_CATE_censoring_plan.md` (kept outside this reposit
 
 **Gate 2:** C0 reproduces Phase 1 at every year; the weighted estimator has small bias in C1 and C2.
 
-## Phase 2 additions from Steingrimsson's work
+## Phase 2 additions from Steingrimsson and Morrison (Stat Med 2020) and Dahabreh et al. (Stat Med 2020)
 
 Ranked in notes kept outside this repository.
 
