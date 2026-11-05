@@ -69,6 +69,7 @@ The figure scripts use the Cairo PNG device. The saved figures were drawn on the
 | `docs/exploratory_prespecification.md` | Expected directions and the decision rule for the exploratory runs, committed before them |
 | `docs/WORKPLAN.md` | Steps and their state |
 | `docs/HANDOFF.md` | Current status, open questions, how to continue |
+| `docs/commit_map.csv` | Old and new commit IDs, for IDs recorded before the history was rewritten |
 
 ## What this does not claim
 
@@ -93,6 +94,8 @@ The code, reports and lessons were written with an AI coding assistant (Claude C
 - **Two computers.** The first Phase 1 and Phase 2 runs were made on an earlier computer. One assistant session then ran the review's checks and the later runs. A second session, on another computer, checked each result before it counted.
 - **Fixed in advance.** The later runs are exploratory. Their expected directions and the rule for scoring them were committed before the full runs (`docs/exploratory_prespecification.md`).
 - **What is reproducible.** The hospital-level rows of the later runs and `reports/tables/15_runs.csv` record the commit of the code that produced them.
+- **Full reproduction.** On 5 November 2026, on a second computer, every summary table was regenerated from the saved results and matched exactly, and one chunk per run setting (16 in all) was regenerated from its seeds and matched exactly (`docs/LOG.md`).
+- **Commit IDs.** Before publication, on 5 November 2026, the history was rewritten to remove private file paths and notes unrelated to this project. Code, tables and saved results were not changed by it; every saved result file is byte-identical. Commit IDs recorded in the saved results, tables and documents refer to the history before that rewrite. `docs/commit_map.csv` gives the new ID for each.
 
 ## References
 
