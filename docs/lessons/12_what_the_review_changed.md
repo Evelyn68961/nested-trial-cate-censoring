@@ -41,7 +41,7 @@ The two did not agree everywhere. Median bias at v = 2 was -0.021 for the reposi
 
 An interval can miss for two reasons: it sits in the wrong place (bias), or it is too narrow (width). Coverage of the exact target mixes the two.
 
-Bias-eliminated coverage (Morris et al. 2019), centred on the median, asks how often the interval contains the method's own median estimate. Bias is removed by construction, so what is left is about width.
+Bias-eliminated coverage (Morris et al. 2019, who centre on the mean; here centred on the median) asks how often the interval contains the method's own median estimate. Bias is removed by construction, so what is left is about width.
 
 | Setting, method | Exact | Bias-eliminated |
 |---|---|---|

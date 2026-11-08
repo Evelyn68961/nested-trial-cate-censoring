@@ -14,9 +14,11 @@
 | C3 | the same hospitals as C2, with a dropout model that leaves out frailty | 30% |
 | C4 | the same hospitals as C2, with the right dropout model and outcome models that leave out frailty | 30% |
 
+**Scores.** All at t = 5 unless stated. Integrated absolute bias: at each of the 37 values of v, the mean estimate over hospitals minus the true value, made absolute, then averaged over v. Median bias: the same with the median estimate over hospitals. Coverage: the share of 95% intervals that contain the true value, averaged over v. Bias-eliminated coverage: the share of intervals that contain the median estimate at that v, averaged over v; Morris et al. (2019) use the mean estimate. Hospitals above 0.5: hospitals with an absolute error above 0.5 at any v, at t = 5. Median interval width: at each v, the median width over hospitals, averaged over v.
+
 ## Error at 5 years
 
-Integrated absolute bias against the true target curve; in brackets, the number of the 200 hospitals with an absolute error above 0.5 somewhere on the curve.
+Integrated absolute bias against the true target curve; in brackets, the number of the 200 hospitals with an absolute error above 0.5 at any v at t = 5.
 
 | Method | C0 none | C1 random | C2 dependent | C3 dropout model wrong |
 |---|---|---|---|---|
@@ -74,7 +76,7 @@ The first time at which the drug lowers the risk by at least 5 points (δ = 0.05
 
 ## What these results mean for the method
 
-The estimator of Wen, Dahabreh and Chiu can be carried to censored outcomes and traced over follow-up by adding a dropout weight (or the augmented version) inside its pseudo-outcome. In this simulation, median bias at 5 years was 0.019 for AIPCW against 0.091 for CC in C2, and 0.025 for AIPCW against 0.067 for NE in C1. NE in C2 (0.029) and CC in C1 (0.022) were not worse by this measure. We did not find a paper with all of these elements. Two problems appear that the no-dropout setting hides:
+The estimator of Wen, Dahabreh and Chiu can be extended to censored outcomes and traced over follow-up by adding a dropout weight (or the augmented version) inside its pseudo-outcome. In this simulation, median bias at 5 years was 0.019 for AIPCW against 0.091 for CC in C2, and 0.025 for AIPCW against 0.067 for NE in C1. NE in C2 (0.029) and CC in C1 (0.022) were not worse by this measure. We did not find a paper with all of these elements. Two problems appear that the no-dropout setting hides:
 
 - The trial-joining weight and the dropout weight multiply, so practical positivity may fail sooner. The source of the large errors is not established. In C2 at t = 5, against 50 of 200 hospitals with an absolute error above 0.5 for AIPCW, the exploratory runs measured the following. BJ, without the dropout weight, has 1 hospital above 0.5. For AIPCW, a floor of 0.10 on p alone leaves 29, omitting frailty from the participation model leaves 23, and the bound on the product at 0.10 leaves 2. These results are exploratory, and they involve both weights without separating them.
 - The sandwich intervals are not validated for this estimator, and they undercover in several settings.
