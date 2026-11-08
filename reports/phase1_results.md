@@ -4,7 +4,7 @@
 
 ## Main result
 
-500 simulated hospitals, each with 2,500 eligible patients, of whom about 500 joined the trial. Nuisance models fitted with Super Learner (logistic regression, generalized additive model, random forest), five-fold cross-fitting; the treatment model is a simple logistic regression, because treatment was randomized. Commit a9a8cd8.
+500 simulated hospitals, each with 2,500 eligible patients, of whom about 500 joined the trial. Nuisance models fitted with Super Learner (logistic regression, generalized additive model, random forest), five-fold cross-fitting; the treatment model is a simple logistic regression, because treatment was randomized. Commit a9a8cd8 (old ID; public c048812, see docs/commit_map.csv).
 
 Each estimator's curve is scored against the true target curve (all eligible patients) at 37 values of v, then averaged over v ("integrated"), as in the paper's Table 1.
 

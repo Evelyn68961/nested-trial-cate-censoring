@@ -93,7 +93,7 @@ The code, reports and lessons were written with an AI coding assistant (Claude C
 - **Separate sessions.** The blind code review and the independent script were each done by a separate AI session, not by the session that wrote the estimators.
 - **Two computers.** The first Phase 1 and Phase 2 runs were made on an earlier computer. One assistant session then ran the review's checks and the later runs. A second session, on another computer, checked each result before it counted.
 - **Fixed in advance.** The later runs are exploratory. Their expected directions and the rule for scoring them were committed before the full runs (`docs/exploratory_prespecification.md`).
-- **What is reproducible.** The hospital-level rows of the later runs and `reports/tables/15_runs.csv` record the commit of the code that produced them.
+- **What is reproducible.** The hospital-level rows of the later runs and `reports/tables/15_runs.csv` record the commit of the code that produced them. IDs saved in results refer to the old history; see `docs/commit_map.csv`.
 - **Full reproduction.** On 5 November 2026, on a second computer, every summary table was regenerated from the saved results and matched exactly, and one chunk per run setting (16 in all) was regenerated from its seeds and matched exactly (`docs/LOG.md`).
 - **Commit IDs.** Before publication, on 5 November 2026, the history was rewritten to remove private file paths and notes unrelated to this project. Code, tables and saved results were not changed by it; every saved result file is byte-identical. Commit IDs recorded in the saved results, tables and documents refer to the history before that rewrite. `docs/commit_map.csv` gives the new ID for each.
 

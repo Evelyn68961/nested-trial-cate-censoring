@@ -1,6 +1,6 @@
 # Process log
 
-What was decided, changed and checked, in order, with the reason for each. Newest entries at the bottom of each day. Commits are short hashes in this repository.
+What was decided, changed and checked, in order, with the reason for each. Newest entries at the bottom of each day. Commit IDs below are from the history before the 5 November rewrite; `docs/commit_map.csv` gives the public ID for each.
 
 ---
 
@@ -77,7 +77,7 @@ The correction's price: standard deviation across hospitals 0.060, against 0.052
 **Settings, and why.**
 
 - **Epanechnikov kernel.** The paper's conditions require a kernel on [−1, 1]; this is the standard one.
-- **Bandwidth by leave-one-out cross-validation**, as in the paper. Grid 0.3 to 2.0 in steps of 0.1. Computed with the closed form for linear smoothers (residual ÷ (1 − own weight)). A test confirms it equals refitting without each patient.
+- **Bandwidth by leave-one-out cross-validation** (the paper says cross-validation; leave-one-out is this project's choice). Grid 0.3 to 2.0 in steps of 0.1. Computed with the closed form for linear smoothers (residual ÷ (1 − own weight)). A test confirms it equals refitting without each patient.
 - **Intervals:** the paper's sandwich formula (section 5.1), estimate ± 1.96 × σ/√n, with n all eligible patients.
 - **Smoothed target θ\*(v):** the same local linear fit applied to the true curve, with v uniform, using each hospital's own bandwidth. The paper reports coverage against this as well as against θ(v).
 - **L's intervals:** robust (sandwich) variance of the straight-line fit. **G** gets no interval, because none is justified when the correction term is left out.
@@ -276,7 +276,7 @@ With the old setting, a wrong dropout model cost only 0.015, less than the smoot
 
 (Integrated absolute bias; RMSE given only where it is abnormal.)
 
-**Diagnosis of the large errors in C2.** With the right dropout model, the estimated chance of staying to 5 years reached 0.00006 in the worst hospital, and was below 0.034 in half of them. The weights (1 ÷ chance) then reach tens of thousands. At year 5, the curve missed the truth by more than 0.5 somewhere in 92 of 200 hospitals for IPCW and 50 of 200 for AIPCW, against 6 to 8 for CC and NE. Bias based on medians, which such outliers cannot drag, puts AIPCW best (0.019), then NE (0.029), IPCW (0.035) and CC (0.091). In C3 the wrong dropout model cannot produce small chances (lowest 0.30), so the weights stay moderate. This is the classic practical-positivity problem of weighting, and it is worse for the right dropout model than for the wrong one.
+**Diagnosis of the large errors in C2.** With the right dropout model, the smallest estimated chance of staying, at each patient's own follow-up time, was 0.00006 in the worst hospital; the median over hospitals was 0.034. The weights (1 ÷ chance) then exceeded 10,000. At year 5, the curve missed the truth by more than 0.5 somewhere in 92 of 200 hospitals for IPCW and 50 of 200 for AIPCW, against 6 to 8 for CC and NE. Bias based on medians, which such outliers cannot drag, puts AIPCW best (0.019), then NE (0.029), IPCW (0.035) and CC (0.091). In C3 the wrong dropout model cannot produce small chances (lowest 0.30), so the weights stay moderate. This is the classic practical-positivity problem of weighting, and it is worse for the right dropout model than for the wrong one.
 
 **Two further points.**
 - NE does well in C2 and C3 (0.029), unlike in C1. Its errors in the two arms happen to cancel in this setting. This is a property of the setting, not a merit of the method; C1 shows it failing.
