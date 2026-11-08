@@ -33,7 +33,7 @@ The bandwidth is chosen by **leave-one-out cross-validation**. For each candidat
 
 Each estimate gets a 95% interval from the paper's "sandwich" formula. It measures how much the pseudo-outcomes scatter around the line inside the window. More scatter, or fewer patients in the window, gives a wider interval.
 
-One subtlety the paper points out: the interval is centred on a smoothed version of the true curve, not the exact curve. Smoothing always flattens peaks and valleys. With a small bandwidth the difference is tiny; with a large one it is not. In one hospital (`scripts/04_check_curve.R`) the bandwidth was 2.0, half the whole range of v. At v = 2 the true curve is −0.085, but its smoothed version is only −0.032.
+One subtlety the paper points out: the interval is centred on a smoothed version of the true curve, not the exact curve. Smoothing always flattens peaks and valleys. With a small bandwidth the difference is tiny; with a large one it is not. In one hospital (scripts/04_check_curve.R, hospital seed 1; drawn outside the parallel runs, so not the same as stored hospital 1) the bandwidth was 2.0, half the whole range of v. At v = 2 the true curve is −0.085, but its smoothed version is only −0.032.
 
 ## What one hospital looks like
 

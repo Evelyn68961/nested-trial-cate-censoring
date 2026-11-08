@@ -23,7 +23,7 @@ Fitted on trial patients only, separately in the treated and the untreated arm. 
 
 ## What the numbers show
 
-The outcome model alone already gives an estimate: average `g1 − g0` over the patients with a given v. We tried this for v near 2, in 200 simulated hospitals (printed by `scripts/02_check_helpers.R`; not saved in a table):
+The outcome model alone already gives an estimate: average `g1 − g0` over the patients with a given v. We tried this for v near 2, in 200 simulated hospitals (scripts/02_check_helpers.R, seeds 1 to 200; printed, not saved in a table):
 
 | Averaged over | Mean of 200 hospitals | Truth |
 |---|---|---|

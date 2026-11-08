@@ -14,6 +14,8 @@
 | C3 | the same hospitals as C2, with a dropout model that leaves out frailty | 30% |
 | C4 | the same hospitals as C2, with the right dropout model and outcome models that leave out frailty | 30% |
 
+Share of trial patients who dropped out: average over 200 hospitals.
+
 **Scores.** All at t = 5 unless stated. Integrated absolute bias: at each of the 37 values of v, the mean estimate over hospitals minus the true value, made absolute, then averaged over v. Median bias: the same with the median estimate over hospitals. Coverage: the share of 95% intervals that contain the true value, averaged over v. Bias-eliminated coverage: the share of intervals that contain the median estimate at that v, averaged over v; Morris et al. (2019) use the mean estimate. Hospitals above 0.5: hospitals with an absolute error above 0.5 at any v, at t = 5. Median interval width: at each v, the median width over hospitals, averaged over v.
 
 ## Error at 5 years

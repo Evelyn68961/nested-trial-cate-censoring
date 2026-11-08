@@ -4,7 +4,7 @@
 >
 > Moved to `reports/archive/` on 5 November 2026. The tables and figures it points to (`reports/tables/10_*.csv`, `reports/figures/10_C*_effect_over_time.png`) now hold the 200-hospital results, so they do not match the numbers below.
 
-22 October 2026, 17:00. Runs finished 16:46 to 17:00, shortly before the computer's scheduled shutdown. **Preliminary:** 50 hospitals per setting is too few to separate methods whose errors differ by about 0.01. Full tables: `reports/tables/10_phase2_by_time.csv` and `10_phase2_time_to_benefit.csv`. Figures: `reports/figures/10_C*_effect_over_time.png`.
+22 October 2026, 17:00. Runs finished 16:46 to 17:00, shortly before the computer's scheduled shutdown. **Preliminary:** 50 hospitals per setting is too few to separate methods whose errors differ by about 0.01. The full tables of this preliminary run were not kept; `reports/tables/10_phase2_by_time.csv` now holds the 200-hospital runs.
 
 ## Error at 5 years, when dropout has accumulated most
 

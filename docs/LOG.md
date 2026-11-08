@@ -84,7 +84,7 @@ The correction's price: standard deviation across hospitals 0.060, against 0.052
 
 **One hospital** (Super Learner): pseudo-outcomes ranged from −30 to 84, because some trial patients carry weights above 100. Bandwidth 0.4. The estimate at v = 0.2 was +0.72 against a truth of −0.04, yet 35 of 37 intervals contained the truth. This noise level fits the paper's Table 1 (integrated RMSE about 0.17 at the same sizes).
 
-**Reference check (step 5).** Robertson, Steingrimsson and Dahabreh's `DGM_Sim` (commit 0bace88 of their repository) was run unchanged, with only its CASS-specific model-fitting step replaced by our helper predictions. Largest difference from our pseudo-outcomes over 7 hospitals: 2 × 10⁻¹⁴. Their file has no licence, so it is downloaded at run time into `results/` and never committed.
+**Reference check (step 5).** Robertson, Steingrimsson and Dahabreh's `DGM_Sim` (commit 0bace88 of their repository) was run unchanged, with only its CASS-specific model-fitting step replaced by our helper predictions. Largest difference from our pseudo-outcomes over 7 hospitals: 2 × 10⁻¹⁴ (superseded: 1.4 × 10⁻¹⁴ over 7 runs on 5 generated datasets; see 5 November). Their file has no licence, so it is downloaded at run time into `results/` and never committed.
 
 ### Step 7: runs
 
@@ -229,7 +229,7 @@ Rscript scripts/08_summarise_phase1.R
 Rscript scripts/11_summarise_phase2.R
 ```
 
-Raw results are in `results/` on this computer's D: drive (not on GitHub). If the next session runs on another computer, either copy `results/` across, or rerun from scratch: the same seeds give the same hospitals.
+Raw results are in `results/` on this computer's D: drive (not on GitHub). If the next session runs on another computer, either copy `results/` across, or rerun from scratch: the same seeds give the same hospitals. (superseded: results are committed; see below)
 
 Also checked before restarting: six R processes still running were started at 12:03, before this work began. They are VS Code's R language servers, not simulation workers, and were left alone.
 

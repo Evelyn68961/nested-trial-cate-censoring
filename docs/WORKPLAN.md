@@ -27,7 +27,7 @@ Full rationale: `nested_trial_CATE_censoring_plan.md` (kept outside this reposit
 | 10 | Four ways of handling dropout, plus truncated versions of the two weighted ones | 09 Weighting for dropout | Done 2026-10-22 |
 | 11 | Runs, time to benefit by profile, tables and figures | 10 Phase 2 results | Done 2026-10-22: 200 hospitals per setting. Gate 2: the first two conditions were met for median bias; the third (AIPCW holds with a wrong dropout model while IPCW does not) was met only partly; stability and intervals failed. See reports/phase2_results.md |
 
-**Gate 2:** with no dropout, all methods agree; the weighted estimator has small bias in C1 and C2.
+**Gate 2:** with no dropout, all methods agree; the weighted methods have small bias under random and dependent dropout; and AIPCW holds with a wrong dropout model while IPCW does not.
 
 ## Phase 2 additions from Steingrimsson and Morrison (Stat Med 2020) and Dahabreh et al. (Stat Med 2020)
 
@@ -38,7 +38,7 @@ Ranked in notes kept outside this repository.
 | 12 | Buckley-James estimator: no dropout weight, dropouts filled in by the outcome model | 11 Which model to trust | Done 2026-10-23 |
 | 13 | Setting C4: right dropout model, outcome models without frailty | 11 | Done 2026-10-23 |
 | 14 | Weight checks per hospital, and four flagging rules | 11 | Done 2026-10-23 |
-| 15 | Rerun C0 to C4 at 200 hospitals; report and lesson | 11 | Done 2026-10-23, 08:42. Gate 3 passed, except that no weight check identifies the hospitals with large errors (a finding) |
+| 15 | Rerun C0 to C4 at 200 hospitals; report and lesson | 11 | Done 2026-10-23, 08:42. Gate 3 (superseded; see docs/LOG.md) |
 | 16 | Optional: Brier score and calibration of each arm's risk model among all eligible patients, with dropout | Not assigned | Not started |
 
 **Gate 3:** the six existing estimators reproduce the 22 October numbers exactly; BJ has few hospitals with large errors in C2 if the dropout weight is needed for them; BJ is biased in C4 while IPCW and AIPCW are not; the report says which weight check, if any, flags the hospitals with large errors.
@@ -56,4 +56,4 @@ Pre-specification: `docs/exploratory_prespecification.md`. Results: `reports/pha
 
 ## Output
 
-Reports in `reports/` and lessons in `docs/lessons/`. The repository is made public once the pre-public checks are done.
+Reports in `reports/` and lessons in `docs/lessons/`. The repository is public.

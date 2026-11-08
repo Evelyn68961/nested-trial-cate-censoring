@@ -8,7 +8,7 @@ A simulation study in R. It rebuilds the estimator of Wen, Dahabreh and Chiu, *G
 
 A trial is nested in a cohort of everyone eligible for a treatment. Characteristics are known for everyone; treatment and outcome only for those randomized. The goal is the treatment effect for each patient profile among all eligible patients, not only those who joined the trial.
 
-Phase 1 rebuilds the paper's estimator for a binary outcome and checks it in simulation, where the true effect is known. Phase 2 replaces the binary outcome with event times, adds dropout, and traces the effect for each profile from year 1 to year 5.
+Phase 1 rebuilds the paper's estimator for a binary outcome and checks it in simulation, where the true effect is known. Phase 2 replaces the binary outcome with event times, adds dropout, and traces the effect for each profile from 0.5 to 5 years.
 
 **Gates.** Each phase ended with a gate, a list of conditions fixed before its full runs. **Gate 1** (Phase 1): the pseudo-outcomes match the reference code, the paper's estimator has small bias, the trial-only estimator is biased, and coverage is near 90 to 95%. **Gate 2** (Phase 2): with no dropout, all methods agree; the weighted methods have small bias under random and dependent dropout; and AIPCW holds with a wrong dropout model while IPCW does not. Results against each condition are in the two reports.
 
