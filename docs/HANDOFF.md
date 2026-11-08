@@ -26,7 +26,7 @@ Other limits, such as the intervals that undercover and the source of the large 
 
 - The run order, with what each script needs, is in `README.md`. Runners refuse to start when `R/`, `config/` or `scripts/` have uncommitted changes, and record the commit in every result row.
 - The Phase 1 trial of about 125 can be extended from 50 to 500 hospitals with `Rscript scripts/07_run_phase1.R sl 0.05 500 3`. Finished chunks are skipped. Then change `sl_trial05 = 50` to 500 in `scripts/08_summarise_phase1.R` and `scripts/13_precision_tables.R`.
-- Step 16 (Brier score and calibration of each arm's risk model among all eligible patients, with dropout) is not started. `docs/WORKPLAN.md`.
+- Step 16 of `docs/WORKPLAN.md`, not the deck-table script `scripts/16_deck_tables.R` (Brier score and calibration of each arm's risk model among all eligible patients, with dropout) is not started. `docs/WORKPLAN.md`.
 - Read, in this order: this file, `docs/LOG.md`, `docs/WORKPLAN.md`, `reports/phase1_results.md` and `reports/phase2_results.md`.
 
 ## If a chunk file is damaged

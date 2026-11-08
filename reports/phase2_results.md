@@ -349,6 +349,10 @@ These totals are not directly comparable with the 250 above, because warnings th
 - **All IPCW warnings are "did not converge".** Each variant has its own fits: 7 warnings for each of IPCW and IPCW_t in the control, and 7 for each of 10 variants in Run A. The floor on p shares IPCW's fits.
 - **No other fit gave a warning:** none from the Weibull, participation or treatment models. All warnings fall at t = 2 or earlier.
 
+## Tables for the slides
+
+`scripts/16_deck_tables.R` writes the three tables that the slide presentation of these results draws on: `reports/tables/16_median_bias_precision.csv`, `16_time_to_benefit_interval.csv` and `16_true_effect_by_time.csv`. Its step number is not step 16 of `docs/WORKPLAN.md`.
+
 ## References
 
 - Wen, Dahabreh and Chiu. Generalizing Conditional Average Treatment Effects From Nested Randomized Trials to Trial-Eligible Individuals. Statistics in Medicine 2026;45(23-24):e70767. doi:10.1002/sim.70767.

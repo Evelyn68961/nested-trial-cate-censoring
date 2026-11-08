@@ -5,7 +5,9 @@ type: software
 authors:
   - family-names: Chang
     given-names: Evelyn
-license: MIT
+license:
+  - MIT
+  - CC-BY-4.0
 repository-code: "https://github.com/Evelyn68961/nested-trial-cate-censoring"
 abstract: >-
   A simulation study in R that rebuilds the estimator of Wen, Dahabreh and Chiu

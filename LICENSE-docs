@@ -11,4 +11,6 @@ licence, and indicate if changes were made.
 Full legal code: https://creativecommons.org/licenses/by/4.0/legalcode
 
 The code in this repository (R/, scripts/, tests/, independent_check/ and
-config/) is licensed under the MIT License; see LICENSE.
+config/) is licensed under the MIT License; see LICENSE. The result files
+independent_check/output/*.csv and independent_check/comparison_C2_t5.csv are
+licensed under CC BY 4.0, as above.
