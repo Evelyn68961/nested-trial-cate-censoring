@@ -20,7 +20,7 @@ keywords:
   - simulation study
 references:
   - type: article
-    title: "Generalizing conditional average treatment effects from nested randomized trials to all trial-eligible individuals"
+    title: "Generalizing Conditional Average Treatment Effects From Nested Randomized Trials to Trial-Eligible Individuals"
     authors:
       - family-names: Wen
       - family-names: Dahabreh

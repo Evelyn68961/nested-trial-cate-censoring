@@ -49,7 +49,7 @@ Time to benefit is the first time at which the drug lowers the risk by at least 
 
 The plan set δ = 0.01 and 0.02. The reports use δ = 0.05, a departure from the plan; see the Disclosures in `reports/phase2_results.md`.
 
-Trial data reconstructed from published Kaplan–Meier curves carry no patient characteristics, so they can give time to benefit only by baseline risk. A nested trial carries the characteristics, so time to benefit can be given by profile.
+Trial data reconstructed from published Kaplan–Meier curves carry no patient characteristics, so they can give time to benefit only overall or for the subgroups a trial publishes. A nested trial carries the characteristics, so time to benefit can be given by profile.
 
 ## Check yourself
 

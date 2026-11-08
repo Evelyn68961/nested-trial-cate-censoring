@@ -15,7 +15,7 @@ The other 2,000 patients do not join. We still know their age, frailty and other
 Each simulated patient has three:
 
 - **frailty**: higher means frailer.
-- **v**: a score from 0 to 4. This is the characteristic a doctor would look at when deciding to prescribe. In the real paper, v was the ejection fraction.
+- **v**: a score from 0 to 4. This is the characteristic a doctor would look at when deciding to prescribe. In the paper's data analysis (CASS), V was the ejection fraction.
 - **male**: 0 or 1.
 
 ## The question

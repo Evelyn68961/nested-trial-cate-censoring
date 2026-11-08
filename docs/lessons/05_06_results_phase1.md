@@ -23,7 +23,7 @@ One hospital tells you almost nothing (lesson 4). So we ran 500 simulated hospit
 
 ## Lesson 5: why each shortcut fails
 
-**T, trial patients only.** It answers a different question: the effect in the trial's healthier patients. Its bias of 0.056 is the gap from lesson 1. Its intervals are honest for the trial's own curve (90%) but miss the hospital's curve. This is the paper's main point in one line: a trial-only answer can be precise and still wrong for the people you treat.
+**T, trial patients only.** It answers a different question: the effect in the trial's healthier patients. Its bias of 0.056 comes from the gap of lesson 1. Its intervals cover its own trial curve 90% of the time and the hospital's 85%. This is the paper's main point in one line: a trial-only answer can be precise and still wrong for the people you treat.
 
 **L, straight line.** The true curve bends: harm at both ends of v, benefit in the middle. A straight line cannot bend, so it is wrong at the ends and the middle in opposite directions. More patients would not fix that; it is the wrong shape.
 

@@ -25,7 +25,7 @@ Full rationale: `nested_trial_CATE_censoring_plan.md` (kept outside this reposit
 | 8 | Event times (Weibull per arm); true risk-difference curves at years 1 to 5 | 07 Effects that grow over time | Done 2026-10-22 |
 | 9 | Dropout settings C0 to C3 | 08 What dropout does | Done 2026-10-22 (dependent dropout strengthened after first runs) |
 | 10 | Four ways of handling dropout, plus truncated versions of the two weighted ones | 09 Weighting for dropout | Done 2026-10-22 |
-| 11 | Runs, time to benefit by profile, tables and figures | 10 Phase 2 results | Done 2026-10-22: 200 hospitals per setting. Gate 2 passed for bias, not for stability or intervals. See reports/phase2_results.md |
+| 11 | Runs, time to benefit by profile, tables and figures | 10 Phase 2 results | Done 2026-10-22: 200 hospitals per setting. Gate 2: the first two conditions were met for median bias; the third (AIPCW holds with a wrong dropout model while IPCW does not) was met only partly; stability and intervals failed. See reports/phase2_results.md |
 
 **Gate 2:** with no dropout, all methods agree; the weighted estimator has small bias in C1 and C2.
 

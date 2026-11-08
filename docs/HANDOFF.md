@@ -8,7 +8,7 @@ Updated 5 November 2026.
 |---|---|
 | Phase 1 (binary outcome, no dropout) | 500 hospitals, Gate 1 passed. `reports/phase1_results.md` |
 | Phase 1, trial of about 125 | 50 of 500 hospitals, preliminary |
-| Phase 2 (dropout, effect over time) | 200 hospitals per setting, C0 to C4. Gate 2 passed for median bias, not for stability or intervals. `reports/phase2_results.md` |
+| Phase 2 (dropout, effect over time) | 200 hospitals per setting, C0 to C4. Gate 2: the first two conditions were met for median bias; the third (AIPCW holds with a wrong dropout model while IPCW does not) was met only partly; stability and intervals failed. `reports/phase2_results.md` |
 | Review of Phase 2 | Claims corrected, disclosures added, no reported number changed. `reports/phase2_results.md`, section "Corrections, disclosures and checks after review" |
 | Exploratory Runs A, B and C | 200 hospitals each, pre-specified in `docs/exploratory_prespecification.md`. No floor chosen. `reports/phase2_results.md`, section "Exploratory runs" |
 | Lessons | 1 to 12 in `docs/lessons/` (lessons 5 and 6 share one file) |

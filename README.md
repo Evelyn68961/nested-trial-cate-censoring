@@ -1,8 +1,8 @@
 # Profile-specific treatment effects from a nested trial, with and without dropout
 
-A simulation study in R. It rebuilds the estimator of Wen, Dahabreh and Chiu, *Generalizing conditional average treatment effects from nested randomized trials to all trial-eligible individuals* (Statistics in Medicine 2026; doi:10.1002/sim.70767; arXiv:2605.14952). It then asks what happens when trial patients drop out before the end of follow-up, a case the paper sets aside ("no dropout in the trial").
+A simulation study in R. It rebuilds the estimator of Wen, Dahabreh and Chiu, *Generalizing Conditional Average Treatment Effects From Nested Randomized Trials to Trial-Eligible Individuals* (Statistics in Medicine 2026; doi:10.1002/sim.70767; arXiv:2605.14952). It then asks what happens when trial patients drop out before the end of follow-up, a case the paper sets aside ("no dropout in the trial").
 
-**Status:** Phase 1 complete (Gate 1 passed; `reports/phase1_results.md`). Phase 2 complete at 200 hospitals per setting (Gate 2 passed for median bias, not for stability or intervals; `reports/phase2_results.md`). The results have been reviewed and rechecked, and exploratory follow-up runs, pre-specified in `docs/exploratory_prespecification.md`, are done (`reports/phase2_results.md`). Process log: `docs/LOG.md`.
+**Status:** Phase 1 complete (Gate 1 passed; `reports/phase1_results.md`). Phase 2 complete at 200 hospitals per setting. Gate 2: the first two conditions were met for median bias; the third (AIPCW holds with a wrong dropout model while IPCW does not) was met only partly; stability and intervals failed (`reports/phase2_results.md`). The results have been reviewed and rechecked, and exploratory follow-up runs, pre-specified in `docs/exploratory_prespecification.md`, are done (`reports/phase2_results.md`). Process log: `docs/LOG.md`.
 
 ## The question
 
@@ -99,7 +99,7 @@ The code, reports and lessons were written with an AI coding assistant (Claude C
 
 ## References
 
-- Wen, Dahabreh and Chiu. Generalizing conditional average treatment effects from nested randomized trials to all trial-eligible individuals. Statistics in Medicine 2026. doi:10.1002/sim.70767.
+- Wen, Dahabreh and Chiu. Generalizing Conditional Average Treatment Effects From Nested Randomized Trials to Trial-Eligible Individuals. Statistics in Medicine 2026;45(23-24):e70767. doi:10.1002/sim.70767.
 - Robertson, Steingrimsson and Dahabreh. European Journal of Epidemiology 2023. Code: https://github.com/serobertson/GeneralizabilityCATE.
 - Steingrimsson JA, Morrison S. Deep learning for survival outcomes. Statistics in Medicine 2020;39:2339–2349.
 - Dahabreh IJ, Robertson SE, Steingrimsson JA, Stuart EA, Hernán MA. Extending inferences from a randomized trial to a new target population. Statistics in Medicine 2020;39:1999–2014.
