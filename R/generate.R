@@ -26,7 +26,8 @@ outcome_risk <- function(a, frailty, v, male, cfg) {
 }
 
 # Intercept of the participation model that gives the target trial fraction.
-# Solved once on a large fixed sample, so it does not change from run to run.
+# Solved once on a large fixed sample. The value depends on the RNG kind: the stored runs use
+# L'Ecuyer-CMRG (-1.718984); Mersenne-Twister gives -1.718098.
 participation_intercept <- function(cfg, n_mc = 1e6, seed = 1) {
   set.seed(seed)
   frailty <- rnorm(n_mc)

@@ -27,13 +27,18 @@ smoothed_P <- sapply(bandwidths, function(h) smoothed_curve(u, target_u, rep(1, 
 settings <- list.dirs(file.path("results", "phase1"), recursive = FALSE, full.names = FALSE)
 # Hospitals expected in each saved setting; the summary stops if a setting has a different number
 expected_hospitals <- c(glm_trial20 = 100, sl_trial05 = 50, sl_trial20 = 500)
+missing <- setdiff(names(expected_hospitals), settings)
+if (length(missing)) stop("Setting folder missing in results/phase1: ", paste(missing, collapse = ", "))
 # Share of hospitals whose interval covers, ignoring missing estimates as bias does; NA when no
 # hospital has an interval (G, or a target that does not apply to the estimator)
 share <- function(z) if (all(is.na(z))) NA else mean(z, na.rm = TRUE)
 tables <- list()
 for (setting in settings) {
   files <- list.files(file.path("results", "phase1", setting), pattern = "^chunk_.*rds$", full.names = TRUE)
-  if (length(files) == 0) next
+  if (length(files) == 0) {
+    if (setting %in% names(expected_hospitals)) stop(setting, ": no chunks found")
+    next
+  }
   parts <- lapply(files, readRDS)
   curves <- do.call(rbind, lapply(parts, `[[`, "curves"))
   info <- do.call(rbind, lapply(parts, `[[`, "info"))

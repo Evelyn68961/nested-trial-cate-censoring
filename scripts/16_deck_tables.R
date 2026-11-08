@@ -57,6 +57,7 @@ score_job <- function(j) {
   job <- jobs[j, ]
   x <- read_curves(folder_of(job$source, job$setting))
   x <- x[x$estimator == job$estimator, ]
+  stopifnot(length(unique(x$seed)) == 200)
   err <- as_hospital_matrix(x, "estimate", 200) - as_hospital_matrix(x, "truth", 200)
   score <- function(e) {
     medians <- apply(e, 2, median)
@@ -91,6 +92,7 @@ for (setting in c("C0", "C2")) {
   curves <- read_curves(folder_of("reported", setting))
   for (est in seven) for (p in 1:3) {
     y <- curves[curves$estimator == est & abs(curves$v - p) < 1e-9, ]
+    stopifnot(length(unique(y$seed)) == 200)
     estimated <- time_to_benefit(matrix(y$estimate, nrow = 200, byrow = TRUE), times, delta)
     filled <- ifelse(is.na(estimated), 5.5, estimated)
     boots <- sapply(seq_len(n_boot), function(b) median(rep(filled, counts[b, ])))

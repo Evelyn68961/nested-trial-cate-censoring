@@ -24,11 +24,13 @@ rules <- list(
 check_rows <- list()
 
 settings <- intersect(names(labels), list.dirs(file.path("results", "phase2"), recursive = FALSE, full.names = FALSE))
+missing <- setdiff(names(labels), settings)
+if (length(missing)) stop("Setting folder missing in results/phase2: ", paste(missing, collapse = ", "))
 by_time <- list()
 ttb_rows <- list()
 for (setting in settings) {
   files <- list.files(file.path("results", "phase2", setting), pattern = "^chunk_.*rds$", full.names = TRUE)
-  if (!length(files)) next
+  if (!length(files)) stop(setting, ": no chunks found")
   parts <- lapply(files, readRDS)
   curves <- do.call(rbind, lapply(parts, `[[`, "curves"))
   info <- do.call(rbind, lapply(parts, `[[`, "info"))

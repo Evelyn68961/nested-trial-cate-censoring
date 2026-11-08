@@ -2,8 +2,8 @@
 # The outcome models for CC, NE and IPCW are logistic while the generator has a complementary
 # log-log form; the Weibull helper has the true form. No estimator is changed.
 #
-# RMSE: square root of the mean squared difference over all eligible patients of a hospital, then
-# averaged over hospitals. Predictions are the cross-fitted ones the estimators use.
+# RMSE: square root of the mean squared difference over all eligible patients of a hospital (for
+# logistic_CC, over the patients complete case keeps), then averaged over hospitals. Predictions are the cross-fitted ones the estimators use.
 #
 # Usage, from the repository root:  Rscript scripts/14_check_helpers.R <n_hospitals> <workers>
 # Writes reports/tables/14_helper_specification.csv

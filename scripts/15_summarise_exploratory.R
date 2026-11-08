@@ -91,9 +91,17 @@ reference_setting <- c(C2 = "C2", C4 = "C4", C2m = "C2", C3m = "C3", C5a = "C2",
 info_rows <- list()
 warning_rows <- list()
 
+# Settings expected per run in results/exploratory; a missing or empty one stops the summary
+expected_settings <- list(A = c("C2", "C4"), B = c("C2m", "C3m"), C = c("C5a", "C5b"),
+                          control = c("C2", "C4"), zero = c("C2", "C4"))
 dirs <- function(run) {
   found <- list.dirs(file.path(folder, run), recursive = FALSE, full.names = FALSE)
-  found[vapply(file.path(folder, run, found), function(p) length(list.files(p, pattern = "^chunk_")) > 0, logical(1))]
+  found <- found[vapply(file.path(folder, run, found), function(p) length(list.files(p, pattern = "^chunk_")) > 0, logical(1))]
+  if (identical(folder, file.path("results", "exploratory"))) {
+    missing <- setdiff(expected_settings[[run]], found)
+    if (length(missing)) stop(file.path(folder, run), ": setting folder missing or empty: ", paste(missing, collapse = ", "))
+  }
+  found
 }
 # Hospitals expected per run in results/exploratory: 3 for the floor-0 controls, 200 otherwise.
 # Other folders hold smoke tests of any size, and are not checked.
