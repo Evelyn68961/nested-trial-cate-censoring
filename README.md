@@ -42,7 +42,7 @@ Full order, with what each step needs. Times are measured with 3 workers on a 4-
 | CC propensity check | `Rscript scripts/14_check_cc_propensity.R <setting> 200 3` | — | median 8 seconds per hospital (`reports/tables/14_checks_runs.csv`) |
 | Nuisance-model check | `Rscript scripts/14_check_helpers.R 25 3` | — | under 1 minute |
 | Follow-ups | `Rscript scripts/14_followups.R warnings <setting> 3`; `warnings_cc <setting> 3`; `slope` | `results/phase2/`, `results/check_step2/` | 8.5 to 8.8 minutes per setting; under 1 minute; under 1 minute |
-| Review summaries | `14_check_center_coverage.R`, `14_check_smoothed_coverage.R`, `14_summarise_checks.R` | `results/phase2/`; the smoothed check also reads `results/phase1/`; the summary reads `results/check_step2/` | 13 minutes; under 1 minute; under 1 minute |
+| Review summaries | `14_check_center_coverage.R`, `14_check_smoothed_coverage.R`, `14_summarise_checks.R`; `14_check_smoothed_coverage.R fine_grid` writes the Phase 2 table on an 80,001-point grid (`14_smoothed_coverage_phase2_fine_grid.csv`) | `results/phase2/`; the smoothed check also reads `results/phase1/`; the summary reads `results/check_step2/` | 13 minutes; under 1 minute; under 1 minute |
 | Exploratory runs | `Rscript scripts/15_run_exploratory.R <run> <setting> 200 3`; zero control `15_run_exploratory.R zero C2 3 3` and `zero C4 3 3` | — | median 59 seconds per hospital for Run A, 17 to 18 seconds for the others (`reports/tables/15_runs.csv`) |
 | Exploratory summaries | `15_summarise_exploratory.R`, `15_sd_table.R` | exploratory runs, `results/phase2/` | 41 minutes; under 1 minute |
 | Deck tables | `Rscript scripts/16_deck_tables.R 3` | steps 13 and 15 | 14.5 minutes |

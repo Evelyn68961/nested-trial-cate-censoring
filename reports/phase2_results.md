@@ -176,7 +176,7 @@ Averaged over the v grid, from saved rows (`reports/tables/15_sd_at_t5.csv`).
 
 ### Coverage against other targets
 
-At 5 years, all from saved rows, MCSE about 0.5 to 1.9. Exact is the reported value. Smoothed passes the true curve through each hospital's own bandwidth. Bias-eliminated coverage (Morris et al. 2019), centred on the median estimate, removes bias by construction, so it separates bias from interval width and is not validation.
+At 5 years, all from saved rows, MCSE about 0.5 to 1.9. Exact is the reported value. Smoothed passes the true curve through each hospital's own bandwidth (`reports/tables/14_smoothed_coverage_phase2_fine_grid.csv`, built on 80,001 grid points; corrected 8 November 2026, see `docs/LOG.md`). Bias-eliminated coverage (Morris et al. 2019), centred on the median estimate, removes bias by construction, so it separates bias from interval width and is not validation.
 
 | Setting, method | Exact | Smoothed | Bias-eliminated |
 |---|---|---|---|
@@ -191,10 +191,10 @@ At 5 years, all from saved rows, MCSE about 0.5 to 1.9. Exact is the reported va
 | C3 AIPCW | 79.9 | 85.1 | 84.0 |
 | C4 IPCW | 97.3 | 96.6 | 97.4 |
 | C4 AIPCW | 95.2 | 93.7 | 96.2 |
-| C4 BJ | 75.5 | 65.8 | 86.2 |
+| C4 BJ | 75.5 | 65.9 | 86.2 |
 
 - With bias removed, BJ in C2 stays at 75.6% and AIPCW in C3 at 84.0%, while C0 reaches about 92.5%. Most of the shortfall remains, so it is not bias. CC in C2 is the reverse: its shortfall is mostly bias.
-- BJ's fall to 65.8% in C4 is bias against a correctly built target: signed bias -0.064 against the exact target and -0.085 against the smoothed one.
+- BJ's fall to 65.9% in C4 is bias against a correctly built target: signed bias -0.064 against the exact target and -0.085 against the smoothed one.
 - The version centred on the mean estimate is in `reports/tables/14_center_coverage_phase2.csv`. For untruncated IPCW and AIPCW in C2 and C4 the mean is unstable (MCSE 5 to 11), so the median is shown.
 - **Limits of this check.** The smoothed target assumes v uniform, which matches the methods fitted on all eligible patients; CC is fitted on a reduced set, so for CC it is close, not exact. Bias-eliminated coverage says nothing about bias. In Phase 1, L has no smoothed value, and T's values may be used only as noted: 75.13 and 87.89 in `reports/tables/14_smoothed_coverage_phase1.csv` use the wrong target, and are not interpreted (`reports/tables/14_smoothed_coverage_phase1_NOTES.md`).
 

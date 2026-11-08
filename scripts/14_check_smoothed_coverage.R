@@ -3,16 +3,20 @@
 # bandwidth, with v uniform. Also, for Phase 1, coverage of the mean estimated curve across
 # hospitals, the approximation of theta* used in the paper.
 #
-# Run from the repository root:  Rscript scripts/14_check_smoothed_coverage.R
-# Writes reports/tables/14_smoothed_coverage_phase2.csv and 14_smoothed_coverage_phase1.csv
+# Run from the repository root:  Rscript scripts/14_check_smoothed_coverage.R [fine_grid]
+# Writes reports/tables/14_smoothed_coverage_phase2.csv and 14_smoothed_coverage_phase1.csv.
+# With fine_grid: Phase 2 only, the smoothed target built on 80,001 points instead of 801, written
+# to reports/tables/14_smoothed_coverage_phase2_fine_grid.csv. The 801-point grid is off by up to
+# 1.9e-4, which moves a few intervals that lie on the boundary (docs/LOG.md, 8 November 2026).
 
 for (f in c("generate", "truth", "smooth", "phase2_generate", "phase2_truth")) source(sprintf("R/%s.R", f))
 source("scripts/14_common.R")
 set.seed(20261031)
 
+fine_grid <- identical(commandArgs(trailingOnly = TRUE)[1], "fine_grid")
 integrated <- function(covered, j) mean(colMeans(covered[, j, drop = FALSE]))
 boot_se <- function(covered, j, counts, n) sd(rowMeans((counts %*% covered / n)[, j, drop = FALSE]))
-u <- seq(0, 4, length.out = 801)
+u <- seq(0, 4, length.out = if (fine_grid) 80001 else 801)
 
 # Phase 2
 cfg2 <- load_config("config/phase2.yaml")
@@ -57,6 +61,20 @@ for (setting in paste0("C", 0:4)) {
   }
 }
 phase2 <- do.call(rbind, rows2)
+
+if (fine_grid) {
+  accepted <- read.csv("reports/tables/13_phase2_precision.csv")
+  m <- merge(phase2, accepted, by = c("setting", "estimator", "time_scope"))
+  stopifnot(nrow(m) == nrow(phase2),
+            max(abs(m$integrated_coverage_exact_target_percent - m$integrated_coverage_percent)) < 1e-4)
+  cat("Check passed: Phase 2 exact coverage reproduces the reported values.\n")
+  write.csv(round_numeric(phase2), "reports/tables/14_smoothed_coverage_phase2_fine_grid.csv", row.names = FALSE)
+  options(width = 200)
+  s <- phase2[phase2$setting %in% c("C0", "C2", "C3", "C4"), c(1:3, 5, 7, 8)]
+  names(s) <- c("set", "est", "scope", "exact", "smoothed", "se")
+  print(s, row.names = FALSE, digits = 4)
+  quit(save = "no")
+}
 
 # Phase 1
 cfg1 <- load_config("config/phase1.yaml")
