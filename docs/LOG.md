@@ -279,7 +279,7 @@ With the old setting, a wrong dropout model cost only 0.015, less than the smoot
 **Diagnosis of the large errors in C2.** With the right dropout model, the smallest estimated chance of staying, at each patient's own follow-up time, was 0.00006 in the worst hospital; the median over hospitals was 0.034. The weights (1 ÷ chance) then exceeded 10,000. At year 5, the curve missed the truth by more than 0.5 somewhere in 92 of 200 hospitals for IPCW and 50 of 200 for AIPCW, against 6 to 8 for CC and NE. Bias based on medians, which such outliers cannot drag, puts AIPCW best (0.019), then NE (0.029), IPCW (0.035) and CC (0.091). In C3 the wrong dropout model cannot produce small chances (lowest 0.30), so the weights stay moderate. This is the classic practical-positivity problem of weighting, and it is worse for the right dropout model than for the wrong one.
 
 **Two further points.**
-- NE does well in C2 and C3 (0.029), unlike in C1. In C2, no event's outcome-model errors in the two arms were both negative (−0.227 and −0.182 over 25 hospitals) and largely offset in the difference. This was not tested as the reason for its small bias. This is a property of the setting, not a merit of the method; C1 shows it failing.
+- NE does well in C2 and C3 (0.029), unlike in C1. In C2, NE's outcome-model errors in the two arms were both negative (−0.227 and −0.182 over 25 hospitals) and largely offset in the difference. This was not tested as the reason for its small bias. This is a property of the setting, not a merit of the method; C1 shows it failing.
 - In C3, IPCW is only slightly worse than AIPCW (0.031 against 0.022 on average; 0.037 against 0.027 at year 5). The direction is as expected.
 
 **Change: weight truncation added as two extra estimators,** IPCW_t and AIPCW_t. The estimated chance of staying is never allowed below 0.05, so no weight exceeds 20. Truncation is the standard remedy, at the price of a little bias. The untruncated estimators are kept unchanged, so both are reported. The summary now also reports bias from medians and the number of hospitals whose curve misses by more than 0.5. The 200-hospital results without truncation moved to `results/archive/phase2_200_before_truncation/`, and their summary to `results/archive/summary_phase2_no_truncation.txt`. All four settings are rerun; with the same seeds, the untruncated estimators reproduce exactly.
@@ -300,7 +300,7 @@ All four settings, 200 hospitals each, with IPCW_t and AIPCW_t added. The untrun
 
 **Time to benefit:** even with no dropout, only 32% to 54% of hospitals put a profile's time to benefit within half a year of the truth. Medians run about half a year late, from smoothing. CC delays it by 1 to 1.5 years under dependent dropout; truncated AIPCW keeps the median on target. [Superseded 31 Oct: see reports/phase2_results.md]
 
-**Gate 2:** passed for bias; not for stability under strong dependent dropout, and not for AIPCW intervals with a wrong dropout model. Both are known limits of weighting methods, reported as findings. Report: `reports/phase2_results.md`; lesson 10.
+**Gate 2:** passed for bias; not for stability under strong dependent dropout, and not for AIPCW intervals with a wrong dropout model. Both are known limits of weighting methods, reported as findings. Report: `reports/phase2_results.md`; lesson 10. [Superseded 8 November 2026: see the README status line.]
 
 ### Note from reading Steingrimsson and Morrison (Stat Med 2020) and Dahabreh et al. (Stat Med 2020) (22 October, evening)
 
@@ -402,4 +402,4 @@ Checked and accepted at commit `cfd8b88`, then merged into `main` without squash
 
 ## 8 November 2026: recheck
 
-- **Smoothed target on a finer grid.** 8 November recheck: the smoothed target used 801 grid points, which is off by up to 1.9e-4. With 80,001 points, 13 of 35 Phase 2 cells move by 1 to 3 of 7,400 pairs; C4 BJ prints 65.9 instead of 65.8. The old table is kept; the corrected one is `14_smoothed_coverage_phase2_fine_grid.csv`. Phase 1 is unchanged at the printed digits.
+- **Smoothed target on a finer grid.** The smoothed target used 801 grid points, which is off by up to 1.9e-4. With 80,001 points, 13 of 35 Phase 2 cells at t = 5 move by 1 to 3 of 7,400 pairs; C4 BJ prints 65.9 instead of 65.8. The old table is kept; the corrected one is `14_smoothed_coverage_phase2_fine_grid.csv`. Phase 1 is unchanged at the printed digits.

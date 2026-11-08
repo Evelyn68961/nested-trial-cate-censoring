@@ -35,7 +35,7 @@ One replicate explains most of that gap. Replicate 161 gave -201.5 at v = 1. SD 
 
 So SD is unreliable as a summary here. A number that one replicate of 200 can move this much tells you about that replicate, not the typical hospital. That is why the report leans on medians and on counts above 0.5.
 
-The two did not agree everywhere. Median bias at v = 2 was -0.021 for the repository and 0.031 for the script. That difference of 0.05 is not explained.
+The two did not agree everywhere. Signed median bias at v = 2 was -0.021 for the repository and 0.031 for the script. That difference of 0.05 is not explained.
 
 ## Three kinds of coverage
 

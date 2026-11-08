@@ -26,7 +26,7 @@ Rscript scripts/04_check_curve.R
 
 The saved results (about 320 MB, in `results/`) are included, so the summary scripts can be rerun without the long runs. The run scripts skip chunks that already exist. They refuse to start when `R/`, `config/` or `scripts/` have uncommitted changes, and record the commit in every result row; `scripts/13_precision_tables.R` also refuses uncommitted changes in `results/`.
 
-Full order, with what each step needs. Times are approximate, from one laptop. They are measured with 3 workers on a 4-core laptop, from the reproduction runs of 5 November 2026 or from `docs/LOG.md`; a per-hospital median comes from the run tables. A blank time was not measured.
+Full order, with what each step needs. Times are approximate. They are measured with 3 workers on a 4-core laptop, from the reproduction runs of 5 November 2026 or from `docs/LOG.md`; a per-hospital median comes from the run tables. A blank time was not measured.
 
 | Step | Command | Needs | Time |
 |---|---|---|---|
@@ -42,7 +42,7 @@ Full order, with what each step needs. Times are approximate, from one laptop. T
 | CC propensity check | `Rscript scripts/14_check_cc_propensity.R <setting> 200 3` for C1 and C2 | — | median 8 seconds per hospital (`reports/tables/14_checks_runs.csv`) |
 | Nuisance-model check | `Rscript scripts/14_check_helpers.R 25 3` | — | under 1 minute |
 | Follow-ups | `Rscript scripts/14_followups.R warnings <setting> 3` for C2 and C4; `warnings_cc <setting> 3` for C1 and C2; `slope` | `results/phase2/`, `results/check_step2/` | 8.5 to 8.8 minutes per setting; under 1 minute; under 1 minute |
-| Review summaries | `14_check_center_coverage.R`, `14_check_smoothed_coverage.R`, `14_summarise_checks.R`; `14_check_smoothed_coverage.R fine_grid` writes the Phase 2 table on an 80,001-point grid (`14_smoothed_coverage_phase2_fine_grid.csv`) | `results/phase2/`; the smoothed check also reads `results/phase1/`; the summary reads `results/check_step2/` | 13 minutes; under 1 minute; under 1 minute |
+| Review summaries | `14_check_center_coverage.R`, `14_check_smoothed_coverage.R`, `14_summarise_checks.R`; `14_check_smoothed_coverage.R fine_grid` writes the Phase 2 table on an 80,001-point grid (`14_smoothed_coverage_phase2_fine_grid.csv`) | `results/phase2/`; the smoothed check also reads `results/phase1/`; the summary reads `results/check_step2/`; the fine_grid run also reads `reports/tables/13_phase2_precision.csv` | 13 minutes; under 1 minute; under 1 minute; fine_grid 12 minutes (8 November 2026, with other runs on the same computer) |
 | Exploratory runs | `Rscript scripts/15_run_exploratory.R <run> <setting> 200 3` for A with C2 and C4, B with C2m and C3m, C with C5a and C5b, and control with C2 and C4; zero control `Rscript scripts/15_run_exploratory.R zero C2 3 3` and `zero C4 3 3` | — | median 59 seconds per hospital for Run A, 17 to 18 seconds for the others (`reports/tables/15_runs.csv`) |
 | Exploratory summaries | `15_summarise_exploratory.R`, `15_sd_table.R` | exploratory runs, `results/phase2/` | 41 minutes; under 1 minute |
 | Deck tables | `Rscript scripts/16_deck_tables.R 3` | steps 13 and 15 | 14.5 minutes |

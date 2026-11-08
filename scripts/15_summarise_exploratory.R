@@ -1,5 +1,6 @@
 # Tables for the exploratory runs: metrics, paired differences against the reported estimator on
-# the same seeds, controls, and warnings by fit. Runs that have not finished are skipped.
+# the same seeds, controls, and warnings by fit. In results/exploratory, a missing or empty
+# expected setting folder stops the summary; in other folders, runs that have not finished are skipped.
 #
 # Usage, from the repository root:  Rscript scripts/15_summarise_exploratory.R [folder] [tables]
 #   folder: results/exploratory; tables: reports/tables. Files are named 15_*.csv.
