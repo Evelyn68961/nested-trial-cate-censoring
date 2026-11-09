@@ -403,3 +403,4 @@ Checked and accepted at commit `cfd8b88`, then merged into `main` without squash
 ## 8 November 2026: recheck
 
 - **Smoothed target on a finer grid.** The smoothed target used 801 grid points, which is off by up to 1.9e-4. With 80,001 points, 13 of 35 Phase 2 cells at t = 5 move by 1 to 3 of 7,400 pairs; C4 BJ prints 65.9 instead of 65.8. The old table is kept; the corrected one is `14_smoothed_coverage_phase2_fine_grid.csv`. Phase 1 is unchanged at the printed digits.
+- **Full reproduction rerun.** A fresh clone of 03a69e6 was rerun on 8 November 2026. All 50 regenerated tables, 32 regenerated chunks (chunk 1 and one randomly drawn chunk per run setting) and 10 refits into empty folders matched the stored results with difference 0. Only run times, commit stamps and figure anti-aliasing differed.
