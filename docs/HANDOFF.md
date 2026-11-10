@@ -6,11 +6,11 @@ Updated 5 November 2026.
 
 | Part | State |
 |---|---|
-| Phase 1 (binary outcome, no dropout) | 500 hospitals, Gate 1 passed. `reports/phase1_results.md` |
-| Phase 1, trial of about 125 | 50 of 500 hospitals, preliminary |
-| Phase 2 (dropout, effect over time) | 200 hospitals per setting, C0 to C4. Gate 2: the first two conditions were met for median bias; the third (AIPCW holds with a wrong dropout model while IPCW does not) was met only partly; stability and intervals failed. `reports/phase2_results.md` |
+| Phase 1 (binary outcome, no dropout) | 500 datasets, Gate 1 passed. `reports/phase1_results.md` |
+| Phase 1, trial of about 125 | 50 of 500 datasets, preliminary |
+| Phase 2 (dropout, effect over time) | 200 datasets per setting, C0 to C4. Gate 2: the first two conditions were met for median bias; the third (AIPCW holds with a misspecified dropout model while IPCW does not) was met only partly; stability and intervals failed. `reports/phase2_results.md` |
 | Review of Phase 2 | Claims corrected, disclosures added, no reported number changed. `reports/phase2_results.md`, section "Corrections, disclosures and checks after review" |
-| Exploratory Runs A, B and C | 200 hospitals each, pre-specified in `docs/exploratory_prespecification.md`. No floor chosen. `reports/phase2_results.md`, section "Exploratory runs" |
+| Exploratory Runs A, B and C | 200 datasets each, pre-specified in `docs/exploratory_prespecification.md`. No floor chosen. `reports/phase2_results.md`, section "Exploratory runs" |
 | Lessons | 1 to 12 in `docs/lessons/` (lessons 5 and 6 share one file) |
 | Process log | `docs/LOG.md` |
 
@@ -25,7 +25,7 @@ Other limits, such as the intervals that undercover and the source of the large 
 ## How to continue
 
 - The run order, with what each script needs, is in `README.md`. Runners refuse to start when `R/`, `config/` or `scripts/` have uncommitted changes, and record the commit in every result row.
-- The Phase 1 trial of about 125 can be extended from 50 to 500 hospitals with `Rscript scripts/07_run_phase1.R sl 0.05 500 3`. Finished chunks are skipped. Then change `sl_trial05 = 50` to 500 in `scripts/08_summarise_phase1.R` and `scripts/13_precision_tables.R`.
+- The Phase 1 trial of about 125 can be extended from 50 to 500 datasets with `Rscript scripts/07_run_phase1.R sl 0.05 500 3`. Finished chunks are skipped. Then change `sl_trial05 = 50` to 500 in `scripts/08_summarise_phase1.R` and `scripts/13_precision_tables.R`.
 - Step 16 of `docs/WORKPLAN.md` (Brier score and calibration of each arm's risk model among all eligible patients, with dropout) is not started. It is unrelated to `scripts/16_deck_tables.R`.
 - Read, in this order: this file, `docs/LOG.md`, `docs/WORKPLAN.md`, `reports/phase1_results.md` and `reports/phase2_results.md`.
 

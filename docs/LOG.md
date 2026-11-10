@@ -12,7 +12,7 @@ What was decided, changed and checked, in order, with the reason for each. Newes
 - **Repository private** until Gate 2 passes (Phase 2 checks): nothing goes public before the results have been checked.
 - **Raw results were at first not committed.** This changed later: `results/` is no longer in `.gitignore`, only `results/reference/` is, and the run files in `results/` are in the repository. Summary tables and figures in `reports/` are committed.
 
-### Step 1: simulated hospitals (commit 3532169)
+### Step 1: simulated datasets (commit 3532169)
 
 **Settings chosen, and why** (`config/phase1.yaml`). The paper's own data-generating mechanism is in its Web Appendix D, which is not in the arXiv PDF. So the mechanism here is our own, built to have the features the paper's simulation needs:
 
@@ -31,7 +31,7 @@ These are design choices, not estimates from any real study.
 
 **Truth.** The target curve is computed exactly by numerical integration over frailty and sex. The paper used Monte Carlo with 10⁷ draws instead; exact integration removes that noise.
 
-**Result.** At v = 2, the trial-population curve is −0.156 and the target curve is −0.120. One hospital: 522 of 2,500 joined; mean frailty −0.65 in the trial against 0.16 outside.
+**Result.** At v = 2, the trial-population curve is −0.156 and the target curve is −0.120. One dataset: 522 of 2,500 joined; mean frailty −0.65 in the trial against 0.16 outside.
 
 **Tweak.** The first version drew outcomes for everyone and then blanked those outside the trial, which made R warn about missing probabilities. Changed to draw outcomes only for trial patients. Results unchanged.
 
@@ -49,11 +49,11 @@ These are design choices, not estimates from any real study.
 
 **Tweak.** Super Learner could not find its own learners unless the package was attached. Fixed by passing its namespace as the environment.
 
-**A near-mistake, caught.** The first preview averaged the outcome model's predicted effect over patients with v near 2 in 20 hospitals. Both averages appeared to lean about 0.025 too negative. A rerun over 200 hospitals showed no lean (−0.1225, Monte Carlo SE 0.0046, against a truth of −0.1199). The 20-hospital result was chance; the script now uses 200.
+**A near-mistake, caught.** The first preview averaged the outcome model's predicted effect over patients with v near 2 in 20 datasets. Both averages appeared to lean about 0.025 too negative. A rerun over 200 datasets showed no lean (−0.1225, Monte Carlo SE 0.0046, against a truth of −0.1199). The 20-dataset result was chance; the script now uses 200.
 
 **Tweak.** The figure first used equal axis scales, which squeezed the panels. Replaced by fixed axis limits.
 
-**Timing.** One hospital: 0.1 seconds with `glm`, 11 seconds with `sl`.
+**Timing.** One dataset: 0.1 seconds with `glm`, 11 seconds with `sl`.
 
 ### Step 3: the pseudo-outcome (commit ba1ea0a)
 
@@ -61,16 +61,16 @@ These are design choices, not estimates from any real study.
 
 **Tweak to tests.** The first double-robustness tests failed. Two reasons, both in the tests, not the method: `testthat`'s `tolerance` is relative (0.01 meant ±0.0012 here), and the narrow band near v = 2 had Monte Carlo noise of about 0.014. The tests now check the average over all patients in a cohort of one million, with absolute limits.
 
-**Result** (200 hospitals; error in the average effect over all eligible patients; truth −0.082):
+**Result** (200 datasets; error in the average effect over all eligible patients; truth −0.082):
 
-| Helpers | Outcome model alone | With correction |
+| Helpers | Outcome model-based estimator | With correction |
 |---|---|---|
 | Both right | 0.000 | 0.000 |
-| Outcome model wrong (frailty left out) | −0.037 | 0.003 |
+| Outcome model misspecified (frailty left out) | −0.037 | 0.003 |
 | Participation model wrong (same chance for all) | 0.000 | 0.001 |
 | Both wrong | −0.037 | −0.039 |
 
-The correction's price: standard deviation across hospitals 0.060, against 0.052 for the outcome model alone.
+The correction's price: standard deviation across datasets 0.060, against 0.052 for the outcome model-based estimator.
 
 ### Steps 4 and 5: the curve, and the reference check (commit 6bea4ef)
 
@@ -79,36 +79,36 @@ The correction's price: standard deviation across hospitals 0.060, against 0.052
 - **Epanechnikov kernel.** The paper's conditions require a kernel on [−1, 1]; this is the standard one.
 - **Bandwidth by leave-one-out cross-validation** (the paper says cross-validation; leave-one-out is this project's choice). Grid 0.3 to 2.0 in steps of 0.1. Computed with the closed form for linear smoothers (residual ÷ (1 − own weight)). A test confirms it equals refitting without each patient.
 - **Intervals:** the paper's sandwich formula (section 5.1), estimate ± 1.96 × σ/√n, with n all eligible patients.
-- **Smoothed target θ\*(v):** the same local linear fit applied to the true curve, with v uniform, using each hospital's own bandwidth. The paper reports coverage against this as well as against θ(v).
+- **Smoothed target θ\*(v):** the same local linear fit applied to the true curve, with v uniform, using each dataset's own bandwidth. The paper reports coverage against this as well as against θ(v).
 - **L's intervals:** robust (sandwich) variance of the straight-line fit. **G** gets no interval, because none is justified when the correction term is left out.
 
-**One hospital** (Super Learner): pseudo-outcomes ranged from −30 to 84, because some trial patients carry weights above 100. Bandwidth 0.4. The estimate at v = 0.2 was +0.72 against a truth of −0.04, yet 35 of 37 intervals contained the truth. This noise level fits the paper's Table 1 (integrated RMSE about 0.17 at the same sizes).
+**One dataset** (Super Learner): pseudo-outcomes ranged from −30 to 84, because some trial patients carry weights above 100. Bandwidth 0.4. The estimate at v = 0.2 was +0.72 against a truth of −0.04, yet 35 of 37 intervals contained the truth. This noise level fits the paper's Table 1 (integrated RMSE about 0.17 at the same sizes).
 
-**Reference check (step 5).** Robertson, Steingrimsson and Dahabreh's `DGM_Sim` (commit 0bace88 of their repository) was run unchanged, with only its CASS-specific model-fitting step replaced by our helper predictions. Largest difference from our pseudo-outcomes over 7 hospitals: 2 × 10⁻¹⁴ (superseded: 1.4 × 10⁻¹⁴ over 7 runs on 5 generated datasets; see 5 November). Their file has no licence, so it is downloaded at run time into `results/` and never committed.
+**Reference check (step 5).** Robertson, Steingrimsson and Dahabreh's `DGM_Sim` (commit 0bace88 of their repository) was run unchanged, with only its CASS-specific model-fitting step replaced by our helper predictions. Largest difference from our pseudo-outcomes over 7 datasets: 2 × 10⁻¹⁴ (superseded: 1.4 × 10⁻¹⁴ over 7 runs on 5 generated datasets; see 5 November). Their file has no licence, so it is downloaded at run time into `results/` and never committed.
 
 ### Step 7: runs
 
 **Runner settings, and why.**
 
-- 25 hospitals per saved chunk; an interrupted run resumes at the next missing chunk.
+- 25 datasets per saved chunk; an interrupted run resumes at the next missing chunk.
 - 3 parallel workers on a 4-core laptop with 16 GB memory (about 6 GB free), leaving one core free.
 - The runner refuses to start if `R/`, `config/` or `scripts/` have uncommitted changes, and records the commit in every result row.
-- Warnings inside a hospital's fit are suppressed in the runner (mostly Super Learner learners failing on small arms); failures show up as missing estimates, which the summary counts.
+- Warnings inside a dataset's fit are suppressed in the runner (mostly Super Learner learners failing on small arms); failures show up as missing estimates, which the summary counts.
 - **Scoring** as in the paper's Table 1: bias, RMSE and coverage at each grid value, then averaged over the 37 values ("integrated").
-- **Plan:** pilot of 50 hospitals with `glm` helpers, then 500 hospitals each for `sl` with 20% and 5% trial shares (about 500 and 125 trial patients).
+- **Plan:** pilot of 50 datasets with `glm` helpers, then 500 datasets each for `sl` with 20% and 5% trial shares (about 500 and 125 trial patients).
 
 ### First pilot, and a change to the design (commit c6a650d)
 
-**First pilot:** 50 hospitals, logistic-regression helpers, original effect settings. It ran cleanly (5 minutes, no missing estimates), but could not tell the estimators apart:
+**First pilot:** 50 datasets, logistic-regression helpers, original effect settings. It ran cleanly (5 minutes, no missing estimates), but could not tell the estimators apart:
 
 | Estimator | Integrated absolute bias | Integrated RMSE | Coverage |
 |---|---|---|---|
 | P (paper) | 0.023 | 0.098 | 94.3% |
-| L (straight line) | 0.029 | 0.082 | 94.3% |
+| L (linear regression on V) | 0.029 | 0.082 | 94.3% |
 | T (trial only) | 0.029 | 0.071 | 92.6% of the target curve |
-| G (outcome model alone) | 0.015 | 0.070 | — |
+| G (outcome model-based estimator) | 0.015 | 0.070 | — |
 
-**Why:** the true curve only ran from −0.12 to −0.02. The trial-to-target gap (about 0.036 on average) and the straight line's misfit were small against the noise of one hospital. The paper's own curve runs from about +0.4 to −0.7.
+**Why:** the true curve only ran from −0.12 to −0.02. The trial-to-target gap (about 0.036 on average) and the misfit of linear regression on V were small against the noise of one dataset. The paper's own curve runs from about +0.4 to −0.7.
 
 **Change:** treatment-effect coefficients from (intercept −0.3, v −0.5, v² 0.15, frailty 0.6) to (1.0, −1.6, 0.4, 1.0). Three candidate designs were compared on their exact curves before choosing:
 
@@ -122,22 +122,22 @@ A was chosen because it separates the estimators most. Its curve also changes si
 
 ### Second pilot, and the bandwidth question
 
-**Second pilot:** 100 hospitals, logistic-regression helpers, new design:
+**Second pilot:** 100 datasets, logistic-regression helpers, new design:
 
 | Estimator | Integrated absolute bias | Integrated RMSE | Coverage |
 |---|---|---|---|
 | P (paper) | 0.021 | 0.104 | 91.4% of θ(v); 93.0% of θ\*(v) |
-| L (straight line) | 0.060 | 0.098 | 80.4% |
+| L (linear regression on V) | 0.060 | 0.098 | 80.4% |
 | T (trial only) | 0.060 | 0.097 | 83.6% of the target curve; 90.6% of its own trial curve |
-| G (outcome model alone) | 0.007 | 0.075 | — |
+| G (outcome model-based estimator) | 0.007 | 0.075 | — |
 
 The shortcuts now fail as they should. P's numbers are close to the paper's Table 1 for the same sizes (integrated absolute bias 0.020, coverage 92%).
 
 G does best here because its outcome model has exactly the right terms. That is the point of running Super Learner next: in real data nobody hands you the right terms.
 
-**P's bias has a pattern:** too high in the middle of v (about +0.03), too low at the ends (about −0.02). That is what over-smoothing does. In 48 of 100 hospitals, cross-validation picked the largest allowed bandwidth, 2.0.
+**P's bias has a pattern:** too high in the middle of v (about +0.03), too low at the ends (about −0.02). That is what over-smoothing does. In 48 of 100 datasets, cross-validation picked the largest allowed bandwidth, 2.0.
 
-**Check:** is the cap of 2.0 (my choice, not the paper's) causing this? 60 hospitals were rerun with bandwidths allowed up to 4.0.
+**Check:** is the cap of 2.0 (my choice, not the paper's) causing this? 60 datasets were rerun with bandwidths allowed up to 4.0.
 
 - Cross-validation's choices spread over the whole range (10 of 60 at the new cap of 4.0).
 - The average cross-validation score is almost flat: the best and worst bandwidths differ by under 0.1%. The pseudo-outcomes are so noisy that cross-validation cannot tell bandwidths apart.
@@ -147,7 +147,7 @@ G does best here because its outcome model has exactly the right terms. That is 
 
 ### Main runs started
 
-Super Learner helpers, 500 hospitals each: trial share 20% (about 500 trial patients) and 5% (about 125). Commit a9a8cd8. While they run, no file they use (`R/` files and `config/phase1.yaml`) is edited; Phase 2 code goes in new files.
+Super Learner helpers, 500 datasets each: trial share 20% (about 500 trial patients) and 5% (about 125). Commit a9a8cd8. While they run, no file they use (`R/` files and `config/phase1.yaml`) is edited; Phase 2 code goes in new files.
 
 ### Phase 2 code (commit ef4577a)
 
@@ -167,19 +167,19 @@ Two candidate designs were compared on their exact curves first. The chosen one 
 
 **Dropout settings.** Exponential dropout times, plus everyone censored at 5 years.
 
-| Setting | Dropout | Share of trial patients dropped out (one hospital) |
+| Setting | Dropout | Share of trial patients dropped out (one dataset) |
 |---|---|---|
 | C0 | none | 0% |
 | C1 | random, rate 0.08 per year | 26% |
 | C2 | rate 0.06 per year × exp(0.7 frailty + 0.6 treated): frail and treated patients leave sooner | 20% |
-| C3 | the same hospitals as C2, analysed with a dropout model that leaves out frailty | 20% |
+| C3 | the same datasets as C2, analysed with a dropout model that leaves out frailty | 20% |
 
 C2 and C3 use the same seeds, so the only difference between them is the dropout model used in the analysis.
 
 **The four estimators**, each feeding the Phase 1 method (pseudo-outcome, then local linear curve) at each time:
 
 - **CC (complete case):** trial patients whose status at t is unknown are removed.
-- **NE (no event):** unknown status is counted as no event by t.
+- **NE (treated as non-event):** unknown status is counted as no event by t.
 - **IPCW:** status known at t, divided by the estimated chance of still being followed at min(time, t). The outcome model is a logistic regression of status at t, weighted the same way.
 - **AIPCW (augmented IPCW):** IPCW plus a correction for each dropout, using a Weibull outcome model fitted in each arm to predict what would likely have happened after they left. The outcome model is that Weibull model. As coded, AIPCW is consistent if the outcome model is right, or if the participation and dropout models are both right.
 
@@ -190,7 +190,7 @@ C2 and C3 use the same seeds, so the only difference between them is the dropout
 
 All are cross-fitted with five folds. Parametric models were chosen because the question here is dropout, not flexible learning, and because the AIPCW correction needs a model that predicts survival over time. CC and NE use the Phase 1 logistic helpers for status at t.
 
-**Bandwidth.** One bandwidth per estimator per hospital, chosen by cross-validation at 5 years and used at every time. Grid 0.4, 0.6, 0.8, 1.0, 1.3, 1.6, 2.0. Reasons: Phase 1 showed the cross-validation score is nearly flat anyway, and choosing it ten times per hospital would multiply the run time.
+**Bandwidth.** One bandwidth per estimator per dataset, chosen by cross-validation at 5 years and used at every time. Grid 0.4, 0.6, 0.8, 1.0, 1.3, 1.6, 2.0. Reasons: Phase 1 showed the cross-validation score is nearly flat anyway, and choosing it ten times per dataset would multiply the run time.
 
 **The AIPCW correction, in formula form.** For a trial patient with follow-up time T̃ and status at t:
 
@@ -204,44 +204,44 @@ Here G is the chance of not having dropped out, and F(t | u) is the chance of th
 - A test first used single numbers for the Weibull scales where the code expects one value per patient, which produced NA. The test was fixed; the code was right.
 - One planned test expected simple dropping to be biased among treated patients at year 3 under dependent dropout. In this setting it was not (difference 0.0008): frail patients drop out more and also have more events, and the two biases cancel. The test now checks counting dropouts as event-free, which is biased in a known direction.
 
-**Checks.** Seven tests. The key ones use true helper values in a hospital of 600,000. The augmented status averages to the true risk among treated patients at year 3 with both helpers right, with the outcome model wrong, and with the dropout model wrong (each within 0.01). It misses when both are wrong. All 29 tests pass.
+**Checks.** Seven tests. The key ones use true helper values in a dataset of 600,000. The augmented status averages to the true risk among treated patients at year 3 with both helpers right, with the outcome model wrong, and with the dropout model wrong (each within 0.01). It misses when both are wrong. All 29 tests pass.
 
-**One hospital per setting** (`scripts/09_check_phase2.R`): 16 to 20 seconds each while the Phase 1 runs shared the computer. With no dropout, CC, NE and IPCW give identical answers, as they should (all weights 1), and AIPCW differs slightly because it uses the Weibull outcome model.
+**One dataset per setting** (`scripts/09_check_phase2.R`): 16 to 20 seconds each while the Phase 1 runs shared the computer. With no dropout, CC, NE and IPCW give identical answers, as they should (all weights 1), and AIPCW differs slightly because it uses the Weibull outcome model.
 
 ### Main runs shortened: the computer shuts down at 17:30
 
-Learned at 14:55 that this computer shuts down automatically at 17:30. At about 5.5 minutes per 25 hospitals, the planned runs (500 + 500 hospitals in Phase 1, then Phase 2) would not finish. Changed at 14:58:
+Learned at 14:55 that this computer shuts down automatically at 17:30. At about 5.5 minutes per 25 datasets, the planned runs (500 + 500 datasets in Phase 1, then Phase 2) would not finish. Changed at 14:58:
 
-- The first main run (Super Learner, 20% trial share) was stopped after 25 hospitals. The chunk in progress was lost (at most 25 hospitals, about 5 minutes).
-- It was restarted with **300 hospitals** instead of 500.
-- Then **Phase 2 at 100 hospitals per setting** (C0 to C3) instead of 200.
+- The first main run (Super Learner, 20% trial share) was stopped after 25 datasets. The chunk in progress was lost (at most 25 datasets, about 5 minutes).
+- It was restarted with **300 datasets** instead of 500.
+- Then **Phase 2 at 100 datasets per setting** (C0 to C3) instead of 200.
 - The 5% trial-share run (about 125 trial patients) is **postponed**.
 
-Nothing is lost by shortening. Chunks hold 25 hospitals with fixed seeds, so rerunning a command with a larger number continues from the saved chunks and adds only the missing ones.
+Nothing is lost by shortening. Chunks hold 25 datasets with fixed seeds, so rerunning a command with a larger number continues from the saved chunks and adds only the missing ones.
 
 **To resume on the next session**, from the repository root:
 
 ```
-Rscript scripts/07_run_phase1.R sl 0.20 500 3     # extends Phase 1 from 300 to 500 hospitals
+Rscript scripts/07_run_phase1.R sl 0.20 500 3     # extends Phase 1 from 300 to 500 datasets
 Rscript scripts/07_run_phase1.R sl 0.05 500 3     # the postponed 125-trial-patient setting
 Rscript scripts/10_run_phase2.R C0 200 3          # and likewise C1, C2, C3: extends Phase 2 to 200
 Rscript scripts/08_summarise_phase1.R
 Rscript scripts/11_summarise_phase2.R
 ```
 
-Raw results are in `results/` on this computer's D: drive (not on GitHub). If the next session runs on another computer, either copy `results/` across, or rerun from scratch: the same seeds give the same hospitals. (superseded: results are committed; see below)
+Raw results are in `results/` on this computer's D: drive (not on GitHub). If the next session runs on another computer, either copy `results/` across, or rerun from scratch: the same seeds give the same datasets. (superseded: results are committed; see below)
 
 Also checked before restarting: six R processes still running were started at 12:03, before this work began. They are VS Code's R language servers, not simulation workers, and were left alone.
 
 ### Phase 2 first runs, before the shutdown
 
-Ran 16:41 to 17:00: C2, C3, C1, C0, 50 hospitals each, about 15 seconds per hospital. Order chosen so the settings that matter most (dependent dropout) ran first. The results files record different commits per setting (2053465, eaae050, 0d9a0a8, e14f16e). These differ only in results and documents committed by the autosave loop; the R code and config are the same in all four.
+Ran 16:41 to 17:00: C2, C3, C1, C0, 50 datasets each, about 15 seconds per dataset. Order chosen so the settings that matter most (dependent dropout) ran first. The results files record different commits per setting (2053465, eaae050, 0d9a0a8, e14f16e). These differ only in results and documents committed by the autosave loop; the R code and config are the same in all four.
 
-**Also found:** the Phase 1 run I thought I had stopped at about 15:00 had kept running and finished all 500 hospitals, and started the 5% trial-share setting (50 hospitals done). Duplicate work would have been harmless, because every hospital has a fixed seed. I had also not checked the clock between 14:53 and 16:40 and assumed much less time had passed.
+**Also found:** the Phase 1 run I thought I had stopped at about 15:00 had kept running and finished all 500 datasets, and started the 5% trial-share setting (50 datasets done). Duplicate work would have been harmless, because every dataset has a fixed seed. I had also not checked the clock between 14:53 and 16:40 and assumed much less time had passed.
 
-**Results** (preliminary; `reports/archive/phase2_preliminary.md`). No dropout: all four methods agree. Random dropout: counting dropouts as event-free fails (bias 0.061 at year 5, coverage 79%). Dependent dropout: AIPCW has the smallest error at year 5 (0.025 against 0.033 to 0.038), but within about one Monte Carlo error. Wrong dropout model (C3): IPCW did not fail (0.023).
+**Results** (preliminary; `reports/archive/phase2_preliminary.md`). No dropout: all four methods agree. Random dropout: counting dropouts as event-free fails (bias 0.061 at year 5, coverage 79%). Dependent dropout: AIPCW has the smallest error at year 5 (0.025 against 0.033 to 0.038), but within about one Monte Carlo error. Misspecified dropout model (C3): IPCW did not fail (0.023).
 
-**Diagnosis:** the dependent-dropout setting is too mild to expose a wrong dropout model. The same problem as the first Phase 1 pilot. Next: a stronger setting chosen by comparing candidates first, then 200 hospitals per setting.
+**Diagnosis:** the dependent-dropout setting is too mild to expose a misspecified dropout model. The same problem as the first Phase 1 pilot. Next: a stronger setting chosen by comparing candidates first, then 200 datasets per setting.
 
 **Saving progress:** `results/` is now committed to git (2.7 MB at the time), except `results/reference/` (the unlicensed download). An autosave loop pushed new results every 4 minutes until 17:28. `docs/HANDOFF.md` lists the state and the commands to resume.
 
@@ -249,7 +249,7 @@ Ran 16:41 to 17:00: C2, C3, C1, C0, 50 hospitals each, about 15 seconds per hosp
 
 The computer was still on (or back) at 17:34; all results and commits were intact.
 
-**Why the preliminary C2/C3 results were flat.** Five candidate analyses were run on one hospital of 400,000 at year 5. The dropout bias appears in each arm's risk, but it partly **cancels when the arms are subtracted**. Bias in the effect at year 5 (treated arm minus untreated arm):
+**Why the preliminary C2/C3 results were flat.** Five candidate analyses were run on one dataset of 400,000 at year 5. The dropout bias appears in each arm's risk, but it partly **cancels when the arms are subtracted**. Bias in the effect at year 5 (treated arm minus untreated arm):
 
 | Dropout setting (base rate, frailty, treated) | Share dropped | CC | NE | IPCW, dropout model without frailty |
 |---|---|---|---|---|
@@ -257,57 +257,57 @@ The computer was still on (or back) at 17:34; all results and commits were intac
 | D2 (0.08, 1.2, 0.8) | 25% | −0.005 | −0.016 | −0.031 |
 | D3 (0.10, 1.5, 1.0), chosen | 30% | −0.016 | −0.026 | −0.046 |
 
-With the old setting, a wrong dropout model cost only 0.015, less than the smoothing error (about 0.026), so no number of hospitals in this design would show it clearly. D3 makes it 0.046. **Changed `config/phase2.yaml` to D3.** Only C2 and C3 use this setting, so their 50-hospital results moved to `results/archive/phase2_mild_dropout/`; C0 and C1 are unaffected and their chunks are kept and extended.
+With the old setting, a misspecified dropout model cost only 0.015, less than the smoothing error (about 0.026), so no number of datasets in this design would show it clearly. D3 makes it 0.046. **Changed `config/phase2.yaml` to D3.** Only C2 and C3 use this setting, so their 50-dataset results moved to `results/archive/phase2_mild_dropout/`; C0 and C1 are unaffected and their chunks are kept and extended.
 
 **The price of D3.** About 8% of trial patients now have under a 5% chance of staying to year 5, and 4.5% under 1%. These patients get very large weights in IPCW and AIPCW (a practical positivity problem for dropout), so those methods will be noisier. This is realistic for strongly selective dropout and will be reported, not hidden.
 
-**Test change.** The AIPCW check with both helpers right missed by 0.011 against a fixed limit of 0.01 in a hospital of 600,000. Diagnosis: one patient's extreme weight gave this seed a Monte Carlo standard error of 0.012, so the miss was within one standard error. Two other seeds missed by 0.002, with standard errors of 0.003. Using 200 integration steps instead of 30 changed nothing. The AIPCW tests now use a limit of 3 Monte Carlo standard errors plus 0.002 instead of a fixed 0.01. All 12 Phase 2 tests pass.
+**Test change.** The AIPCW check with both helpers right missed by 0.011 against a fixed limit of 0.01 in a dataset of 600,000. Diagnosis: one patient's extreme weight gave this seed a Monte Carlo standard error of 0.012, so the miss was within one standard error. Two other seeds missed by 0.002, with standard errors of 0.003. Using 200 integration steps instead of 30 changed nothing. The AIPCW tests now use a limit of 3 Monte Carlo standard errors plus 0.002 instead of a fixed 0.01. All 12 Phase 2 tests pass.
 
-### 200-hospital Phase 2 runs, and weight truncation added
+### 200-dataset Phase 2 runs, and weight truncation added
 
-**Runs** (17:37 to 18:44, D3 dropout, 200 hospitals per setting). Averages over the ten times:
+**Runs** (17:37 to 18:44, D3 dropout, 200 datasets per setting). Averages over the ten times:
 
 | Setting | CC | NE | IPCW | AIPCW |
 |---|---|---|---|---|
-| C0 no dropout | 0.022 | 0.022 | 0.022 | 0.022 |
-| C1 random (26% dropped) | 0.020 | **0.038** | 0.025 | 0.021 |
-| C2 dependent (30%) | 0.069 | 0.029 | 0.073, **RMSE 1.10** | 0.038, **RMSE 0.76** |
-| C3 dependent, dropout model wrong | 0.069 | 0.029 | 0.031 | 0.022 |
+| C0 No dropout | 0.022 | 0.022 | 0.022 | 0.022 |
+| C1 Random dropout (26% dropped) | 0.020 | **0.038** | 0.025 | 0.021 |
+| C2 Dependent dropout (30%) | 0.069 | 0.029 | 0.073, **RMSE 1.10** | 0.038, **RMSE 0.76** |
+| C3 Dropout model misspecified | 0.069 | 0.029 | 0.031 | 0.022 |
 
 (Integrated absolute bias; RMSE given only where it is abnormal.)
 
-**Diagnosis of the large errors in C2.** With the right dropout model, the smallest estimated chance of staying, at each patient's own follow-up time, was 0.00006 in the worst hospital; the median over hospitals was 0.034. The weights (1 ÷ chance) then exceeded 10,000. At year 5, the curve missed the truth by more than 0.5 somewhere in 92 of 200 hospitals for IPCW and 50 of 200 for AIPCW, against 6 to 8 for CC and NE. Bias based on medians, which such outliers cannot drag, puts AIPCW best (0.019), then NE (0.029), IPCW (0.035) and CC (0.091). In C3 the wrong dropout model cannot produce small chances (lowest 0.30), so the weights stay moderate. This is the classic practical-positivity problem of weighting, and it is worse for the right dropout model than for the wrong one.
+**Diagnosis of the large errors in C2.** With the right dropout model, the smallest estimated chance of staying, at each patient's own follow-up time, was 0.00006 in the worst dataset; the median over datasets was 0.034. The weights (1 ÷ chance) then exceeded 10,000. At year 5, the curve missed the truth by more than 0.5 somewhere in 92 of 200 datasets for IPCW and 50 of 200 for AIPCW, against 6 to 8 for CC and NE. Bias based on medians, which such outliers cannot drag, puts AIPCW best (0.019), then NE (0.029), IPCW (0.035) and CC (0.091). In C3 the misspecified dropout model cannot produce small chances (lowest 0.30), so the weights stay moderate. This is the classic practical-positivity problem of weighting, and it is worse for the right dropout model than for the wrong one.
 
 **Two further points.**
-- NE does well in C2 and C3 (0.029), unlike in C1. In C2, NE's outcome-model errors in the two arms were both negative (−0.227 and −0.182 over 25 hospitals) and largely offset in the difference. This was not tested as the reason for its small bias. This is a property of the setting, not a merit of the method; C1 shows it failing.
+- NE does well in C2 and C3 (0.029), unlike in C1. In C2, NE's outcome-model errors in the two arms were both negative (−0.227 and −0.182 over 25 datasets) and largely offset in the difference. This was not tested as the reason for its small bias. This is a property of the setting, not a merit of the method; C1 shows it failing.
 - In C3, IPCW is only slightly worse than AIPCW (0.031 against 0.022 on average; 0.037 against 0.027 at year 5). The direction is as expected.
 
-**Change: weight truncation added as two extra estimators,** IPCW_t and AIPCW_t. The estimated chance of staying is never allowed below 0.05, so no weight exceeds 20. Truncation is the standard remedy, at the price of a little bias. The untruncated estimators are kept unchanged, so both are reported. The summary now also reports bias from medians and the number of hospitals whose curve misses by more than 0.5. The 200-hospital results without truncation moved to `results/archive/phase2_200_before_truncation/`, and their summary to `results/archive/summary_phase2_no_truncation.txt`. All four settings are rerun; with the same seeds, the untruncated estimators reproduce exactly.
+**Change: weight truncation added as two extra estimators,** IPCW_t and AIPCW_t. The estimated chance of staying is never allowed below 0.05, so no weight exceeds 20. Truncation is the standard remedy, at the price of a little bias. The untruncated estimators are kept unchanged, so both are reported. The summary now also reports bias from medians and the number of datasets whose curve misses by more than 0.5. The 200-dataset results without truncation moved to `results/archive/phase2_200_before_truncation/`, and their summary to `results/archive/summary_phase2_no_truncation.txt`. All four settings are rerun; with the same seeds, the untruncated estimators reproduce exactly.
 
 ### Phase 2 final runs with truncation (18:48 to 20:36)
 
-All four settings, 200 hospitals each, with IPCW_t and AIPCW_t added. The untruncated estimators reproduced the archived numbers exactly (same seeds), as expected. The runs took about 25 minutes per setting (21 s per hospital), longer than estimated, because the AIPCW status is now computed twice.
+All four settings, 200 datasets each, with IPCW_t and AIPCW_t added. The untruncated estimators reproduced the archived numbers exactly (same seeds), as expected. The runs took about 25 minutes per setting (21 s per dataset), longer than estimated, because the AIPCW status is now computed twice.
 
 **Key results at 5 years** (full tables in `reports/phase2_results.md`):
 - No dropout: all methods identical (bias 0.024).
 - Random dropout: NE fails (0.064, coverage 79%).
-- Dependent dropout: CC fails (0.093, coverage 68%). Untruncated IPCW and AIPCW have an absolute error above 0.5 in 92 and 50 of 200 hospitals; truncated in 83 and 27, against 0 or 1 with no dropout.
-- Wrong dropout model: AIPCW 0.027, IPCW 0.037; AIPCW coverage 80%.
+- Dependent dropout: CC fails (0.093, coverage 68%). Untruncated IPCW and AIPCW have an absolute error above 0.5 in 92 and 50 of 200 datasets; truncated in 83 and 27, against 0 or 1 with no dropout.
+- Misspecified dropout model: AIPCW 0.027, IPCW 0.037; AIPCW coverage 80%.
 
 **Why truncation did not cure it:** the dropout weight multiplies the trial-joining weight (which can exceed 100), so the combined weight stays in the thousands even with the dropout part capped at 20. Not yet tried: truncating the combined weight, or a higher floor. [Superseded 31 Oct: see reports/phase2_results.md]
 
 **AIPCW undercoverage in C3:** the sandwich treats helper models as known. With one helper model wrong, the estimate stays consistent but that variance formula is no longer valid. [Superseded 31 Oct: see reports/phase2_results.md]
 
-**Time to benefit:** even with no dropout, only 32% to 54% of hospitals put a profile's time to benefit within half a year of the truth. Medians run about half a year late, from smoothing. CC delays it by 1 to 1.5 years under dependent dropout; truncated AIPCW keeps the median on target. [Superseded 31 Oct: see reports/phase2_results.md]
+**Time to benefit:** even with no dropout, only 32% to 54% of datasets put a profile's time to benefit within half a year of the truth. Medians run about half a year late, from smoothing. CC delays it by 1 to 1.5 years under dependent dropout; truncated AIPCW keeps the median on target. [Superseded 31 Oct: see reports/phase2_results.md]
 
-**Gate 2:** passed for bias; not for stability under strong dependent dropout, and not for AIPCW intervals with a wrong dropout model. Both are known limits of weighting methods, reported as findings. Report: `reports/phase2_results.md`; lesson 10. [Superseded 8 November 2026: see the README status line.]
+**Gate 2:** passed for bias; not for stability under strong dependent dropout, and not for AIPCW intervals with a misspecified dropout model. Both are known limits of weighting methods, reported as findings. Report: `reports/phase2_results.md`; lesson 10. [Superseded 8 November 2026: see the README status line.]
 
 ### Note from reading Steingrimsson and Morrison (Stat Med 2020) and Dahabreh et al. (Stat Med 2020) (22 October, evening)
 
 - **Truncation changes the target.** Dahabreh, Robertson, Steingrimsson, Stuart and Hernán's tutorial warns that truncating extreme weights "may also help, but these strategies shift the causal estimand, which is often undesirable" (Stat Med 2020; arXiv v3, p. 16). So the small bias of IPCW_t and AIPCW_t in C2 is partly a change of target, not only a cure.
 - **Phase 2 is the combination that tutorial left as future work.** It says methods for right censoring can be combined with its methods "in a modular fashion", and that "Future work should assess the properties of such combined procedures" (p. 17).
 - **Candidate additions** from these papers were ranked in notes kept outside this repository:
-  - a Buckley–James version with no dropout weight;
+  - a Buckley-James version with no dropout weight;
   - a wrong-outcome-model setting C4;
   - weight diagnostics;
   - counterfactual Brier scores with dropout.
@@ -320,7 +320,7 @@ Planned and timed against the 17:30 shutdown: code by 08:30, runs by 12:30, writ
 
 **What it is.** [Superseded 31 Oct: see reports/phase2_results.md] No dropout weight at all. A trial patient whose status at t is known keeps it. A patient who dropped out before t gets the outcome model's chance of an event between leaving and t. In code it is `augmented_status()` with the chance of staying set to 1 for everyone (`use_dropout_model = FALSE`). With G ≡ 1 the compensator is zero, so only the observed status and the filled-in chance are left. Steingrimsson & Morrison (Stat Med 2020; arXiv:1904.10345v1, p. 7) show this is the doubly robust loss with G ≡ 1.
 
-**Why.** In C2, 92 (IPCW) and 50 (AIPCW) of 200 hospitals had an absolute error above 0.5. BJ keeps the trial-joining weight but drops the dropout weight. If it rarely has such errors, the dropout weight is needed for them.
+**Why.** In C2, 92 (IPCW) and 50 (AIPCW) of 200 datasets had an absolute error above 0.5. BJ keeps the trial-joining weight but drops the dropout weight. If it rarely has such errors, the dropout weight is needed for them.
 
 **Price.** BJ is right only if the outcome model is right.
 
@@ -329,17 +329,17 @@ Planned and timed against the 17:30 shutdown: code by 08:30, runs by 12:30, writ
 - With the true outcome model, the BJ status averages to the true risk; with an outcome model that ignores every characteristic, it does not.
 - With no dropout, the BJ curve equals the AIPCW curve exactly.
 
-### Step 13: setting C4, a wrong outcome model
+### Step 13: setting C4, a misspecified outcome model
 
-**What it is.** The C2 hospitals (same seeds), the right dropout model, and outcome models that leave out frailty: the Weibull models in each arm and the IPCW logistic models (`~ v + I(v^2) + male`). The Phase 1 helper models used by CC and NE are unchanged.
+**What it is.** The C2 datasets (same seeds), the right dropout model, and outcome models that leave out frailty: the Weibull models in each arm and the IPCW logistic models (`~ v + I(v^2) + male`). The Phase 1 helper models used by CC and NE are unchanged.
 
-**Why.** C3 tested a wrong dropout model with a right outcome model. C4 is the other half of the double-robustness test. Expected: BJ biased, IPCW and AIPCW not.
+**Why.** C3 tested a misspecified dropout model with a right outcome model. C4 is the other half of the double-robustness test. Expected: BJ biased, IPCW and AIPCW not.
 
-**Pilot (25 hospitals, 06:03 to 06:07).** The risk was that leaving out frailty biases BJ too little to see; the threshold set in advance was 0.02. At 5 years, BJ's bias was 0.066 with 72% coverage, and only 1 of 25 hospitals had an absolute error above 0.5. So C4 was kept as designed, with no stronger misspecification. The pilot's 25 hospitals are the first chunk of the full C4 run (same code and seeds).
+**Pilot (25 datasets, 06:03 to 06:07).** The risk was that leaving out frailty biases BJ too little to see; the threshold set in advance was 0.02. At 5 years, BJ's bias was 0.066 with 72% coverage, and only 1 of 25 datasets had an absolute error above 0.5. So C4 was kept as designed, with no stronger misspecification. The pilot's 25 datasets are the first chunk of the full C4 run (same code and seeds).
 
 ### Step 14: weight checks
 
-Recorded per hospital at 5 years, over all eligible patients (`weight_checks()` in `R/phase2_estimators.R`):
+Recorded per dataset at 5 years, over all eligible patients (`weight_checks()` in `R/phase2_estimators.R`):
 - the mean of the trial-joining weight S / P(trial), which should be close to 1 (Dahabreh et al., Stat Med 2020; arXiv v3, p. 16);
 - in each arm, the mean of the trial and arm weight, and of the combined weight (also divided by the chance of still being followed, untruncated), each close to 1;
 - in each arm, the largest combined weight, the share of the arm's total weight that it carries, and the effective sample size (sum of weights squared over sum of squared weights).
@@ -350,11 +350,11 @@ The summary script tests four rules, fixed before seeing the full results:
 - an effective sample size below 50 in an arm;
 - a trial-joining weight mean off 1 by more than 0.2.
 
-For each rule, it counts how many hospitals with an absolute error above 0.5 (somewhere at 5 years) it flags, and how many others.
+For each rule, it counts how many datasets with an absolute error above 0.5 (somewhere at 5 years) it flags, and how many others.
 
 ### Runs
 
-The 200-hospital results of 22 October moved to `results/archive/phase2_200_before_bj/`. All five settings were rerun at commit 2b38cab, 3 workers, starting 06:08. The six existing estimators use the same seeds and code paths, so they must reproduce the archived numbers exactly; this is checked below.
+The 200-dataset results of 22 October moved to `results/archive/phase2_200_before_bj/`. All five settings were rerun at commit 2b38cab, 3 workers, starting 06:08. The six existing estimators use the same seeds and code paths, so they must reproduce the archived numbers exactly; this is checked below.
 
 Commits after 2b38cab during the runs change only docs/ (checked with `git diff --stat 2b38cab -- R config scripts`, which is empty), so settings that started later may record a later commit hash with the same code.
 
@@ -367,9 +367,9 @@ Commits after 2b38cab during the runs change only docs/ (checked with `git diff 
 | Condition | Result |
 |---|---|
 | Existing estimators reproduce exactly | **Yes** |
-| BJ stable in C2 | **Yes.** 1 of 200 hospitals with an absolute error above 0.5, against 92 (IPCW) and 50 (AIPCW); bias 0.025 at 5 years. The dropout weight is needed for most of these errors. |
-| BJ biased in C4; IPCW and AIPCW not | **Yes for BJ** (0.064, coverage 76%). **IPCW and AIPCW: yes by medians** (0.030, 0.027), but averages are dragged by hospitals with an absolute error above 0.5 (90 and 73). |
-| A weight check flags the hospitals with an absolute error above 0.5 | **No.** Effective sample size below 50 catches 47 of 50 such AIPCW hospitals in C2 but flags 171 of 200. The combined-weight mean instead flags a wrong dropout model (187 of 200 in C3). |
+| BJ stable in C2 | **Yes.** 1 of 200 datasets with an absolute error above 0.5, against 92 (IPCW) and 50 (AIPCW); bias 0.025 at 5 years. The dropout weight is needed for most of these errors. |
+| BJ biased in C4; IPCW and AIPCW not | **Yes for BJ** (0.064, coverage 76%). **IPCW and AIPCW: yes by medians** (0.030, 0.027), but averages are dragged by datasets with an absolute error above 0.5 (90 and 73). |
+| A weight check flags the datasets with an absolute error above 0.5 | **No.** Effective sample size below 50 catches 47 of 50 such AIPCW datasets in C2 but flags 171 of 200. The combined-weight mean instead flags a misspecified dropout model (187 of 200 in C3). |
 
 **Unplanned finding.** [Superseded 31 Oct: see reports/phase2_results.md] BJ's intervals undercover even with the right outcome model: 72% in C2, 86% in C1. The likely reason is that filled-in values are less variable than real outcomes and the sandwich treats them as observed. Not tested; a bootstrap would.
 
@@ -385,7 +385,7 @@ The review of Phase 2 (Steps 2a and 2b, issue #1) found claims the numbers did n
 - `docs/lessons/10_phase2_results.md` and `11_which_model_to_trust.md`: the same corrections.
 - `docs/exploratory_prespecification.md`: Runs A, B and C, exploratory, with expected directions and a decision rule fixed before any full run.
 
-Full runs at commit `da5c483`, 3 workers, 200 hospitals, finished at 22:55. All 30 controls were exactly 0 and no hospital failed. Predictions: AIPCW and BJ in C5a held; BJ in C5b held; AIPCW and IPCW in C5b not determined; IPCW in C5a reported without a decision, as fixed in advance. No floor was chosen. The floor of 0.05 never applied in Run B. Results are in the section "Exploratory runs" of `reports/phase2_results.md`, tables in `reports/tables/15_*`, chunks in `results/exploratory/`, and the final smoke test in `results/exploratory_smoke_final/`.
+Full runs at commit `da5c483`, 3 workers, 200 datasets, finished at 22:55. All 30 controls were exactly 0 and no dataset failed. Predictions: AIPCW and BJ in C5a held; BJ in C5b held; AIPCW and IPCW in C5b not determined; IPCW in C5a reported without a decision, as fixed in advance. No floor was chosen. The floor of 0.05 never applied in Run B. Results are in the section "Exploratory runs" of `reports/phase2_results.md`, tables in `reports/tables/15_*`, chunks in `results/exploratory/`, and the final smoke test in `results/exploratory_smoke_final/`.
 
 Checked and accepted at commit `cfd8b88`, then merged into `main` without squashing on 1 November 2026. Lesson 12 added.
 
@@ -396,8 +396,8 @@ Checked and accepted at commit `cfd8b88`, then merged into `main` without squash
 - **Wording corrected** in the reports, lessons and this log: neutral wording, claims and numbers checked against the tables, and consistent terms (median bias, bias-eliminated coverage, nuisance models). No reported table or saved result changed. Entries above that the review superseded are marked inline.
 - **Printed slips corrected** against the saved tables: C1 IPCW coverage 92%, BJ in C1 85%, C2 AIPCW bias-eliminated coverage 93.1, SDs 0.149 and 0.173, lesson 7's −0.19, the reference-check figure (1.4 × 10⁻¹⁴ over 7 runs on 5 datasets), and the Phase 1 small-trial MCSE (0.017). A sentence that traced to no table (truncated AIPCW moved by at most 0.0011) was replaced by the traced value.
 - **Citations:** the arXiv version is now given with page citations of Dahabreh et al.; full references are in the README and the report. In `docs/exploratory_prespecification.md` only the citation changed (Pawel et al. 2023, with a reference added). The pre-specification keeps its original terms (for example "median-based bias" and "coverage of the median estimate") as a dated record of what was fixed before the runs.
-- **Safeguards in the summary scripts:** they stop if the number of hospitals is not as expected; the compensator integration check uses a relative error; figures use the Cairo PNG device. No output changed.
-- **Full reproduction on a second computer.** From a fresh clone at 3562ee7: the 75 tests pass; every summary script was rerun from the saved results and all 50 tables matched the committed ones exactly (largest numeric difference 0; only run-time and commit columns differ); `scripts/12_check_reproduction.R` matched 444,000 rows per setting with difference 0; `scripts/05_reference_check.R` matched the reference code to 1.42 × 10⁻¹⁴. Steps that skip existing output were refitted into empty folders and matched exactly. One chunk (25 or 50 hospitals) per run setting, 16 in all, was regenerated from its seeds and matched the saved chunk with difference 0. Redrawn figures differed only in anti-aliasing.
+- **Safeguards in the summary scripts:** they stop if the number of datasets is not as expected; the compensator integration check uses a relative error; figures use the Cairo PNG device. No output changed.
+- **Full reproduction on a second computer.** From a fresh clone at 3562ee7: the 75 tests pass; every summary script was rerun from the saved results and all 50 tables matched the committed ones exactly (largest numeric difference 0; only run-time and commit columns differ); `scripts/12_check_reproduction.R` matched 444,000 rows per setting with difference 0; `scripts/05_reference_check.R` matched the reference code to 1.42 × 10⁻¹⁴. Steps that skip existing output were refitted into empty folders and matched exactly. One chunk (25 or 50 datasets) per run setting, 16 in all, was regenerated from its seeds and matched the saved chunk with difference 0. Redrawn figures differed only in anti-aliasing.
 - **History rewritten before publication.** Private file paths and notes unrelated to this project were removed from every commit, and the author address was changed. Code, tables and saved results were not changed; every saved result file is byte-identical. Commit IDs recorded before this refer to the old history; `docs/commit_map.csv` maps them.
 
 ## 8 November 2026: recheck

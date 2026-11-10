@@ -21,7 +21,7 @@ Examples from those runs:
 
 - A floor of 0 changes nothing, so each floor scheme at 0 must return the plain IPCW and AIPCW.
 - A floor of 0.05 on G must return the truncated methods.
-- The reported analysis, sent through the new code, must return the saved rows at 200 hospitals.
+- The reported analysis, sent through the new code, must return the saved rows at 200 datasets.
 
 What a control shows is narrow. It shows the new path did not change the old answer. It does not show the old answer is right, and it says nothing about settings the old runs never used.
 
@@ -33,7 +33,7 @@ At v = 1 in C2, the median bias was close: -0.010 for the repository and -0.012 
 
 One replicate explains most of that gap. Replicate 161 gave -201.5 at v = 1. SD squares each distance from the mean, so a single value that far out dominates it. Dropping that replicate takes the script's SD to 1.70, and dropping replicates 161 and 4 takes it to 0.52.
 
-So SD is unreliable as a summary here. A number that one replicate of 200 can move this much tells you about that replicate, not the typical hospital. That is why the report leans on medians and on counts above 0.5.
+So SD is unreliable as a summary here. A number that one replicate of 200 can move this much tells you about that replicate, not the typical dataset. That is why the report leans on medians and on counts above 0.5.
 
 The two did not agree everywhere. Signed median bias at v = 2 was -0.021 for the repository and 0.031 for the script. That difference of 0.05 is not explained.
 
@@ -57,7 +57,7 @@ This is not validation. A method could be far from the truth and still score wel
 
 ## Runs A, B and C
 
-These came after the first results were seen, so they are exploratory. Each cell below is a count of hospitals of 200 with an absolute error above 0.5 at t = 5.
+These came after the first results were seen, so they are exploratory. Each cell below is a count of datasets of 200 with an absolute error above 0.5 at t = 5.
 
 **Run A: floors.** Reported, with no floor, C2 had 92 for IPCW and 50 for AIPCW.
 
@@ -71,7 +71,7 @@ The bound on the product cut large errors the most, and it had a cost. AIPCW's c
 
 **Run B: mild dropout.** 19.9% of trial patients dropped out, against 30% in C2. The floor of 0.05 never applied, so the truncated methods equal the plain ones exactly. Large errors fell but stayed: in C2m, 25 for IPCW and 14 for AIPCW. So an error above 0.5 does not need a dropout weight near the floor. This run does not separate the two weights.
 
-**Run C: wrong participation model.** In C5a only the participation model is wrong. In C5b the outcome model is wrong too. AIPCW's median bias stayed small in C5a (0.023), yet 23 hospitals remained above 0.5. A small median does not make an estimate stable.
+**Run C: wrong participation model.** In C5a only the participation model is wrong. In C5b the outcome model is wrong too. AIPCW's median bias stayed small in C5a (0.023), yet 23 datasets remained above 0.5. A small median does not make an estimate stable.
 
 ## Pre-specified predictions
 
@@ -106,7 +106,7 @@ The rule uses the change in median bias against C2 on the same seeds, its 95% in
 
 ## What "exploratory" lets you say
 
-You can say what was measured, on this design, and with what uncertainty: "In C2 at t = 5, the bound on the product at 0.10 left 2 of 200 hospitals above 0.5."
+You can say what was measured, on this design, and with what uncertainty: "In C2 at t = 5, the bound on the product at 0.10 left 2 of 200 datasets with an absolute error above 0.5."
 
 You cannot say a run confirms something, that a method or floor is best, or that a result holds beyond this design. Runs chosen after seeing results can suggest questions. They do not settle them.
 
@@ -123,6 +123,6 @@ You cannot say a run confirms something, that a method or floor is best, or that
 1. A control shows "largest difference 0". What does that show, and what does it not show?
 2. One replicate of 200 moved the script's SD from 1.70 to 14.34 at v = 1. Why can one value do that to SD and not to the median?
 3. CC in C2 has exact coverage of 68.1% and bias-eliminated coverage of 92.5%. BJ has 72.4% and 75.6%. What does each pair suggest, and why does neither validate the intervals?
-4. A floor cuts hospitals above 0.5 from 50 to 2 but coverage falls to 76.7%. Why is that a trade-off to describe and not a floor to choose?
+4. A floor cuts datasets with an absolute error above 0.5 from 50 to 2 but coverage falls to 76.7%. Why is that a trade-off to describe and not a floor to choose?
 5. A "biased" prediction gives a difference of 0.02 with an interval of -0.01 to 0.03. Is it held, failed or not determined under a margin of 0.01?
 6. Why does it matter that the rule was committed before the runs?

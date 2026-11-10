@@ -50,7 +50,7 @@ In real data we never know the true curve, so we cannot tell whether a method is
 
 ## What step 1 does
 
-- `generate.R` creates one hospital: 2,500 patients, who joins the trial, the coin toss, and the outcomes.
+- `generate.R` creates one dataset: 2,500 patients, who joins the trial, the coin toss, and the outcomes.
 - `truth.R` computes the two true curves exactly from the rules.
 - The tests check that about 20% join, that the coin gives about half treated, that trial patients are less frail, and that the exact curves agree with a brute-force count over two million simulated patients.
 

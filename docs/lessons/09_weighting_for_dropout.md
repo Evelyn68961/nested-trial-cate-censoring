@@ -33,7 +33,7 @@ So the method now has two double-robust layers:
 
 ## What the tests showed
 
-In a simulated hospital of 600,000 patients with the true nuisance-model values, among treated trial patients at year 3, the average augmented status matched the true risk within the test's limit of 3 Monte Carlo standard errors plus 0.002 (a fixed 0.01 until dropout was strengthened; `docs/LOG.md`):
+In a simulated dataset of 600,000 patients with the true nuisance-model values, among treated trial patients at year 3, the average augmented status matched the true risk within the test's limit of 3 Monte Carlo standard errors plus 0.002 (a fixed 0.01 until dropout was strengthened; `docs/LOG.md`):
 - with both nuisance models right;
 - with the outcome model replaced by one that ignores every patient characteristic;
 - with the dropout model replaced by one that gives everyone the same dropout rate.
@@ -46,10 +46,10 @@ Expected before the runs:
 
 | Setting | CC | NE | IPCW | AIPCW |
 |---|---|---|---|---|
-| C0 no dropout | right | right | right | right |
-| C1 random | biased | biased | right | right |
-| C2 dependent | biased | biased | right | right |
-| C3 dropout model wrong | biased | biased | biased | right (outcome model is right) |
+| C0 No dropout | right | right | right | right |
+| C1 Random dropout | biased | biased | right | right |
+| C2 Dependent dropout | biased | biased | right | right |
+| C3 Dropout model misspecified | biased | biased | biased | right (outcome model is right) |
 
 The runs test whether this holds with fitted models, not just in theory. The results go in report 10.
 

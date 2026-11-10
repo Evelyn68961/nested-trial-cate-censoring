@@ -33,13 +33,13 @@ The bandwidth is chosen by **leave-one-out cross-validation**. For each candidat
 
 Each estimate gets a 95% interval from the paper's "sandwich" formula. It measures how much the pseudo-outcomes scatter around the line inside the window. More scatter, or fewer patients in the window, gives a wider interval.
 
-One subtlety the paper points out: the interval is centred on a smoothed version of the true curve, not the exact curve. Smoothing always flattens peaks and valleys. With a small bandwidth the difference is tiny; with a large one it is not. In one hospital (scripts/04_check_curve.R, hospital seed 1; drawn outside the parallel runs, so not the same as stored hospital 1) the bandwidth was 2.0, half the whole range of v. At v = 2 the true curve is −0.085, but its smoothed version is only −0.032.
+One subtlety the paper points out: the interval is centred on a smoothed version of the true curve, not the exact curve. Smoothing always flattens peaks and valleys. With a small bandwidth the difference is tiny; with a large one it is not. In one dataset (scripts/04_check_curve.R, dataset seed 1; drawn outside the parallel runs, so not the same as stored dataset 1) the bandwidth was 2.0, half the whole range of v. At v = 2 the true curve is −0.085, but its smoothed version is only −0.032.
 
-## What one hospital looks like
+## What one dataset looks like
 
-`reports/figures/04_one_hospital_curve.png` shows one hospital. The estimated curve is much flatter than the true one: at v = 2 it says +0.025 when the truth is −0.085. The intervals are wide, and all 37 contain the truth.
+`reports/figures/04_one_hospital_curve.png` shows one dataset. The estimated curve is much flatter than the true one: at v = 2 it says +0.025 when the truth is −0.085. The intervals are wide, and all 37 contain the truth.
 
-This is not a fault in the code. With 500 trial patients, some carrying weights above 100, one hospital simply cannot pin down a profile-specific curve. The paper reports the same level of error for the same sizes. Whether the method is right on average is answered by running hundreds of hospitals (step 7).
+This is not a fault in the code. With 500 trial patients, some carrying weights above 100, one dataset simply cannot pin down a profile-specific curve. The paper reports the same level of error for the same sizes. Whether the method is right on average is answered by running hundreds of datasets (step 7).
 
 ## Why the bandwidth is often large
 
@@ -47,10 +47,10 @@ The pilot runs found that cross-validation often picks the widest window allowed
 
 ## Step 5: checking against someone else's code
 
-Sarah Robertson, Jon Steingrimsson and Issa Dahabreh published R code for a related pseudo-outcome estimator (2023). We ran their pseudo-outcome function on our hospitals, giving it our nuisance-model predictions. Their numbers and ours agree to 13 decimal places. So our step 3 is not just our own reading of the equation: it matches their published code.
+Sarah Robertson, Jon Steingrimsson and Issa Dahabreh published R code for a related pseudo-outcome estimator (2023). We ran their pseudo-outcome function on our datasets, giving it our nuisance-model predictions. Their numbers and ours agree to 13 decimal places. So our step 3 is not just our own reading of the equation: it matches their published code.
 
 ## Check yourself
 
 1. What does the bandwidth control, and what goes wrong if it is too small or too large?
-2. Why can one hospital's curve be far from the truth even though the method is correct?
+2. Why can one dataset's curve be far from the truth even though the method is correct?
 3. What did the comparison with Robertson's code prove, and what did it not prove? (Hint: it checked the pseudo-outcome, not the curve-drawing step.)

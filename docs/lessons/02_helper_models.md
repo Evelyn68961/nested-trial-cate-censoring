@@ -13,7 +13,7 @@ The paper's method starts by fitting three nuisance models. The paper calls them
 **1. Who joins the trial?**
 Fitted on all 2,500 patients, because we know who joined and who did not. It gives each patient a participation probability, based on frailty, v and sex.
 
-In one hospital the smallest participation probability was 0.007 (`reports/tables/02_helper_errors.csv`). That patient resembles almost nobody in the trial. Remember this patient: in lesson 3, patients like this get very large weights.
+In one dataset the smallest participation probability was 0.007 (`reports/tables/02_helper_errors.csv`). That patient resembles almost nobody in the trial. Remember this patient: in lesson 3, patients like this get very large weights.
 
 **2. Who got the drug inside the trial?**
 A coin decided, so the answer is 0.5 for everyone. The paper still fits a simple model for it, and so do we.
@@ -23,9 +23,9 @@ Fitted on trial patients only, separately in the treated and the untreated arm. 
 
 ## What the numbers show
 
-The outcome model alone already gives an estimate: average `g1 − g0` over the patients with a given v. We tried this for v near 2, in 200 simulated hospitals (scripts/02_check_helpers.R, seeds 1 to 200; printed, not saved in a table):
+The outcome model-based estimator already gives an estimate: average `g1 − g0` over the patients with a given v. We tried this for v near 2, in 200 simulated datasets (scripts/02_check_helpers.R, seeds 1 to 200; printed, not saved in a table):
 
-| Averaged over | Mean of 200 hospitals | Truth |
+| Averaged over | Mean of 200 datasets | Truth |
 |---|---|---|
 | All eligible patients | −0.088 | −0.085 (target) |
 | Trial patients only | −0.151 | −0.148 (trial) |
@@ -34,7 +34,7 @@ So when the outcome model is applied to the 2,000 non-trial patients, it lands o
 
 Two warnings come with it:
 
-- **One hospital is very noisy.** Single hospitals ranged from −0.24 to +0.05. The average over 200 is right; any one hospital can be far off.
+- **One dataset is very noisy.** Single datasets ranged from −0.24 to +0.05. The average over 200 is right; any one dataset can be far off.
 - **Predictions are worst for the patients least like the trial.** In `reports/figures/02_outcome_model_vs_truth.png`, the blue points (trial patients) sit close to the grey line, which marks a perfect prediction. The red points (non-trial patients) scatter much more. The model learned from healthier patients and is guessing about frail ones.
 
 The right panel shows the same with Super Learner, which was not told the right formula. In real data nobody knows the right formula, so this is the realistic case.
@@ -49,7 +49,7 @@ The outcome model gets the right answer only if the model itself is right. In re
 
 Why it matters: a flexible model can memorise noise in the patients it was trained on. Its predictions for those same patients would then look better than they really are. One of the tests flips the outcomes of the trial patients in group 1 and checks that group 1's predictions do not change. They do not.
 
-**Super Learner.** It tries three methods on the same data: ordinary logistic regression, a smooth-curve model (generalized additive model) and a random forest. It checks how well each predicts patients it was not trained on, and blends them according to that. The paper uses the same approach with a larger set of methods. It takes about 11 seconds per hospital, against 0.1 seconds for plain logistic regression. We will use plain logistic regression for fast checks and Super Learner for the main runs.
+**Super Learner.** It tries three methods on the same data: ordinary logistic regression, a smooth-curve model (generalized additive model) and a random forest. It checks how well each predicts patients it was not trained on, and blends them according to that. The paper uses the same approach with a larger set of methods. It takes about 11 seconds per dataset, against 0.1 seconds for plain logistic regression. We will use plain logistic regression for fast checks and Super Learner for the main runs.
 
 ## Check yourself
 

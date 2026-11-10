@@ -19,7 +19,7 @@ The paper assumes nobody leaves. CASS happened to have complete follow-up to 10 
 **Drop them (CC, complete case).** Analyse only patients whose status at year 3 is known.
 But the dropped patients were event-free for a while: they survived part of the time. Removing them removes event-free time, so the risk comes out too high. Under dependent dropout it gets worse in less predictable ways: the frail patients who left had more events ahead of them, which pulls the other way. The two can even cancel by chance, as one of our tests found.
 
-**Count them as event-free (NE, no event).** Pretend nothing happened after they left.
+**Count them as event-free (NE, treated as non-event).** Pretend nothing happened after they left.
 Some of them would have had the event. So the risk comes out too low, more so the longer the follow-up.
 
 Both distort the effect, not only the risk, whenever dropout differs between the arms. In C2 treated patients leave more often, so the two arms are distorted by different amounts.

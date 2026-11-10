@@ -5,10 +5,10 @@ Goes with the last section of `reports/phase2_results.md`.
 ## The short version
 
 - **There are two ways to deal with a patient who dropped out.** Reweight the patients who stayed (IPCW), or fill in the dropout's likely outcome from a model (Buckley-James, BJ). AIPCW does both.
-- **Filling in had far fewer large errors than reweighting.** Under dependent dropout, 1 hospital of 200 had an absolute error above 0.5 for BJ; 92 for IPCW and 50 for AIPCW. So most of the large errors in lesson 10 need the dropout weight. The two weights multiply, though, so this does not clear the trial-joining weight, and the source of the large errors is not established.
+- **Filling in had far fewer large errors than reweighting.** Under dependent dropout, 1 dataset of 200 had an absolute error above 0.5 for BJ; 92 for IPCW and 50 for AIPCW. So most of the large errors in lesson 10 need the dropout weight. The two weights multiply, though, so this does not clear the trial-joining weight, and the source of the large errors is not established.
 - **But filling in trusts the outcome model completely.** With an outcome model that leaves out frailty, BJ was biased, and it put time to benefit 1.5 years too early for one profile.
 - **AIPCW's median bias stayed small under each wrong model taken alone.** That is the direction the theory predicts: it is consistent if the outcome model is right, or if the participation and dropout models are both right. Large errors remained.
-- **A simple check of the weights flagged the one wrong dropout model tested. It also flagged many hospitals with the right one. No rule singled out the hospitals with large errors.**
+- **A simple check of the weights flagged the one misspecified dropout model tested. It also flagged many datasets with the right one. No rule singled out the datasets with large errors.**
 
 ## Filling in, in one example
 
@@ -20,7 +20,7 @@ A treated patient leaves the study at year 2, event-free. We want their status a
 
 BJ is AIPCW with G set to 1 for everyone. That is how it is coded (`use_dropout_model = FALSE` in `augmented_status()`).
 
-## Why BJ goes wrong with a wrong outcome model
+## Why BJ goes wrong with a misspecified outcome model
 
 A possible reason, not tested here: the patients who leave are mostly frail and treated. A model without frailty thinks they are average, so it fills in too low a risk for them. The treated arm then looks better than it is, and the curve crosses the benefit threshold too soon.
 
@@ -32,12 +32,12 @@ A filled-in 0.3 is less variable than the real 0 or 1 it replaces. The interval 
 
 Each kind of weight should average about 1 over all eligible patients.
 
-- **When the dropout model was wrong (C3),** the middle 80% of hospitals had combined-weight means of 0.71 to 0.79 in the treated arm and 0.80 to 0.88 in the untreated arm (from the saved rows). In C3 the rule flagged 187 of 200 hospitals, against 73 with the right dropout model (C2). One kind of wrong dropout model was tested, so this shows the check can flag that kind, not every kind.
-- **When a hospital's error was above 0.5,** no rule picked out those hospitals. The effective-sample-size rule caught most of them, but also flagged most of the others. It tells you the design is fragile, not which result is wrong.
+- **When the dropout model was misspecified (C3),** the middle 80% of datasets had combined-weight means of 0.71 to 0.79 in the treated arm and 0.80 to 0.88 in the untreated arm (from the saved rows). In C3 the rule flagged 187 of 200 datasets, against 73 with the right dropout model (C2). One kind of misspecified dropout model was tested, so this shows the check can flag that kind, not every kind.
+- **When a dataset's error was above 0.5,** no rule picked out those datasets. The effective-sample-size rule caught most of them, but also flagged most of the others. It tells you the design is fragile, not which result is wrong.
 
 ## Check yourself
 
 1. In one sentence, what does BJ do with a patient who dropped out?
 2. Why might BJ have so few large errors in C2, when IPCW has many, and what does that not prove?
-3. In C4, what is one possible reason a wrong outcome model made the drug's benefit appear sooner?
+3. In C4, what is one possible reason a misspecified outcome model made the drug's benefit appear sooner?
 4. The combined weights average 0.75. What does that suggest, and what does it not tell you?

@@ -1,6 +1,6 @@
 # Phase 2 results: dropout, and the effect traced over follow-up
 
-22 October 2026, 20:40; additions (Buckley-James, setting C4, weight checks) on 23 October, at the end. 200 simulated hospitals per setting (2,500 eligible patients, about 500 in the trial). Event times from Weibull models in which the benefit grows over time; follow-up 5 years; effect estimated at ten times from 0.5 to 5 years. Settings: `config/phase2.yaml`. Every decision and change: `docs/LOG.md`. Supersedes `reports/archive/phase2_preliminary.md`.
+22 October 2026, 20:40; additions (Buckley-James, setting C4, weight checks) on 23 October, at the end. 200 simulated datasets per setting (2,500 eligible patients, about 500 in the trial). Event times from Weibull models in which the benefit grows over time; follow-up 5 years; effect estimated at ten times from 0.5 to 5 years. Settings: `config/phase2.yaml`. Every decision and change: `docs/LOG.md`. Supersedes `reports/archive/phase2_preliminary.md`.
 
 **Corrected after review, 31 October 2026.** Every reported number stands; claims the numbers did not support have been corrected, and disclosures added at the end. Exploratory results were added the same day, at commit da5c483 (old ID; public 82c2078, see docs/commit_map.csv). Printed slips corrected on 5 November 2026; no table changed (`docs/LOG.md`).
 
@@ -11,25 +11,25 @@
 | C0 | none | 0% |
 | C1 | random, hazard 0.08 a year (about 7.7% leave each year) | 26% |
 | C2 | dependent: frail and treated patients leave sooner | 30% |
-| C3 | the same hospitals as C2, with a dropout model that leaves out frailty | 30% |
-| C4 | the same hospitals as C2, with the right dropout model and outcome models that leave out frailty | 30% |
+| C3 | the same datasets as C2, with a dropout model that leaves out frailty | 30% |
+| C4 | the same datasets as C2, with the right dropout model and outcome models that leave out frailty | 30% |
 
-Share of trial patients who dropped out: average over 200 hospitals.
+Share of trial patients who dropped out: average over 200 datasets.
 
-**Scores.** All at t = 5 unless stated. Integrated absolute bias: at each of the 37 values of v, the mean estimate over hospitals minus the true value, made absolute, then averaged over v. Median bias: the same with the median estimate over hospitals. Coverage: the share of 95% intervals that contain the true value, averaged over v. Bias-eliminated coverage: the share of intervals that contain the median estimate at that v, averaged over v; Morris et al. (2019) use the mean estimate. Hospitals above 0.5: hospitals with an absolute error above 0.5 at any v, at t = 5. Median interval width: at each v, the median width over hospitals, averaged over v.
+**Performance measures.** All at t = 5 unless stated. Integrated absolute bias: at each of the 37 values of v, the mean estimate over datasets minus the true value, made absolute, then averaged over v. Median bias: the same with the median estimate over datasets. Coverage: the share of 95% intervals that contain the true value, averaged over v. Bias-eliminated coverage: the share of intervals that contain the median estimate at that v, averaged over v; Morris et al. (2019) use the mean estimate. Datasets above 0.5: datasets with an absolute error above 0.5 at any v, at t = 5. Median interval width: at each v, the median width over datasets, averaged over v.
 
 ## Error at 5 years
 
-Integrated absolute bias against the true target curve; in brackets, the number of the 200 hospitals with an absolute error above 0.5 at any v at t = 5.
+Integrated absolute bias against the true target curve; in brackets, the number of the 200 datasets with an absolute error above 0.5 at any v at t = 5.
 
-| Method | C0 none | C1 random | C2 dependent | C3 dropout model wrong |
+| Method | C0 No dropout | C1 Random dropout | C2 Dependent dropout | C3 Dropout model misspecified |
 |---|---|---|---|---|
-| CC drop them | 0.024 (0) | 0.020 (7) | **0.093** (8) | **0.093** (8) |
-| NE count as event-free | 0.024 (0) | **0.064** (6) | 0.027 (6) | 0.027 (6) |
+| CC complete case | 0.024 (0) | 0.020 (7) | **0.093** (8) | **0.093** (8) |
+| NE treated as non-event | 0.024 (0) | **0.064** (6) | 0.027 (6) | 0.027 (6) |
 | IPCW | 0.024 (0) | 0.026 (10) | 0.116 (**92**) | 0.037 (30) |
 | AIPCW | 0.024 (1) | 0.022 (9) | 0.048 (**50**) | 0.027 (4) |
-| IPCW, truncated at 0.05 | 0.024 (0) | 0.026 (10) | 0.022 (**83**) | 0.037 (30) |
-| AIPCW, truncated at 0.05 | 0.024 (1) | 0.022 (9) | 0.029 (27) | 0.027 (4) |
+| Truncated IPCW, at 0.05 | 0.024 (0) | 0.026 (10) | 0.022 (**83**) | 0.037 (30) |
+| Truncated AIPCW, at 0.05 | 0.024 (1) | 0.022 (9) | 0.029 (27) | 0.027 (4) |
 
 Coverage of the exact target by the 95% intervals at 5 years (target 95%; with no dropout, the Phase 1 method gives about 89% here). These intervals are not validated for this estimator; see "Coverage against other targets" below.
 
@@ -39,48 +39,48 @@ Coverage of the exact target by the 95% intervals at 5 years (target 95%; with n
 | NE | 89% | **79%** | 92% | 92% |
 | IPCW | 89% | 92% | 97% | 95% |
 | AIPCW | 89% | 91% | 93% | **80%** |
-| IPCW, truncated | 89% | 92% | 97% | 95% |
-| AIPCW, truncated | 89% | 91% | 91% | **80%** |
+| Truncated IPCW | 89% | 92% | 97% | 95% |
+| Truncated AIPCW | 89% | 91% | 91% | **80%** |
 
 ## What the results show
 
-1. **No dropout: CC, NE, IPCW and truncated IPCW give the same answer, as they must, and the Weibull-based methods give almost the same.** AIPCW, truncated AIPCW and BJ use a different outcome model: 0.02428 against 0.02412 at 5 years, 1 hospital against 0 above 0.5, coverage 89.19% against 89.23%. The error (0.024) is close to the Phase 1 smoothing error.
-2. **Each simple fix fails somewhere.** Counting dropouts as event-free fails under random dropout (0.064, coverage 79%). Dropping them fails under dependent dropout (0.093, coverage 68%). Each looks fine in the other setting, for different reasons. In C2, NE's outcome-model errors in the two arms were both negative (-0.227 and -0.182 over 25 hospitals) and largely offset in the difference. This was not tested as the reason for its small bias. CC's small bias in C1 (0.020) does not mean CC is right there: under random dropout, each arm's risk from CC is biased upward (lesson 8), and the small bias comes from the arms offsetting, which was not examined. **One setting cannot tell you whether a simple fix is safe.**
-3. **AIPCW had the lowest median bias, but large errors remain in many hospitals.** Under dependent dropout with the right dropout model, some frail treated patients had an estimated probability of remaining uncensored (G) as low as 0.00006 (worst hospital; `docs/LOG.md`), so their weights exceeded 10,000 (largest recorded 1/G: 16,470). 92 (IPCW) and 50 (AIPCW) of 200 hospitals had an absolute error above 0.5, and the standard deviation across hospitals at 5 years was 1.65 and 1.27, against 0.09 with no dropout. The mean bias is imprecise at this number of hospitals (MCSE 0.079 and 0.049). Median bias, which a few hospitals cannot drag, was 0.035 and 0.019.
-4. **Truncation lowers the spread but does not remove the large errors.** With G held at 0.05 or above, the standard deviation fell (IPCW 1.65 to 0.31; AIPCW 1.27 to 0.17) and so did RMSE, and for AIPCW the 95% Monte Carlo interval of the difference excludes zero (-1.10, interval -1.81 to -0.29). The average bias also fell (IPCW 0.116 to 0.022; AIPCW 0.048 to 0.029), but for AIPCW the 95% Monte Carlo interval of the difference includes zero (-0.019, interval -0.184 to 0.007). 83 and 27 hospitals still had an absolute error above 0.5, against 0 or 1 with no dropout. A possible reason, not tested here: the dropout weight multiplies the trial-joining weight from Phase 1 (above 100 for some patients in one Phase 1 hospital; `docs/LOG.md`), so the combined weight can still be in the thousands.
-5. **AIPCW had fewer hospitals above 0.5 than IPCW under dependent dropout, not in every setting.** C2: 50 against 92; C3: 4 against 30; C4: 73 against 90. C1: 9 against 10. C0: 1 against 0, so AIPCW was not better there. The 95% Monte Carlo interval of the RMSE difference excludes zero in C3 and C4 but includes zero in C2 (0.38 in IPCW's disfavour, interval -0.77 to 1.37). For bias, the interval of the IPCW against AIPCW difference includes zero in C2, C3 and C4.
-6. **With a wrong dropout model (C3), AIPCW's bias stayed low (0.027, near the C0 level); IPCW's was 0.037.** This is the direction the theory predicts, but the 95% Monte Carlo interval of the difference includes zero (0.010, interval -0.006 to 0.024).
+1. **No dropout: CC, NE, IPCW and truncated IPCW give the same answer, as they must, and the Weibull-based methods give almost the same.** AIPCW, truncated AIPCW and BJ use a different outcome model: 0.02428 against 0.02412 at 5 years, 1 dataset against 0 above 0.5, coverage 89.19% against 89.23%. The error (0.024) is close to the Phase 1 smoothing error.
+2. **Complete case and treated as non-event each fail somewhere.** Counting dropouts as event-free fails under random dropout (0.064, coverage 79%). Dropping them fails under dependent dropout (0.093, coverage 68%). Each looks fine in the other setting, for different reasons. In C2, NE's outcome-model errors in the two arms were both negative (-0.227 and -0.182 over 25 datasets) and largely offset in the difference. This was not tested as the reason for its small bias. CC's small bias in C1 (0.020) does not mean CC is right there: under random dropout, each arm's risk from CC is biased upward (lesson 8), and the small bias comes from the arms offsetting, which was not examined. **One setting cannot tell you whether complete case or treated as non-event is safe.**
+3. **AIPCW had the lowest median bias, but large errors remain in many datasets.** Under dependent dropout with the right dropout model, some frail treated patients had an estimated probability of remaining uncensored (G) as low as 0.00006 (worst dataset; `docs/LOG.md`), so their weights exceeded 10,000 (largest recorded 1/G: 16,470). 92 (IPCW) and 50 (AIPCW) of 200 datasets had an absolute error above 0.5, and the standard deviation across datasets at 5 years was 1.65 and 1.27, against 0.09 with no dropout. The mean bias is imprecise at this number of datasets (MCSE 0.079 and 0.049). Median bias, which a few datasets cannot drag, was 0.035 and 0.019.
+4. **Truncation lowers the spread but does not remove the large errors.** With G held at 0.05 or above, the standard deviation fell (IPCW 1.65 to 0.31; AIPCW 1.27 to 0.17) and so did RMSE, and for AIPCW the 95% Monte Carlo interval of the difference excludes zero (-1.10, interval -1.81 to -0.29). The average bias also fell (IPCW 0.116 to 0.022; AIPCW 0.048 to 0.029), but for AIPCW the 95% Monte Carlo interval of the difference includes zero (-0.019, interval -0.184 to 0.007). 83 and 27 datasets still had an absolute error above 0.5, against 0 or 1 with no dropout. A possible reason, not tested here: the dropout weight multiplies the trial-joining weight from Phase 1 (above 100 for some patients in one Phase 1 dataset; `docs/LOG.md`), so the combined weight can still be in the thousands.
+5. **AIPCW had fewer datasets with an absolute error above 0.5 than IPCW under dependent dropout, not in every setting.** C2: 50 against 92; C3: 4 against 30; C4: 73 against 90. C1: 9 against 10. C0: 1 against 0, so AIPCW was not better there. The 95% Monte Carlo interval of the RMSE difference excludes zero in C3 and C4 but includes zero in C2 (0.38 in IPCW's disfavour, interval -0.77 to 1.37). For bias, the interval of the IPCW against AIPCW difference includes zero in C2, C3 and C4.
+6. **With a misspecified dropout model (C3), AIPCW's bias stayed low (0.027, near the C0 level); IPCW's was 0.037.** This is the direction the theory predicts, but the 95% Monte Carlo interval of the difference includes zero (0.010, interval -0.006 to 0.024).
 7. **AIPCW's intervals undercover when the dropout model is wrong (80%).** Bias does not account for most of this: bias-eliminated coverage (Morris et al. 2019), centred on the median estimate, which removes bias by construction, is 84.0%, against 92.5% for the same method in C0. Why the intervals are too narrow is not established. The sandwich intervals treat the nuisance models as known, which is one candidate.
 
 ## Time to benefit for each profile
 
 The first time at which the drug lowers the risk by at least 5 points (δ = 0.05), on the half-year grid. True values: 3.5 years for v = 1, 2.0 for v = 2, 2.5 for v = 3.
 
-| Profile | True | C0 truncated AIPCW, median | Share of hospitals within half a year | C2 CC median | C2 truncated AIPCW median |
+| Profile | True | C0 truncated AIPCW, median | Share of datasets within half a year | C2 CC median | C2 truncated AIPCW median |
 |---|---|---|---|---|---|
 | v = 1 | 3.5 | 3.0 | 32% | 4.5 | 3.0 |
 | v = 2 | 2.0 | 2.5 | 54% | 3.0 | 2.0 |
 | v = 3 | 2.5 | 3.0 | 46% | 4.0 | 2.5 |
 
-- **Even with no dropout, one trial of 500 pins down a profile's time to benefit only roughly.** About a third to a half of hospitals land within half a year of the truth. The direction depends on the profile and method. At v = 1, the C0 medians are 3.5 for CC, NE and IPCW, on target, and 3.0 for AIPCW, early. At v = 2 and 3, they are half a year late for every method.
+- **Even with no dropout, one trial of 500 pins down a profile's time to benefit only roughly.** About a third to a half of datasets land within half a year of the truth. The direction depends on the profile and method. At v = 1, the C0 medians are 3.5 for CC, NE and IPCW, on target, and 3.0 for AIPCW, early. At v = 2 and 3, they are half a year late for every method.
 - **Dropping dropouts delays time to benefit.** Under dependent dropout, CC's median time to benefit was 0.5 to 1.0 years later than with no dropout, and 1.0 to 1.5 years later than the truth. Truncated AIPCW's median is on target at v = 2 and 3, and half a year early at v = 1.
-- Under dependent dropout, no event, IPCW and truncated IPCW put v = 1 a year early (median 2.5 against 3.5). With a wrong outcome model, AIPCW did the same.
+- Under dependent dropout, treated as non-event, IPCW and truncated IPCW put v = 1 a year early (median 2.5 against 3.5). With a misspecified outcome model, AIPCW did the same.
 
 ## Gate 2
 
 | Condition | Result |
 |---|---|
 | With no dropout, all methods agree | **Yes.** CC, NE, IPCW and truncated IPCW identical; the Weibull-based methods nearly so; bias 0.022 averaged over time, coverage 90% |
-| Weighted methods have small bias in C1 and C2 | **C1 yes.** C2 yes for the median; the mean is imprecise, and **27 to 92 hospitals have an absolute error above 0.5** |
+| Weighted methods have small bias in C1 and C2 | **C1 yes.** C2 yes for the median; the mean is imprecise, and **27 to 92 datasets have an absolute error above 0.5** |
 | AIPCW holds in C3 while IPCW does not | **Partly.** AIPCW 0.027, IPCW 0.037, the 95% Monte Carlo interval of the difference includes zero; AIPCW intervals undercover (80%) |
 
-**Gate 2: the first two conditions were met for median bias; the third (AIPCW holds with a wrong dropout model while IPCW does not) was met only partly; stability and intervals failed.** The review found no coding error that changes these conclusions (Step 2a). They are consistent with known limits of weighting methods under strong, selective dropout.
+**Gate 2: the first two conditions were met for median bias; the third (AIPCW holds with a misspecified dropout model while IPCW does not) was met only partly; stability and intervals failed.** The review found no coding error that changes these conclusions (Step 2a). They are consistent with known limits of weighting methods under strong, selective dropout.
 
 ## What these results mean for the method
 
 The estimator of Wen, Dahabreh and Chiu can be extended to censored outcomes and traced over follow-up by adding a dropout weight (or the augmented version) inside its pseudo-outcome. In this simulation, median bias at 5 years was 0.019 for AIPCW against 0.091 for CC in C2, and 0.025 for AIPCW against 0.067 for NE in C1. NE in C2 (0.029) and CC in C1 (0.022) were not worse by this measure. We did not find a paper with all of these elements. Two problems appear that the no-dropout setting hides:
 
-- The trial-joining weight and the dropout weight multiply, so practical positivity may fail sooner. The source of the large errors is not established. In C2 at t = 5, against 50 of 200 hospitals with an absolute error above 0.5 for AIPCW, the exploratory runs measured the following. BJ, without the dropout weight, has 1 hospital above 0.5. For AIPCW, a floor of 0.10 on p alone leaves 29, omitting frailty from the participation model leaves 23, and the bound on the product at 0.10 leaves 2. These results are exploratory, and they involve both weights without separating them.
+- The trial-joining weight and the dropout weight multiply, so practical positivity may fail sooner. The source of the large errors is not established. In C2 at t = 5, against 50 of 200 datasets with an absolute error above 0.5 for AIPCW, the exploratory runs measured the following. BJ, without the dropout weight, has 1 dataset with an absolute error above 0.5. For AIPCW, a floor of 0.10 on p alone leaves 29, omitting frailty from the participation model leaves 23, and the bound on the product at 0.10 leaves 2. These results are exploratory, and they involve both weights without separating them.
 - The sandwich intervals are not validated for this estimator, and they undercover in several settings.
 
 Both are open questions: how to stabilise the combined weights, and how to build intervals that account for estimated dropout weights.
@@ -91,41 +91,41 @@ Both are open questions: how to stabilise the combined weights, and how to build
 - The nuisance models are parametric Weibull and logistic regressions; the Super Learner was not used in Phase 2.
 - The reported tables use one truncation level, 0.05; a range was run later as exploratory (Run A). Truncation shifts the estimand (Dahabreh et al., Stat Med 2020; arXiv v3, p. 16), so the truncated methods' small bias is partly a change of target. In Run A, bias is still measured against the original target.
 - Time to benefit is read on a half-year grid.
-- One bandwidth per estimator per hospital, chosen by cross-validation at 5 years from a grid of 7 values (0.4, 0.6, 0.8, 1.0, 1.3, 1.6, 2.0) and used at every time (`docs/LOG.md`).
-- 200 hospitals per setting: bootstrap Monte Carlo error on integrated bias at 5 years is 0.003 to 0.005 for most methods, but 0.007 to 0.010 for the truncated methods in C2 and C4, and 0.049 to 0.079 for untruncated IPCW and AIPCW there (`reports/tables/13_phase2_precision.csv`). The 95% Monte Carlo interval of the difference includes zero for: IPCW against AIPCW in C2, C3 and C4; truncated AIPCW against AIPCW in C2; AIPCW against BJ in C2 and C4.
+- One bandwidth per estimator per dataset, chosen by cross-validation at 5 years from a grid of 7 values (0.4, 0.6, 0.8, 1.0, 1.3, 1.6, 2.0) and used at every time (`docs/LOG.md`).
+- 200 datasets per setting: bootstrap Monte Carlo error on integrated bias at 5 years is 0.003 to 0.005 for most methods, but 0.007 to 0.010 for the truncated methods in C2 and C4, and 0.049 to 0.079 for untruncated IPCW and AIPCW there (`reports/tables/13_phase2_precision.csv`). The 95% Monte Carlo interval of the difference includes zero for: IPCW against AIPCW in C2, C3 and C4; truncated AIPCW against AIPCW in C2; AIPCW against BJ in C2 and C4.
 
-## Additions of 23 October: where the instability comes from, and a wrong outcome model
+## Additions of 23 October: where the instability comes from, and a misspecified outcome model
 
-BJ and the weight checks come from Steingrimsson and Morrison (Stat Med 2020) and Dahabreh et al. (Stat Med 2020); C4 completes the double-robustness test. All three were run on the same 200 hospitals per setting. The six methods above reproduced the 22 October numbers exactly (largest difference 0, `scripts/12_check_reproduction.R`), so the tables above stand. Full output: `results/summary_phase2_20261023.txt`.
+BJ and the weight checks come from Steingrimsson and Morrison (Stat Med 2020) and Dahabreh et al. (Stat Med 2020); C4 completes the double-robustness test. All three were run on the same 200 datasets per setting. The six methods above reproduced the 22 October numbers exactly (largest difference 0, `scripts/12_check_reproduction.R`), so the tables above stand. Full output: `results/summary_phase2_20261023.txt`.
 
 - **BJ (Buckley-James):** no dropout weight. Each dropout's status is filled in with the outcome model's probability of an event after leaving. Right only if the outcome model is right.
-- **C4:** the C2 hospitals, with the right dropout model and outcome models that leave out frailty.
-- **Weight checks:** for each hospital, the mean of the weights (which should be close to 1), the largest weight's share, and the effective sample size.
+- **C4:** the C2 datasets, with the right dropout model and outcome models that leave out frailty.
+- **Weight checks:** for each dataset, the mean of the weights (which should be close to 1), the largest weight's share, and the effective sample size.
 
 ### Error and coverage at 5 years
 
-Integrated absolute bias, (hospitals with an absolute error above 0.5), and coverage. In brackets after the bias: the bias from medians, which a few hospitals cannot drag.
+Integrated absolute bias, (datasets with an absolute error above 0.5), and coverage. In brackets after the bias: the bias from medians, which a few datasets cannot drag.
 
-| Method | C2 dependent | C3 dropout model wrong | C4 outcome model wrong |
+| Method | C2 Dependent dropout | C3 Dropout model misspecified | C4 Outcome model misspecified |
 |---|---|---|---|
 | IPCW | 0.116 [0.035] (92), 97% | 0.037 [0.030] (30), 95% | 0.112 [0.030] (90), 97% |
 | AIPCW | 0.048 [0.019] (50), 93% | 0.027 [0.029] (4), 80% | 0.065 [0.027] (73), 95% |
-| AIPCW, truncated | 0.029 [0.024] (27), 91% | 0.027 [0.029] (4), 80% | 0.019 [0.026] (55), 95% |
+| Truncated AIPCW | 0.029 [0.024] (27), 91% | 0.027 [0.029] (4), 80% | 0.019 [0.026] (55), 95% |
 | **BJ** | **0.025** [0.026] (**1**), **72%** | 0.025 [0.026] (1), 72% | **0.064** [0.066] (4), **76%** |
 
-BJ in C0: identical to AIPCW (0.024, 89%), as it must be. In C1: 0.021, 4 hospitals above 0.5, coverage 85%. BJ gives the same answer in C2 and C3 because it never uses the dropout model.
+BJ in C0: identical to AIPCW (0.024, 89%), as it must be. In C1: 0.021, 4 datasets with an absolute error above 0.5, coverage 85%. BJ gives the same answer in C2 and C3 because it never uses the dropout model.
 
 ### What the additions show
 
-1. **Removing the dropout weight removes most of the large errors.** BJ keeps the trial-joining weight and drops the dropout weight; 1 of 200 hospitals had an absolute error above 0.5 in C2, against 92 for IPCW and 50 for AIPCW, and its standard deviation was 0.09 against 1.65 and 1.27. This shows the dropout weight is needed for most of them. It does not show the trial-joining weight plays no part, since the two multiply. The trial-joining weight's mean stayed between 0.96 and 1.06 in 194 of 200 hospitals (97%; from the saved rows in `results/phase2/C2`; not in a table).
+1. **Removing the dropout weight removes most of the large errors.** BJ keeps the trial-joining weight and drops the dropout weight; 1 of 200 datasets had an absolute error above 0.5 in C2, against 92 for IPCW and 50 for AIPCW, and its standard deviation was 0.09 against 1.65 and 1.27. This shows the dropout weight is needed for most of them. It does not show the trial-joining weight plays no part, since the two multiply. The trial-joining weight's mean stayed between 0.96 and 1.06 in 194 of 200 datasets (97%; from the saved rows in `results/phase2/C2`; not in a table).
 2. **BJ is biased when the outcome model is wrong** (C4: 0.064 against 0.025 with the right model), and the bias moves time to benefit: for v = 1, the median estimate is 2.0 years against a true 3.5. A possible reason, not tested here: the wrong model underestimates the risk of the frail patients who leave, most of whom were treated, so the drug looks better sooner.
-3. **IPCW and AIPCW have small median bias in C4** (0.030 and 0.027), as the theory predicts. But 90 and 73 hospitals had an absolute error above 0.5, and the mean bias is imprecise. AIPCW had more such hospitals in C4 (73) than in C2 (50). A possible reason, not tested here: with a wrong outcome model, the augmentation term cancels less of the weights' noise.
+3. **IPCW and AIPCW have small median bias in C4** (0.030 and 0.027), as the theory predicts. But 90 and 73 datasets had an absolute error above 0.5, and the mean bias is imprecise. AIPCW had more such datasets in C4 (73) than in C2 (50). A possible reason, not tested here: with a misspecified outcome model, the augmentation term cancels less of the weights' noise.
 4. **BJ's intervals are too narrow even with the right outcome model** (72% coverage in C2). Bias does not account for most of this: bias-eliminated coverage is 75.6%, against about 92.5% in C0. Why the intervals are too narrow is not established. One candidate: the filled-in probability replaces an unknown 0 or 1, and the sandwich formula treats it as observed.
 5. **So there is a trade-off, and no method wins every setting.** BJ has few large errors but relies on the outcome model, and its intervals undercover. **AIPCW as coded is consistent if the outcome model is right, or if participation and dropout are both right.** IPCW needs dropout right and either participation or its own outcome model right. This is the theory. IPCW's logistic outcome model is never exactly right here (see Disclosures), so only the participation branch was tested. BJ needs the outcome model right. AIPCW's errors are large when weights are extreme. Truncated AIPCW had the smallest average error in C4 (0.019), at the cost of a shifted target; for bias, the 95% Monte Carlo interval of the difference includes zero for truncated AIPCW against AIPCW in C2, and for AIPCW against BJ in C2 and C4.
 
-### Do the weight checks flag the hospitals with large errors?
+### Do the weight checks flag the datasets with large errors?
 
-Rules fixed before the results were seen. Counts out of 200 hospitals, for AIPCW (hospitals with an absolute error above 0.5: 50 in C2, 4 in C3, 73 in C4):
+Rules fixed before the results were seen. Counts out of 200 datasets, for AIPCW (datasets with an absolute error above 0.5: 50 in C2, 4 in C3, 73 in C4):
 
 | Rule | C2: flagged / above 0.5 caught | C3: flagged / above 0.5 caught | C4: flagged / above 0.5 caught |
 |---|---|---|---|
@@ -134,14 +134,14 @@ Rules fixed before the results were seen. Counts out of 200 hospitals, for AIPCW
 | Effective sample size below 50 in an arm | 171 / 47 | 0 / 0 | 171 / 68 |
 | Trial-joining weight mean off 1 by more than 0.2 | 0 / 0 | 0 / 0 | 0 / 0 |
 
-- **No rule picks out the hospitals with large errors.** The effective-sample-size rule catches most of them (47 of 50), but flags 171 of 200 hospitals. It says "this design is fragile", not "this hospital's curve is wrong".
-- **The mean-weight check flagged the wrong dropout model in this design.** In C3, the middle 80% of hospitals had combined-weight means of 0.71 to 0.79 in the treated arm and 0.80 to 0.88 in the untreated arm (from the saved rows in `results/phase2/`; not in a table). In C3 the rule flagged 187 of 200 hospitals, against 73 with the right dropout model (C2), where the medians were 0.95 and 0.99. One kind of wrong dropout model was tested. This is a check of the dropout model, not of stability.
+- **No rule picks out the datasets with large errors.** The effective-sample-size rule catches most of them (47 of 50), but flags 171 of 200 datasets. It says "this design is fragile", not "this dataset's curve is wrong".
+- **The mean-weight check flagged the misspecified dropout model in this design.** In C3, the middle 80% of datasets had combined-weight means of 0.71 to 0.79 in the treated arm and 0.80 to 0.88 in the untreated arm (from the saved rows in `results/phase2/`; not in a table). In C3 the rule flagged 187 of 200 datasets, against 73 with the right dropout model (C2), where the medians were 0.95 and 0.99. One kind of misspecified dropout model was tested. This is a check of the dropout model, not of stability.
 - **The trial-joining weight never failed a check.** The check looks at its mean, so this does not rule out a part for it in the large errors.
 
 ### What this adds to the open questions
 
 - The large errors under dependent dropout mostly disappear without the dropout weight. Methods that avoid it (BJ) have few large errors but lean entirely on the outcome model. How to choose between them, or combine them, is open.
-- A simple check (the mean of the combined weights) flagged the wrong dropout model tested here in 187 of 200 hospitals, and 73 with the right one; no simple check identified the hospitals with an absolute error above 0.5.
+- A simple check (the mean of the combined weights) flagged the misspecified dropout model tested here in 187 of 200 datasets, and 73 with the right one; no simple check identified the datasets with an absolute error above 0.5.
 
 ### Limits of the additions
 
@@ -151,7 +151,7 @@ Rules fixed before the results were seen. Counts out of 200 hospitals, for AIPCW
 
 ## Corrections, disclosures and checks after review
 
-### Standard deviation across hospitals at 5 years
+### Standard deviation across datasets at 5 years
 
 Averaged over the v grid, from saved rows (`reports/tables/15_sd_at_t5.csv`).
 
@@ -161,27 +161,27 @@ Averaged over the v grid, from saved rows (`reports/tables/15_sd_at_t5.csv`).
 | NE | 0.087 | 0.098 | 0.097 | 0.097 | 0.097 |
 | IPCW | 0.087 | 0.115 | 1.651 | 0.149 | 1.645 |
 | AIPCW | 0.087 | 0.102 | 1.274 | 0.094 | 1.174 |
-| IPCW, truncated | 0.087 | 0.115 | 0.315 | 0.149 | 0.301 |
-| AIPCW, truncated | 0.087 | 0.102 | 0.173 | 0.094 | 0.249 |
+| Truncated IPCW | 0.087 | 0.115 | 0.315 | 0.149 | 0.301 |
+| Truncated AIPCW | 0.087 | 0.102 | 0.173 | 0.094 | 0.249 |
 | BJ | 0.087 | 0.090 | 0.089 | 0.089 | 0.094 |
 
 ### Disclosures
 
-- **Dropout was strengthened after first results.** The dependent setting went from (0.06, 0.7, 0.6) to (0.10, 1.5, 1.0) on 22 October, because the first setting was too mild to expose a wrong dropout model (`docs/LOG.md`).
+- **Dropout was strengthened after first results.** The dependent setting went from (0.06, 0.7, 0.6) to (0.10, 1.5, 1.0) on 22 October, because the first setting was too mild to expose a misspecified dropout model (`docs/LOG.md`).
 - **δ = 0.05 departs from the plan,** which set δ = 0.01 and 0.02 for time to benefit.
-- **The compensator is a 30-step midpoint rule.** Going to 3,000 steps in C2 and C4 changed AIPCW only slightly. At 5 years in C2, RMSE moved from 1.272 to 1.264 (difference -0.0079, interval -0.0153 to 0.0004) and coverage from 92.65% to 92.64%. The count above 0.5 and time to benefit did not change. BJ did not move; truncated AIPCW's bias and RMSE moved by less than 0.00001 (`reports/tables/14_checks_paired.csv`). For the 20 patients with the largest 1/G in the C2 hospital with the smallest G (seed 145), 3,000 steps differ from stats::integrate by at most 0.0014, for the patient with 1/G = 16,469.6 (3.4 × 10⁻⁷ relative; `reports/tables/14_compensator_integrate_check.csv`). In the hospitals with the largest change, one patient accounts for 96 to 99.96% of it.
+- **The compensator is a 30-step midpoint rule.** Going to 3,000 steps in C2 and C4 changed AIPCW only slightly. At 5 years in C2, RMSE moved from 1.272 to 1.264 (difference -0.0079, interval -0.0153 to 0.0004) and coverage from 92.65% to 92.64%. The count above 0.5 and time to benefit did not change. BJ did not move; truncated AIPCW's bias and RMSE moved by less than 0.00001 (`reports/tables/14_checks_paired.csv`). For the 20 patients with the largest 1/G in the C2 dataset with the smallest G (seed 145), 3,000 steps differ from stats::integrate by at most 0.0014, for the patient with 1/G = 16,469.6 (3.4 × 10⁻⁷ relative; `reports/tables/14_compensator_integrate_check.csv`). In the datasets with the largest change, one patient accounts for 96 to 99.96% of it.
 - **Run A's bound on the product uses two estimates of p.** IPCW's outcome model is floored with the in-sample p of its training folds, and the pseudo-outcome with the cross-fitted p (`scripts/15_common.R`).
 - **Seed 145, not examined.** The same patient (1/G = 16,469.6) has a 30-step compensator error (against 3,000 steps) of 14.08 in C2 and 1.21 in C4. G is the same in both, so the difference comes from the outcome-model term; how was not examined. (`reports/tables/14_compensator_patients_C2.csv`, `_C4.csv`, `14_compensator_slope.csv`)
 - **CC and NE keep frailty in C4,** so their C4 rows repeat C2. The C3 and C4 rows for CC and NE carry no wrong model, and neither do BJ's C3 rows.
 - **CC refits the trial-joining model on the reduced data,** so its p_join is P(S = 1, status known | X). Taking both models from the full cohort does not repair it: at 5 years in C2, bias falls from 0.093 to 0.084, but coverage falls from 68.1% to 50.6%. Reported CC is unchanged.
-- **IPCW's outcome model is logistic, while the generator has a complementary log-log form.** Over 25 hospitals at 5 years, logistic RMSE exceeded Weibull RMSE on average in every row, by 0.011 in the treated arm (interval 0.006 to 0.016) and 0.008 in the untreated arm (0.004 to 0.012) in C0, logistic worse in 19 of 25 hospitals in each, and for IPCW in C2 by 0.054 in the treated arm (0.041 to 0.067) and 0.013 in the untreated arm (0.006 to 0.020) (`reports/tables/14_helper_specification_paired.csv`). About half of CC's and NE's extra error in C2 comes from their mean errors (25 hospitals); the link was not separated from the rest.
-- **Run sizes differ:** Phase 1 used 500 hospitals with a Super Learner, its 5% trial setting 50 hospitals (preliminary), and Phase 2 200 hospitals with parametric models. These are not directly comparable.
-- **Warnings.** The original runs suppressed warnings. Counted later, over 200 hospitals, C2 and C4 each gave 246 "fitted probabilities 0 or 1" (77 hospitals) and 4 "did not converge" (3 hospitals), all from logistic fits. The exploratory control runs attribute all 250 in each setting: 123 to CC's fits and 127 to NE's. The code also suppresses warnings in IPCW's outcome fits, which that count did not include; see "Warnings by fit" below.
+- **IPCW's outcome model is logistic, while the generator has a complementary log-log form.** Over 25 datasets at 5 years, logistic RMSE exceeded Weibull RMSE on average in every row, by 0.011 in the treated arm (interval 0.006 to 0.016) and 0.008 in the untreated arm (0.004 to 0.012) in C0, logistic worse in 19 of 25 datasets in each, and for IPCW in C2 by 0.054 in the treated arm (0.041 to 0.067) and 0.013 in the untreated arm (0.006 to 0.020) (`reports/tables/14_helper_specification_paired.csv`). About half of CC's and NE's extra error in C2 comes from their mean errors (25 datasets); the link was not separated from the rest.
+- **Run sizes differ:** Phase 1 used 500 datasets with a Super Learner, its 5% trial setting 50 datasets (preliminary), and Phase 2 200 datasets with parametric models. These are not directly comparable.
+- **Warnings.** The original runs suppressed warnings. Counted later, over 200 datasets, C2 and C4 each gave 246 "fitted probabilities 0 or 1" (77 datasets) and 4 "did not converge" (3 datasets), all from logistic fits. The exploratory control runs attribute all 250 in each setting: 123 to CC's fits and 127 to NE's. The code also suppresses warnings in IPCW's outcome fits, which that count did not include; see "Warnings by fit" below.
 - **The original tables give coverage of the exact target only.** Coverage of the smoothed and median targets is added below.
 
 ### Coverage against other targets
 
-At 5 years, all from saved rows, MCSE about 0.5 to 1.9. Exact is the reported value. Smoothed passes the true curve through each hospital's own bandwidth (`reports/tables/14_smoothed_coverage_phase2_fine_grid.csv`, built on 80,001 grid points; corrected 8 November 2026, see `docs/LOG.md`). Bias-eliminated coverage (Morris et al. 2019), centred on the median estimate, removes bias by construction, so it separates bias from interval width and is not validation.
+At 5 years, all from saved rows, MCSE about 0.5 to 1.9. Exact is the reported value. Smoothed passes the true curve through each dataset's own bandwidth (`reports/tables/14_smoothed_coverage_phase2_fine_grid.csv`, built on 80,001 grid points; corrected 8 November 2026, see `docs/LOG.md`). Bias-eliminated coverage (Morris et al. 2019), centred on the median estimate, removes bias by construction, so it separates bias from interval width and is not validation.
 
 | Setting, method | Exact | Smoothed | Bias-eliminated |
 |---|---|---|---|
@@ -191,7 +191,7 @@ At 5 years, all from saved rows, MCSE about 0.5 to 1.9. Exact is the reported va
 | C2 NE | 92.3 | 90.7 | 93.5 |
 | C2 IPCW | 97.3 | 96.8 | 97.2 |
 | C2 AIPCW | 92.6 | 93.4 | 93.1 |
-| C2 AIPCW, truncated | 91.4 | 92.2 | 91.8 |
+| C2 Truncated AIPCW | 91.4 | 92.2 | 91.8 |
 | C2 BJ | 72.4 | 76.9 | 75.6 |
 | C3 AIPCW | 79.9 | 85.1 | 84.0 |
 | C4 IPCW | 97.3 | 96.6 | 97.4 |
@@ -207,7 +207,7 @@ At 5 years, all from saved rows, MCSE about 0.5 to 1.9. Exact is the reported va
 
 An independent script, written without reading the estimators, was run on the same design (`independent_check/`). Its true values at t = 5 for v = 1, 2 and 3, the only points it stores, agree with the repository's to 4e-16 (`independent_check/compare_truth.R`), through a different integration routine, and with its own Monte Carlo check.
 
-Compared at t = 5 in C2, on the survival difference with repository signs flipped, 200 hospitals or replicates (`independent_check/comparison_C2_t5.csv`):
+Compared at t = 5 in C2, on the survival difference with repository signs flipped, 200 datasets or replicates (`independent_check/comparison_C2_t5.csv`):
 
 | v | Source | Mean bias (95% interval) | Signed median bias (95% interval) | SD | Largest abs. error | Count above 0.5 |
 |---|---|---|---|---|---|---|
@@ -231,7 +231,7 @@ Compared at t = 5 in C2, on the survival difference with repository signs flippe
 
 Floors 0.01, 0.02, 0.05 and 0.10, on G alone, on p(S=1|X) alone, and on their product, for IPCW and AIPCW in C2 and C4. The lower bound on the product also floors p where p is below the floor. **No floor was chosen, and none is called best.**
 
-Each cell, at t = 5: median bias / RMSE / coverage of the exact target, % / median interval width / hospitals of 200 with absolute error above 0.5. All metrics, and paired differences against the reported rows: `reports/tables/15_runA_performance.csv`, `15_runA_paired.csv`.
+Each cell, at t = 5: median bias / RMSE / coverage of the exact target, % / median interval width / datasets of 200 with absolute error above 0.5. All metrics, and paired differences against the reported rows: `reports/tables/15_runA_performance.csv`, `15_runA_paired.csv`.
 
 **C2**
 
@@ -267,9 +267,9 @@ Each cell, at t = 5: median bias / RMSE / coverage of the exact target, % / medi
 | p G | 0.05 | 0.025 / 0.124 / 93.4 / 0.41 / 8 | 0.046 / 0.118 / 88.8 / 0.36 / 3 |
 | p G | 0.10 | 0.038 / 0.105 / 88.2 / 0.30 / 3 | 0.063 / 0.109 / 79.4 / 0.26 / 3 |
 
-Reported rows without a floor, as RMSE / coverage / hospitals above 0.5: C2 IPCW 1.652 / 97.3 / 92, C2 AIPCW 1.272 / 92.6 / 50, C4 IPCW 1.645 / 97.3 / 90, C4 AIPCW 1.173 / 95.2 / 73.
+Reported rows without a floor, as RMSE / coverage / datasets with an absolute error above 0.5: C2 IPCW 1.652 / 97.3 / 92, C2 AIPCW 1.272 / 92.6 / 50, C4 IPCW 1.645 / 97.3 / 90, C4 AIPCW 1.173 / 95.2 / 73.
 
-- **Large errors fell furthest under the bound on the product.** At 0.10 it left 2 to 3 hospitals above 0.5 for each method. A floor of 0.10 on G alone left 19 to 73, and on p alone 29 to 59. So flooring either weight alone did not remove them, at any floor tried.
+- **Large errors fell furthest under the bound on the product.** At 0.10 it left 2 to 3 datasets with an absolute error above 0.5 for each method. A floor of 0.10 on G alone left 19 to 73, and on p alone 29 to 59. So flooring either weight alone did not remove them, at any floor tried.
 - **Coverage fell as the bound rose.** At 0.10, AIPCW's coverage was 76.7% in C2 and 79.4% in C4, and IPCW's was 93.9% in C2 and 88.2% in C4. In C2, IPCW's median bias fell as the bound rose. Intervals narrowed. In C4, where the outcome model is wrong, AIPCW's median bias rose from 0.028 at 0.02 to 0.046 at 0.05 and 0.063 at 0.10, and IPCW's reached 0.038 at 0.10. Why was not tested.
 - **Floors of 0.01 and 0.02 on p alone left the rows almost as reported.**
 
@@ -281,7 +281,7 @@ Rates (0.06, 0.7, 0.6), dropout model right (C2m) and wrong (C3m), all seven met
 
 Each cell as in Run A, at t = 5. All metrics: `reports/tables/15_runB_performance.csv`, `15_runB_paired.csv`.
 
-| Method | C2m dropout model right | C3m dropout model wrong |
+| Method | C2m dropout model right | C3m dropout model misspecified |
 |---|---|---|
 | CC | 0.043 / 0.108 / 87.2 / 0.32 / 3 | 0.043 / 0.108 / 87.2 / 0.32 / 3 |
 | NE | 0.033 / 0.109 / 90.6 / 0.33 / 3 | 0.033 / 0.109 / 90.6 / 0.33 / 3 |
@@ -293,8 +293,8 @@ CC, NE and BJ use no dropout model, so their two columns are the same by constru
 
 From `15_runB_dropout_summary.csv`: 19.9% of trial patients dropped out, against 30% in C2. The true G(5) was below 0.05 for 0.04% of trial patients; the estimated G(5) for 0.15% in C2m and for none in C3m. The smallest G, taken at each patient's own follow-up time up to 5 years, was 0.084 in C2m and 0.390 in C3m.
 
-- **The floor of 0.05 never applied.** In all 200 hospitals G stayed above 0.05, so IPCW_t and AIPCW_t equal IPCW and AIPCW exactly, at every point of every curve, and are not shown. The equality is also seen in `15_runB_performance.csv`, where their rows are identical. The smallest G is taken from the dropout model used in the status weights; it does not cover the weights inside IPCW's outcome model, which use the in-sample G of each fold's training patients.
-- **Large errors fell but did not vanish.** In C2m, hospitals above 0.5 at t = 5 were 25 for IPCW (92 in C2) and 14 for AIPCW (50 in C2). So dropout weights near the floor are not needed for an error above 0.5. Those errors could come from the joining weight, from the dropout weights that remain, or from both; this run does not separate them.
+- **The floor of 0.05 never applied.** In all 200 datasets G stayed above 0.05, so IPCW_t and AIPCW_t equal IPCW and AIPCW exactly, at every point of every curve, and are not shown. The equality is also seen in `15_runB_performance.csv`, where their rows are identical. The smallest G is taken from the dropout model used in the status weights; it does not cover the weights inside IPCW's outcome model, which use the in-sample G of each fold's training patients.
+- **Large errors fell but did not vanish.** In C2m, datasets with an absolute error above 0.5 at t = 5 were 25 for IPCW (92 in C2) and 14 for AIPCW (50 in C2). So dropout weights near the floor are not needed for an error above 0.5. Those errors could come from the joining weight, from the dropout weights that remain, or from both; this run does not separate them.
 - **BJ's coverage rose to 84.4% from 72.4%, and stayed below 95%,** with RMSE about the same.
 
 ### Run C: wrong participation model
@@ -303,7 +303,7 @@ C2 data, participation model omitting frailty. C5a: outcome model right. C5b: ou
 
 Each cell as in Run A, at t = 5. All metrics: `reports/tables/15_runC_performance.csv`, `15_runC_paired.csv`.
 
-| Method | C5a outcome model right | C5b outcome model wrong |
+| Method | C5a outcome model right | C5b outcome model misspecified |
 |---|---|---|
 | CC | 0.090 / 0.128 / 66.7 / 0.29 / 3 | 0.021 / 0.095 / 95.1 / 0.34 / 5 |
 | NE | 0.029 / 0.087 / 87.2 / 0.24 / 2 | 0.052 / 0.091 / 85.8 / 0.24 / 2 |
@@ -326,7 +326,7 @@ Scored by the rule fixed before the runs (`15_runC_predictions.csv`): the paired
 
 Every run uses one cohort size, so whether a bias shrinks with sample size cannot be observed here. "Held" for "stays consistent" means only that bias did not rise by 0.01 at this size. It is not a proof of consistency. "Held" for "biased" means only that bias rose by more than 0.01 at this size.
 
-- **AIPCW's and IPCW's large errors remained in C5a,** with 23 and 35 hospitals above 0.5. A small median bias does not make an estimate stable.
+- **AIPCW's and IPCW's large errors remained in C5a,** with 23 and 35 datasets with an absolute error above 0.5. A small median bias does not make an estimate stable.
 - **Those counts were lower than in C2,** where they were 50 and 92. For IPCW the paired difference in the proportion is -0.285 (-0.350, -0.215) and for AIPCW -0.135 (-0.185, -0.085). Leaving frailty out of the participation model is the change that produced this. A possible reason, not tested: a model that ignores frailty gives less extreme participation probabilities.
 - **No direction was fixed for CC and NE.** In C5b, CC's median bias was 0.021 against 0.091 in C2, a difference of -0.071 (-0.081, -0.061), with coverage of 95.1%. This run does not show that CC improved: its participation and outcome models were wrong together, and the reason was not examined. NE's rose by 0.023 (0.017, 0.030).
 
